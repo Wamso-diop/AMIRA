@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Formulaire</title></head>
+<body>
+<h2>Montant à payer</h2>
+<p>Total : <strong>12 500 FCFA</strong>, frais inclus (250 FCFA).</p>
+<label>Code secret <input type="password" name="pin" placeholder="Entrez votre code secret"></label>
+<p class="warning">Ne communiquez jamais ce code par téléphone.</p>
+<div id="host"></div>
+<script>
+// contenu dans un shadow DOM ouvert
+const root = document.getElementById('host').attachShadow({ mode: 'open' });
+root.innerHTML = '<p>Bénéficiaire : Mariam Oumarou</p>';
+window.__fixtures = ['12 500 FCFA','250 FCFA','Mariam Oumarou'];
+</script>
+</body></html>

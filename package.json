@@ -1,0 +1,16 @@
+{
+  "name": "amira",
+  "private": true,
+  "description": "Raccourcis : chaque commande est lancée dans front/ (l'extension). Le back-end Flask est dans backend/.",
+  "scripts": {
+    "install:front": "npm --prefix front install",
+    "dev": "npm --prefix front run dev",
+    "build": "npm --prefix front run build",
+    "test": "npm --prefix front run test",
+    "test:e2e": "npm --prefix front run test:e2e",
+    "apercu": "npm --prefix front run apercu",
+    "screens": "npm --prefix front run screens",
+    "safinum": "npm --prefix front run safinum",
+    "icons": "npm --prefix front run icons"
+  }
+}

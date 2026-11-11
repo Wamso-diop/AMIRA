@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Banque — application monopage</title></head>
+<body>
+<div id="app"></div>
+<script>
+// Mini application monopage : rendu par JS, changement d'étape sans rechargement.
+const steps = [
+  () => `<h1>Tableau de bord</h1><p>Solde : <strong>125 000 FCFA</strong></p><p>Dernière opération le 02/03/2025.</p>`,
+  () => `<h1>Transfert</h1><p>Frais applicables : <em>1,5 %</em> du montant.</p><label>Bénéficiaire <input placeholder="Nom du bénéficiaire"></label><p>Bénéficiaire sélectionné : Awa Bello</p>`,
+  () => `<h1>Récapitulatif</h1><ul><li>Montant : 20 000 FCFA</li><li>Frais : 300 FCFA</li><li>Destinataire : Awa Bello (+237 677 55 44 33)</li></ul><p>Référence de l’opération : REF-88412.</p>`,
+  () => `<h1>Erreur</h1><div role="alert" class="alert alert-danger">Le transfert a échoué. Code d’erreur : E-4021.</div><p>Ne partagez jamais votre code PIN avec qui que ce soit.</p>`,
+];
+let i = 0;
+const app = document.getElementById('app');
+function render(){ app.innerHTML = steps[i]() + '<nav data-amira-ignore><button id="next">Suivant</button></nav>'; }
+render();
+document.addEventListener('click', (e) => { if (e.target.id === 'next') { i = Math.min(i + 1, steps.length - 1); render(); } });
+// un compteur qui change seul (texte mis à jour par le site)
+window.__setBalance = (v) => { const s = app.querySelector('strong'); if (s) s.textContent = v; };
+window.__fixtures = ['125 000 FCFA','02/03/2025','1,5 %','Awa Bello','20 000 FCFA','300 FCFA','+237 677 55 44 33','REF-88412','E-4021'];
+</script>
+</body></html>

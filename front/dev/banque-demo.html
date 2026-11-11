@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Banque Démo — espace client</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.5 system-ui, sans-serif; background: #f2f4f7; color: #1d2433; }
+  header { background: #fff; border-bottom: 1px solid #e3e6eb; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  header strong { font-size: 18px; }
+  .etapes { display: flex; gap: 8px; padding: 14px 24px; flex-wrap: wrap; }
+  .etapes span { padding: 4px 12px; border-radius: 999px; background: #e3e6eb; font-size: 13px; }
+  .etapes span.on { background: #1a73e8; color: #fff; }
+  main { max-width: 760px; margin: 0 auto; padding: 8px 24px 40px; display: grid; gap: 16px; }
+  .carte { background: #fff; border: 1px solid #e3e6eb; border-radius: 12px; padding: 18px 20px; }
+  .solde { font-size: 30px; font-weight: 800; }
+  table { width: 100%; border-collapse: collapse; } td, th { text-align: left; padding: 6px 0; border-bottom: 1px solid #eef0f3; }
+  label { display: block; font-weight: 600; margin-bottom: 4px; }
+  input { width: 100%; padding: 10px; border: 1px solid #c9ced6; border-radius: 8px; font: inherit; }
+  .actions { display: flex; gap: 10px; margin-top: 12px; }
+  button { padding: 10px 18px; border-radius: 8px; border: 0; background: #1a73e8; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+  button.second { background: #e3e6eb; color: #1d2433; }
+  .alerte { background: #fdecea; border: 1px solid #f5c2bd; color: #8a1c13; border-radius: 10px; padding: 12px 16px; }
+  .securite { background: #fff8e1; border: 1px solid #f2d27a; border-radius: 10px; padding: 12px 16px; }
+  .toast { position: fixed; right: 20px; bottom: 20px; background: #1d2433; color: #fff; padding: 12px 16px; border-radius: 10px; }
+</style>
+</head>
+<body>
+<header>
+  <strong>Banque Démo</strong>
+  <span>Bonjour, Amina Ngo Bell</span>
+</header>
+<div class="etapes" id="etapes"></div>
+<main id="app"></main>
+<script>
+  // Page bancaire FICTIVE pour l'aperçu de développement (données inventées).
+  const noms = ['Solde', 'Frais', 'Bénéficiaire', 'Récapitulatif', 'Confirmation'];
+  const vues = [
+    () => `<section class="carte"><h1>Votre compte</h1><p>Solde disponible au 11/11/2026 :</p><p class="solde">250 000 FCFA</p>
+      <p>Compte courant n° CM 001 2345 6789 01</p></section>
+      <section class="carte"><h2>Transactions récentes</h2><table>
+      <tr><td>Paiement marchand</td><td>05 nov. 2026</td><td>-12 500 FCFA</td></tr>
+      <tr><td>Salaire reçu</td><td>04 nov. 2026</td><td>+180 000 FCFA</td></tr></table></section>`,
+    () => `<section class="carte"><h1>Frais de transfert</h1><p>Des frais de <strong>1 %</strong> s’appliquent à chaque transfert, avec un minimum de 100 FCFA.</p>
+      <table><tr><th>Montant envoyé</th><th>Frais</th></tr><tr><td>Jusqu’à 50 000 FCFA</td><td>500 FCFA</td></tr><tr><td>Au-delà</td><td>1 % du montant</td></tr></table></section>`,
+    () => `<section class="carte"><h1>Bénéficiaire</h1>
+      <label for="tel">Numéro de téléphone du bénéficiaire</label><input id="tel" placeholder="Ex. : 6XX XX XX XX" />
+      <p>Bénéficiaire enregistré : Jean Mbarga (+237 690 12 34 56)</p></section>
+      <div class="securite" role="note">Attention : ne communiquez jamais votre code secret, même à un agent de la banque.</div>`,
+    () => `<section class="carte"><h1>Récapitulatif</h1><p>Vous envoyez <strong>50 000 FCFA</strong> à <strong>Jean Mbarga</strong>.</p>
+      <p>Frais : 500 FCFA. Total débité : 50 500 FCFA. Référence : TRX-2026-000123.</p></section>
+      <div class="alerte" role="alert">Solde insuffisant pour effectuer ce transfert avec les frais.</div>`,
+    () => `<section class="carte"><h1>Transfert confirmé</h1><p>Votre transfert a bien été envoyé. Un SMS de confirmation vous a été adressé.</p></section>`,
+  ];
+  let i = 0;
+  function rendre() {
+    document.getElementById('etapes').innerHTML = noms.map((n, k) => `<span class="${k === i ? 'on' : ''}">${k + 1}. ${n}</span>`).join('');
+    document.getElementById('app').innerHTML = vues[i]() +
+      `<div class="actions">${i > 0 ? '<button class="second" data-a="prec">Retour</button>' : ''}${i < vues.length - 1 ? '<button data-a="suiv">Continuer</button>' : ''}</div>`;
+    if (i === vues.length - 1) {
+      const t = document.createElement('div');
+      t.className = 'toast'; t.setAttribute('role', 'status');
+      t.textContent = 'Transfert de 50 000 FCFA envoyé avec succès.';
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 4000);
+    }
+  }
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('button')?.dataset.a;
+    if (a === 'suiv') { i++; rendre(); }
+    if (a === 'prec') { i--; rendre(); }
+  });
+  rendre();
+</script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+{
+  "app": {
+    "tagline": "Read. Understand. Act.",
+    "toggle": "Translate this page",
+    "tabs": {
+      "translate": "Translate",
+      "voice": "Voice",
+      "settings": "Settings",
+      "journal": "Log"
+    }
+  },
+  "status": {
+    "ready": "Ready",
+    "busy": "Working",
+    "offline": "Offline",
+    "notConnected": "Service not connected",
+    "error": "Error",
+    "demo": "demo"
+  },
+  "states": {
+    "loading": "Loading…",
+    "offlineTitle": "No connection",
+    "offlineBody": "The translation service is not responding. Check your internet connection, then try again.",
+    "errorTitle": "The translation service returned an error",
+    "errorBody": "Code: {code}. Try again in a moment; if it continues, check the Log.",
+    "retry": "Try again"
+  },
+  "hero": {
+    "line1": "This page",
+    "line2pre": "in",
+    "off": "Click “Translate” to translate the open tab.",
+    "showingOriginal": "You are seeing the original."
+  },
+  "translate": {
+    "fr": "Français",
+    "en": "English",
+    "ff": "Fulfulde (Adamawa)",
+    "variety": "Fulfulde variety",
+    "varieties": {
+      "ngaoundere": "Ngaoundéré",
+      "garoua": "Garoua",
+      "maroua": "Maroua"
+    },
+    "display": "Display",
+    "displays": {
+      "replace": "Replace",
+      "bilingual": "Bilingual",
+      "hover": "Original on hover"
+    },
+    "displayHelp": {
+      "replace": "The translation takes the place of the text.",
+      "bilingual": "The translation appears under the original.",
+      "hover": "Translation shown; the original appears on hover."
+    },
+    "seeOriginal": "See the original",
+    "altClickHint": "Alt + click a passage to switch that passage only.",
+    "counters": {
+      "translated": "translated",
+      "kept": "kept in French",
+      "errors": "errors",
+      "pending": "waiting"
+    },
+    "quick": "Quick translator",
+    "quickPlaceholder": "Type or paste some text",
+    "quickGo": "Translate",
+    "copy": "Copy",
+    "copied": "Copied",
+    "listen": "Listen",
+    "result": "Result",
+    "quickMasked": "Amounts, numbers and names are masked before sending.",
+    "quickKept": "Translation not reliable enough: the original text is kept.",
+    "legend": "Reliability",
+    "badge": {
+      "validated": "Validated",
+      "machine": "Automatic",
+      "uncertain": "To check"
+    },
+    "badgeHelp": {
+      "validated": "reviewed by a native speaker",
+      "machine": "machine output, not reviewed",
+      "uncertain": "in doubt: the original stays on screen"
+    },
+    "report": "Report a bad translation",
+    "detected": "Detected language:",
+    "frWord": "French",
+    "soonList": "Ghomálá’, Ewondo, Duala, Bassa, Bulu, Pidgin: soon.",
+    "ffTarget": "Translate Fulfulde into",
+    "options": "Translation options",
+    "translate": "Translate",
+    "translating": "Translating…",
+    "waiting": "Waiting for the translation service…",
+    "seeingTranslation": "You are seeing the translation."
+  },
+  "voice": {
+    "title": "Listen",
+    "intro": "Have the page, the passages you choose or the important messages read aloud.",
+    "what": "What to read?",
+    "whats": {
+      "page": "The page",
+      "selection": "The selection",
+      "messages": "Messages"
+    },
+    "play": "Listen",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop",
+    "speed": "Speed",
+    "autoWarnings": "Read warnings automatically",
+    "recorded": "Recorded voice",
+    "synthetic": "Synthetic voice",
+    "noTts": "Read-aloud is not available yet. It will appear as soon as the service offers it.",
+    "nothing": "Nothing to read on this page yet.",
+    "dictation": "Dictation",
+    "dictationOff": "Dictation is not available yet.",
+    "dictationStart": "Dictate",
+    "dictationStop": "Finish dictation",
+    "dictationResult": "Dictated text",
+    "micDenied": "The microphone is blocked. Allow it in the browser settings, then try again.",
+    "placeholdersNote": "Amounts, numbers and names are not read: they stay masked.",
+    "heroPre": "in",
+    "choose": "Choose",
+    "voiceHint": "Recorded by a native speaker whenever available.",
+    "nowReading": "Now reading",
+    "noMessages": "No important message found on this page.",
+    "counts": {
+      "page": "{n} passages",
+      "selection": "{n} chosen",
+      "messages": "{n} messages"
+    },
+    "hints": {
+      "idle": "{n} passages ready to read.",
+      "loading": "Preparing the voice…",
+      "playing": "Passage {i} of {n}",
+      "paused": "Paused · passage {i} of {n}",
+      "empty": "Choose at least one passage to read."
+    },
+    "speeds": {
+      "slow": "Slow",
+      "normal": "Normal",
+      "fast": "Fast"
+    },
+    "picker": {
+      "title": "Choose passages",
+      "intro": "The page is already split into passages, the same ones native speakers record. Tap them on the page or tick them here.",
+      "onPage": "Choose on the page",
+      "finish": "Finish selecting",
+      "live": "Selecting on the page. Press Esc to finish.",
+      "chosen": "chosen",
+      "search": "Search a passage…",
+      "empty": "No passage found on this page.",
+      "noMatch": "No passage matches.",
+      "order": "Read in page order.",
+      "all": "Choose all",
+      "clear": "Clear all",
+      "message": "Message",
+      "chooseFirst": "First choose the passages to read."
+    }
+  },
+  "settings": {
+    "security": "Security",
+    "prudence": "Caution mode",
+    "prudenceHelp": "Keeps French when the translation is uncertain.",
+    "threshold": "Confidence threshold",
+    "mask": "Mask amounts, numbers and names before sending",
+    "maskHelp": "Always on: amounts, numbers and names never leave your browser.",
+    "warningRule": "Security warnings are only shown translated in their validated version. Otherwise the original stays on screen.",
+    "a11y": "Accessibility",
+    "textSize": "Text size",
+    "contrast": "High contrast",
+    "theme": "Theme",
+    "themes": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "motion": "Reduce motion",
+    "uiLang": "Interface language",
+    "sites": "Websites",
+    "sitesHelp": "safinum.cm is allowed from installation. For other sites, Chrome asks for your consent once.",
+    "removeSite": "Remove",
+    "builtin": "default",
+    "shortcut": "Keyboard shortcut",
+    "shortcutBody": "Alt + Shift + A translates or restores the page.",
+    "shortcutChange": "Change the shortcut",
+    "privacy": "Privacy",
+    "sentTitle": "Sent to the translation service",
+    "sent": [
+      "The site’s interface text, after masking",
+      "The chosen Fulfulde variety",
+      "Your translation reports, masked"
+    ],
+    "neverTitle": "Never sent",
+    "never": [
+      "Amounts, phone numbers, names, dates, references",
+      "What you type in the site’s fields",
+      "Cookies, security tokens, full page addresses"
+    ],
+    "replayOnboarding": "Replay the introduction",
+    "permissionDenied": "Permission refused: the site was not added.",
+    "allSites": "Use Amira on all websites",
+    "allSitesHelp": "Amira only reads a page when you turn on “Translate this page”."
+  },
+  "journal": {
+    "title": "Log",
+    "intro": "Technical events only: never the page text or your data.",
+    "filters": {
+      "all": "All",
+      "client": "Client",
+      "serveur": "Service",
+      "extension": "Extension",
+      "error": "Errors"
+    },
+    "empty": "No events. Translate a page to fill the log.",
+    "copy": "Copy",
+    "export": "Export as JSON",
+    "clear": "Clear",
+    "confirmClear": "Clear the whole log?",
+    "detail": "Detail",
+    "levels": {
+      "info": "info",
+      "warn": "warning",
+      "error": "error"
+    },
+    "report": "Report a bad translation",
+    "reportIntro": "Your report helps a native speaker validate the translation.",
+    "reportOriginal": "Message (masked)",
+    "reportShown": "Translation shown",
+    "reportSuggestion": "Suggested correction",
+    "reportSend": "Send the report",
+    "reportSent": "Report sent. Thank you.",
+    "reportPick": "Choose a passage from the page",
+    "reportNone": "No translated passage on this page yet."
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Start",
+    "s1title": "Your bank, in your language",
+    "s1body": "Amira translates your financial service’s screen into Fulfulde, without changing the site.",
+    "s2title": "Your data stays with you",
+    "s2body": "Amounts, numbers and names are masked before anything is sent. Amira never clicks or fills in anything.",
+    "s3title": "When in doubt, the original",
+    "s3body": "If a translation is not reliable, the original text stays on screen with ⚠. One click on “See the original” is enough.",
+    "s2screen": "On your screen",
+    "s2sent": "Sent for translation",
+    "s2a": "You send",
+    "s2b": "to",
+    "s3sample": "Never share your secret code."
+  },
+  "errors": {
+    "RATE_LIMITED": "Too many requests. Amira will try again in a few seconds.",
+    "UNAVAILABLE": "The translation service is unavailable. Try again later.",
+    "TIMEOUT": "The translation service is taking too long. Try again.",
+    "BAD_REQUEST": "The translation service refused the request. Check the Log.",
+    "UNSUPPORTED_LANGUAGE": "This language is not supported yet.",
+    "NOT_CONFIGURED": "Translation service not configured.",
+    "NETWORK": "Translation service unreachable. Check the connection, then try again.",
+    "BAD_RESPONSE": "Unreadable response from the translation service. Check the Log.",
+    "NO_TAB": "No active tab to translate.",
+    "NO_CONTENT": "Amira is not loaded on this page. Reload it, then try again.",
+    "generic": "Something went wrong. Check the Log.",
+    "RESTRICTED": "Chrome does not allow extensions on this page (chrome:// pages, Chrome Web Store). Open a website, then try again.",
+    "PERMISSION_DENIED": "Permission refused: Amira cannot read this page. Try again and choose “Allow”."
+  }
+}

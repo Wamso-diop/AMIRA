@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Banque — fenêtre modale</title>
+<style>.overlay{position:fixed;inset:0;background:#0006;display:grid;place-items:center}.modal{background:#fff;padding:20px;max-width:420px}</style></head>
+<body>
+<h1>Confirmer le transfert</h1>
+<p>Vérifiez les informations avant de confirmer.</p>
+<button id="open">Confirmer</button>
+<div id="root"></div>
+<script>
+document.getElementById('open').addEventListener('click', () => {
+  document.getElementById('root').innerHTML = `
+  <div class="overlay"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+    <h2 id="mt">Récapitulatif du transfert</h2>
+    <p>Vous allez envoyer <strong>75 000 FCFA</strong> à <strong>Paul Ndjock</strong> le 15 mars 2025.</p>
+    <p>Frais : 750 FCFA. Total débité : 75 750 FCFA.</p>
+    <p class="text-warning">Attention : cette opération est irréversible. Ne communiquez jamais votre code de confirmation.</p>
+    <button aria-label="Fermer la fenêtre">×</button> <button>Valider</button>
+  </div></div>`;
+});
+window.__fixtures = ['75 000 FCFA','Paul Ndjock','15 mars 2025','750 FCFA','75 750 FCFA'];
+</script>
+</body></html>

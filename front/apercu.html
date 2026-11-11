@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Amira — aperçu du panneau</title>
+<style>
+  :root { --barre: #dee1e6; --bord: #c4c7cc; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; font: 13px/1.4 system-ui, sans-serif; background: var(--barre); }
+  .fenetre { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+  .chrome { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--barre); border-bottom: 1px solid var(--bord); }
+  .chrome .rond { width: 12px; height: 12px; border-radius: 50%; background: #c4c7cc; }
+  .adresse { flex: 1; min-width: 0; background: #fff; border-radius: 999px; padding: 6px 14px; color: #3c4043; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ext { width: 30px; height: 30px; border-radius: 50%; border: 0; display: grid; place-items: center; background: #fff; cursor: pointer; }
+  .ext[aria-pressed="true"] { background: #e8d9ea; }
+  .ext img { width: 18px; height: 18px; }
+  .zone { display: flex; min-height: 0; background: #fff; }
+  #amira-site { flex: 1; min-width: 0; border: 0; height: 100%; }
+  .poignee { width: 6px; cursor: col-resize; background: var(--barre); border-left: 1px solid var(--bord); flex: none; }
+  .poignee:hover, .poignee.actif { background: #b9a3bb; }
+  #amira-panel { width: var(--largeur, 400px); flex: none; border: 0; height: 100%; }
+  .ferme .poignee, .ferme #amira-panel { display: none; }
+  .note { color: #5f6368; font-size: 12px; white-space: nowrap; }
+  @media (max-width: 900px) { .note { display: none; } }
+</style>
+</head>
+<body>
+<div class="fenetre">
+  <div class="chrome">
+    <span class="rond"></span><span class="rond"></span><span class="rond"></span>
+    <div class="adresse" id="adresse">safinum.cm/hackathon-test</div>
+    <span class="note">Aperçu de développement — dans Chrome, le panneau s’ouvre ainsi, à côté de la page</span>
+    <button class="ext" id="bouton-ext" aria-pressed="true" title="Ouvrir ou fermer Amira">
+      <img src="/icons/icon-32.png" alt="Amira" />
+    </button>
+  </div>
+  <div class="zone" id="zone">
+    <iframe id="amira-site" src="/dev/banque-demo.html" title="Page du site (simulée)"></iframe>
+    <div class="poignee" id="poignee" title="Glisser pour élargir le panneau (320 à 480 px)"></div>
+    <iframe id="amira-panel" src="/sidepanel.html" title="Panneau Amira"></iframe>
+  </div>
+</div>
+<script>
+  // Panneau à droite, largeur réglable entre 320 et 480 px, comme le panneau latéral de Chrome.
+  const zone = document.getElementById('zone');
+  const poignee = document.getElementById('poignee');
+  const largeur = (px) => document.documentElement.style.setProperty('--largeur', Math.max(320, Math.min(480, px)) + 'px');
+  try { largeur(Number(localStorage.getItem('amira-dev:largeur')) || 400); } catch { largeur(400); }
+  poignee.addEventListener('pointerdown', (e) => {
+    poignee.setPointerCapture(e.pointerId);
+    poignee.classList.add('actif');
+    document.getElementById('amira-panel').style.pointerEvents = 'none';
+    document.getElementById('amira-site').style.pointerEvents = 'none';
+    const move = (ev) => largeur(zone.getBoundingClientRect().right - ev.clientX);
+    const up = () => {
+      poignee.removeEventListener('pointermove', move);
+      poignee.classList.remove('actif');
+      document.getElementById('amira-panel').style.pointerEvents = '';
+      document.getElementById('amira-site').style.pointerEvents = '';
+      try { localStorage.setItem('amira-dev:largeur', parseInt(getComputedStyle(document.documentElement).getPropertyValue('--largeur'))); } catch {}
+    };
+    poignee.addEventListener('pointermove', move);
+    poignee.addEventListener('pointerup', up, { once: true });
+  });
+  document.getElementById('bouton-ext').addEventListener('click', (e) => {
+    const ferme = zone.classList.toggle('ferme');
+    e.currentTarget.setAttribute('aria-pressed', String(!ferme));
+  });
+</script>
+</body>
+</html>

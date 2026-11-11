@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Installer Amira</title>
+<link rel="icon" href="/icons/icon-32.png" />
+</head>
+<body>
+<div class="guide">
+  <header class="g-haut">
+    <img class="g-logo" src="/src/assets/amira-logo-clair.png" alt="Amira" />
+    <p class="g-statut" id="statut"><i></i><span>dist/ se reconstruit à chaque modification</span></p>
+  </header>
+
+  <main class="g-scene" aria-live="polite">
+    <!-- 0 : ouverture -->
+    <section class="g-slide g-intro" data-titre="Bienvenue">
+      <div class="intro-logo" aria-hidden="true">
+        <svg class="logo-anim" viewBox="0 0 420 130" role="img" aria-label="Amira">
+          <g transform="translate(62 65)">
+            <g transform="rotate(12) scale(1.45)"><path class="lp lp1" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#E01D5B" /></g>
+            <g transform="rotate(-48) scale(1.45)"><path class="lp lp2" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#2DCF42" /></g>
+            <g transform="rotate(-132) scale(1.45)"><path class="lp lp3" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#EFD109" /></g>
+            <g transform="rotate(168) scale(1.45)"><path class="lp lp4" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#2BB1EB" /></g>
+          </g>
+          <path class="la la-barre" d="M14 65 H40" />
+          <path class="la la-fleche" d="M112 30 L 78 65 L 112 100 M 80 65 H 150" />
+          <text class="lt" x="150" y="92">Amira<tspan class="lt-point">.</tspan></text>
+        </svg>
+      </div>
+      <div class="g-texte intro-texte">
+        <h1>Lire. Comprendre. Agir.</h1>
+        <p>Amira rend les services financiers numériques compréhensibles en fulfulde, directement dans votre navigateur, sans rien changer au site.</p>
+        <p>Ce guide vous montre comment l’installer dans Chrome en quelques minutes.</p>
+      </div>
+    </section>
+
+    <!-- 1 -->
+    <section class="g-slide" data-titre="Construire">
+      <div class="g-texte">
+        <p class="g-num">2 / 9</p>
+        <h1>L’extension est déjà construite</h1>
+        <p><code>npm run dev</code> a créé le dossier <code>dist/</code> et le met à jour à chaque modification du code. C’est ce dossier que Chrome va charger.</p>
+        <p class="g-chemin">Dossier : <code class="chemin-dist">…/AMIRA/dist</code> <button class="g-copier" data-copier-dist>Copier</button></p>
+      </div>
+      <div class="g-maquette terminal" aria-hidden="true">
+        <div class="t-barre"><i></i><i></i><i></i></div>
+        <pre><span class="t-l l1">$ npm run dev</span>
+<span class="t-l l2 doux">vite build — panneau, service worker</span>
+<span class="t-l l3 doux">vite build — script de contenu</span>
+<span class="t-l l4 ok">✓ dist/ prêt à charger dans Chrome</span>
+<span class="t-l l5 doux">surveillance des modifications…</span><span class="t-curseur"></span></pre>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="g-slide" data-titre="Ouvrir">
+      <div class="g-texte">
+        <p class="g-num">3 / 9</p>
+        <h1>Ouvrez la page des extensions</h1>
+        <p>Dans Chrome, tapez cette adresse dans la barre d’adresse, puis Entrée.</p>
+        <p class="g-chemin"><code>chrome://extensions</code> <button class="g-copier" data-copier="chrome://extensions">Copier</button></p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse"><span class="tape">chrome://extensions</span><span class="caret"></span></span></div>
+        <div class="n-page vide"><span class="n-titre apparait">Extensions</span></div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="g-slide" data-titre="Mode développeur">
+      <div class="g-texte">
+        <p class="g-num">4 / 9</p>
+        <h1>Activez le mode développeur</h1>
+        <p>En haut à droite de la page Extensions, activez l’interrupteur <b>Mode développeur</b>. De nouveaux boutons apparaissent.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse">chrome://extensions</span></div>
+        <div class="n-page">
+          <div class="x-entete"><span class="n-titre">Extensions</span><span class="x-dev">Mode développeur <span class="x-switch"><i></i></span></span></div>
+          <div class="x-boutons apparait-tard"><span>Charger l’extension non empaquetée</span><span>Empaqueter l’extension</span><span>Mettre à jour</span></div>
+          <span class="curseur c-dev"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="g-slide" data-titre="Charger dist/">
+      <div class="g-texte">
+        <p class="g-num">5 / 9</p>
+        <h1>Chargez le dossier dist/</h1>
+        <p>Cliquez sur <b>Charger l’extension non empaquetée</b>, choisissez le dossier <code>dist</code> du projet, puis <b>Sélectionner</b>. Amira apparaît avec son logo.</p>
+        <p class="g-chemin"><code class="chemin-dist">…/AMIRA/dist</code> <button class="g-copier" data-copier-dist>Copier</button></p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse">chrome://extensions</span></div>
+        <div class="n-page">
+          <div class="x-boutons"><span class="x-cible">Charger l’extension non empaquetée</span><span>Empaqueter l’extension</span></div>
+          <div class="x-dialogue">
+            <p class="x-d-titre">Sélectionner le dossier de l’extension</p>
+            <p class="x-d-ligne">📁 AMIRA</p>
+            <p class="x-d-ligne retrait">📁 docs</p>
+            <p class="x-d-ligne retrait choisi">📁 dist</p>
+            <p class="x-d-ligne retrait">📁 src</p>
+            <span class="x-d-ok">Sélectionner</span>
+          </div>
+          <div class="x-carte"><img src="/icons/icon-48.png" alt="" /><span><b>Amira</b> 0.1.0<br /><small>Rend un service financier compréhensible en fulfulde.</small></span></div>
+          <span class="curseur c-charger"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="g-slide" data-titre="Épingler">
+      <div class="g-texte">
+        <p class="g-num">6 / 9</p>
+        <h1>Épinglez Amira</h1>
+        <p>Cliquez sur l’icône <b>puzzle</b> de la barre d’outils, puis sur l’<b>épingle</b> à côté d’Amira. Son logo reste visible en permanence.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse">exemple.cm</span><span class="n-icones"><img class="epinglee" src="/icons/icon-32.png" alt="" /><span class="puzzle">🧩</span></span></div>
+        <div class="n-page">
+          <div class="p-menu"><p>Extensions</p><p class="p-ligne"><img src="/icons/icon-16.png" alt="" /> Amira <span class="p-pin">📌</span></p></div>
+          <span class="curseur c-pin"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="g-slide" data-titre="Ouvrir le panneau">
+      <div class="g-texte">
+        <p class="g-num">7 / 9</p>
+        <h1>Ouvrez-la sur n’importe quel site</h1>
+        <p>Sur la page à traduire, cliquez sur le logo Amira. Le panneau s’ouvre à droite et la page se resserre à côté : rien n’est caché. Tirez son bord pour l’élargir ; Chrome retient la largeur.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse">banque.exemple.cm</span><span class="n-icones"><img class="clic-icone" src="/icons/icon-32.png" alt="" /></span></div>
+        <div class="n-page partage">
+          <div class="s-site"><b>Votre compte</b><i></i><i class="court"></i><i></i><span class="s-bouton"></span></div>
+          <div class="s-panneau"><img src="/src/assets/amira-logo.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-switch"><i></i></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="g-slide" data-titre="Traduire">
+      <div class="g-texte">
+        <p class="g-num">8 / 9</p>
+        <h1>Activez « Traduire cette page »</h1>
+        <p>Amira détecte la langue du site : français ou anglais vers le fulfulde, fulfulde vers le français ou l’anglais. La première fois sur un nouveau site, Chrome demande votre accord une seule fois.</p>
+        <p class="g-astuce">Après une modification du code, cliquez sur ↻ sous Amira dans <code>chrome://extensions</code>.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse">banque.exemple.cm</span><span class="n-icones"><img src="/icons/icon-32.png" alt="" /></span></div>
+        <div class="n-page partage">
+          <div class="s-site traduit"><b><span class="avant">Votre compte</span><span class="apres">⟦FF⟧ Votre compte</span></b><i></i><i class="court"></i><i></i><span class="s-bouton"></span></div>
+          <div class="s-panneau ouvert"><img src="/src/assets/amira-logo.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-switch active"><i></i></span><span class="s-sens">Français → Fulfulde</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 : essai sur l'environnement de test -->
+    <section class="g-slide" data-titre="Essayer">
+      <div class="g-texte">
+        <p class="g-num">9 / 9</p>
+        <h1>Essayez sur l’environnement de test</h1>
+        <p>Ouvrez la page officielle du SAFINUM Innovate Challenge, puis cliquez sur le logo Amira épinglé dans la barre d’outils.</p>
+        <p class="g-chemin"><a class="g-lien" href="https://safinum.cm/hackathon-test" target="_blank" rel="noopener">safinum.cm/hackathon-test</a> <button class="g-copier" data-copier="https://safinum.cm/hackathon-test">Copier</button></p>
+        <p class="g-astuce">Les données de cette page sont fictives : aucune transaction réelle.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre">
+          <span class="n-adresse"><span class="tape tape-safinum">safinum.cm/hackathon-test</span><span class="caret"></span></span>
+          <span class="n-icones"><img class="clic-final" src="/icons/icon-32.png" alt="" /><span class="puzzle">🧩</span></span>
+        </div>
+        <div class="n-page partage final">
+          <div class="s-site safinum">
+            <div class="sf-entete"><span class="sf-logo">🏛</span><b>Safinum Pay</b></div>
+            <b class="sf-titre"><span class="avant">Bonjour, Amina</span><span class="apres">⟦FF⟧ Bonjour, Amina</span></b>
+            <div class="sf-solde"><small><span class="avant">Solde disponible</span><span class="apres">⟦FF⟧ Solde disponible</span></small><strong>250 000 FCFA</strong></div>
+            <i></i><i class="court"></i>
+            <span class="sf-bouton"><span class="avant">Effectuer un transfert</span><span class="apres">⟦FF⟧ Effectuer un transfert</span></span>
+          </div>
+          <div class="s-panneau final-panneau"><img src="/src/assets/amira-logo.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-sens">Français → Fulfulde</span><span class="rond-traduire"><span class="avant">Traduire</span><span class="apres">Voir l’original</span></span></div>
+          <span class="curseur c-final"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="g-nav" aria-label="Étapes">
+    <button class="g-prec" id="prec" aria-label="Étape précédente">←</button>
+    <div class="g-points" id="points"></div>
+    <button class="g-suiv" id="suiv">Suivant <span aria-hidden="true">→</span></button>
+  </nav>
+  <p class="g-pied"><a href="/apercu.html">Voir un aperçu du panneau sans installer</a></p>
+</div>
+<script type="module" src="/src/guide/guide.ts"></script>
+</body>
+</html>

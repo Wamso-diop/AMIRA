@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="csrf-token" content="SECRET-CSRF-123"><title>Banque — simple</title>
+<style>body{font-family:sans-serif;max-width:640px;margin:2rem auto}.error{color:#b00}.warning{border:2px solid #c80;padding:8px}</style></head>
+<body>
+<h1>Mon espace client</h1>
+<section id="solde"><h2>Solde</h2><p>Votre solde disponible est de <strong>125 000 FCFA</strong> au 12/03/2025.</p></section>
+<section id="frais"><h2>Frais de transfert</h2>
+  <p>Des frais de <b>1 %</b> s’appliquent, avec un minimum de 100 FCFA par opération.</p>
+  <table><tr><th>Montant</th><th>Frais</th></tr><tr><td>Jusqu’à 50 000 FCFA</td><td>500 FCFA</td></tr></table>
+</section>
+<form id="benef">
+  <h2>Bénéficiaire</h2>
+  <label for="tel">Numéro de téléphone du bénéficiaire</label>
+  <input id="tel" name="tel" value="690123456" placeholder="Saisissez le numéro">
+  <p>Bénéficiaire : Jean Mbarga, joignable au +237 690 12 34 56.</p>
+  <button type="button" aria-label="Continuer vers le récapitulatif">Continuer</button>
+</form>
+<section id="recap"><h2>Récapitulatif</h2>
+  <p>Vous envoyez <span class="amt">50 000 FCFA</span> à <a href="#">Jean Mbarga</a>. Frais : 500 FCFA. Référence : TRX-2025-000123.</p>
+</section>
+<p class="error" role="alert">Solde insuffisant pour effectuer ce transfert.</p>
+<div class="warning">Attention : ne communiquez jamais votre code secret, même à un agent de la banque.</div>
+<script>window.__fixtures = ['125 000 FCFA','12/03/2025','100 FCFA','50 000 FCFA','500 FCFA','Jean Mbarga','+237 690 12 34 56','TRX-2025-000123'];</script>
+</body></html>

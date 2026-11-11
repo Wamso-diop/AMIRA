@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Banque — changement de langue</title></head>
+<body>
+<header><button id="lang">EN</button></header>
+<main id="app"></main>
+<script>
+// Le site change de langue sans recharger la page, comme safinum.cm.
+const textes = {
+  fr: { titre: 'Votre compte', solde: 'Votre solde disponible est de 250 000 FCFA.', aide: 'Consultez votre solde et lancez un transfert en toute sécurité.', bouton: 'Effectuer un transfert' },
+  en: { titre: 'Your account', solde: 'Your available balance is 250 000 FCFA.', aide: 'Check your balance and start a transfer with full security.', bouton: 'Make a transfer' },
+};
+let langue = 'fr';
+function rendre() {
+  const t = textes[langue];
+  document.documentElement.lang = langue;
+  document.getElementById('app').innerHTML = `<h1>${t.titre}</h1><p>${t.solde}</p><p>${t.aide}</p><button>${t.bouton}</button>`;
+  document.getElementById('lang').textContent = langue === 'fr' ? 'EN' : 'FR';
+}
+document.getElementById('lang').addEventListener('click', () => { langue = langue === 'fr' ? 'en' : 'fr'; rendre(); });
+rendre();
+window.__fixtures = ['250 000 FCFA'];
+</script>
+</body></html>

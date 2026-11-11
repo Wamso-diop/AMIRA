@@ -1,0 +1,98 @@
+# ============================================================
+# Amira : un seul dépôt pour front/ (extension Chrome) et backend/ (Flask)
+# Un motif sans « / » au début s'applique dans tous les dossiers.
+# ============================================================
+
+# ---------- Commun ----------
+
+# Variables d'environnement et secrets (garder les .env.example)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Journaux
+logs/
+*.log
+
+# Éditeurs et système
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ---------- front/ : Vite + React + TypeScript ----------
+
+front/node_modules/
+front/.pnpm-store/
+front/dist/
+front/build/
+.vite/
+front/*.zip
+front/*.crx
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Tests (Vitest, Playwright)
+front/coverage/
+front/test-results/
+front/playwright-report/
+front/blob-report/
+front/playwright/.cache/
+front/tests/e2e/.harness/
+front/tests/e2e/results/
+
+# ---------- backend/ : Flask (Python) ----------
+
+# Environnements virtuels
+backend/venv/
+backend/.venv/
+backend/env/
+
+# Python compilé
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Paquets et construction
+backend/build/
+backend/dist/
+*.egg-info/
+.eggs/
+wheels/
+
+# Flask (.flaskenv reste suivi, comme Flask le prévoit)
+backend/instance/
+.webassets-cache
+flask_session/
+.flaskenv.local
+
+# Bases de données locales
+*.sqlite
+*.sqlite3
+*.db
+
+# Tests et qualité
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.ipynb_checkpoints/
+
+# Fichiers téléversés et audio générés (enregistrements des natifs, synthèse)
+backend/uploads/
+backend/media/
+backend/audio_cache/
