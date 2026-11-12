@@ -13,7 +13,7 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
   - Tests : `test_app.py` (erreurs, 404 JSON, 413, préflight, `ready` 503 puis 200, conformité à openapi).
   - Fichiers : `docs/openapi.yaml`, `amira/__init__.py`, `config.py`, `errors.py`, `cors.py`, `routes/public.py`, `tests/conftest.py`, `tests/openapi_check.py`, `.env.example`, `wsgi.py`.
 
-- [ ] **S2. Marqueurs**
+- [x] **S2. Marqueurs**
   - Acceptation : `same_markers`, `well_nested`, `markers_ok`, `canonicalize`, `model_view`/`from_model`, `speakable`.
   - Tests : `test_markers.py` (imbrication, doublons, renumérotation, aller-retour, ajout ou perte, accolades inconnues).
   - Fichiers : `amira/markers.py`, `tests/test_markers.py`.
