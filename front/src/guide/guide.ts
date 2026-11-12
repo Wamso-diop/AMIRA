@@ -11,10 +11,6 @@ const prec = document.getElementById('prec') as HTMLButtonElement;
 const suiv = document.getElementById('suiv') as HTMLButtonElement;
 let courant = 0;
 
-// chemin absolu du dossier dist/, fourni par scripts/dev.mjs
-const dist = (import.meta.env.VITE_DIST_PATH as string | undefined) || 'AMIRA/front/dist';
-document.querySelectorAll('.chemin-dist').forEach((el) => (el.textContent = dist));
-
 slides.forEach((s, i) => {
   const b = document.createElement('button');
   b.setAttribute('aria-label', `${i + 1}. ${s.dataset.titre}`);
@@ -47,7 +43,7 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('click', async (e) => {
   const b = (e.target as Element).closest<HTMLButtonElement>('.g-copier');
   if (!b) return;
-  const texte = b.hasAttribute('data-copier-dist') ? dist : b.dataset.copier!;
+  const texte = b.dataset.copier!;
   try {
     await navigator.clipboard.writeText(texte);
     b.textContent = 'Copié';

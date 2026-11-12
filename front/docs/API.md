@@ -58,7 +58,7 @@ Requête :
   ]
 }
 ```
-- `source` : `"fr" | "en" | "auto" | "ff"` — `target` : `"ff" | "fr" | "en"` — `variety` : `"ngaoundere" | "garoua" | "maroua" | null` (null si la cible n'est pas le fulfulde).
+- `source` : `"fr" | "en" | "auto" | "ff"` — `target` : `"ff" | "fr" | "en"` — `variety` : `"ngaoundere" | "garoua" | "maroua" | null`. Le panneau ne propose plus de choix : l'extension envoie toujours `"ngaoundere"`, même quand la cible est `fr` ou `en` (le serveur l'ignore alors).
 - `categoryHint` (indice, le serveur décide) : `"label" | "instruction" | "fees" | "security_warning" | "error"`.
 - `placeholders` : tous les marqueurs présents dans `text` (valeurs masquées et repères de balises).
 - Lots de 40 segments au plus, 2 requêtes simultanées au plus par onglet.
@@ -96,7 +96,7 @@ Requête : `{ "text": "texte masqué ou non sensible", "language": "ff", "speed"
   normalisés, minuscules), préfixée par `k`. La segmentation est celle de la traduction : un
   locuteur natif enregistre l'audio d'un segment une fois, le serveur le range sous cette clé et le
   renvoie avec `X-Amira-Voice: recorded`. Calcul : `segmentKey()` dans `src/content/engine.ts`.
-Réponse : audio binaire (`Content-Type: audio/mpeg`, `audio/ogg`…). En-tête facultatif
+Réponse : audio binaire (`Content-Type: audio/mpeg`, `audio/ogg`…), ou `204 No Content` quand le serveur n'a pas d'audio (le panneau utilise alors la synthèse du navigateur). En-tête facultatif
 `X-Amira-Voice: recorded | synthetic` → étiquette « Voix enregistrée » / « Voix de synthèse ».
 Les marqueurs `{N0}` sont retirés avant l'envoi : montants et noms ne sont pas lus.
 

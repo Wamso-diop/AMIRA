@@ -10,7 +10,7 @@
 <div class="guide">
   <header class="g-haut">
     <img class="g-logo" src="/src/assets/amira-logo-clair.png" alt="Amira" />
-    <p class="g-statut" id="statut"><i></i><span>dist/ se reconstruit à chaque modification</span></p>
+    <p class="g-statut" id="statut"><i></i><span>front/dist se reconstruit à chaque modification</span></p>
   </header>
 
   <main class="g-scene" aria-live="polite">
@@ -41,15 +41,15 @@
       <div class="g-texte">
         <p class="g-num">2 / 9</p>
         <h1>L’extension est déjà construite</h1>
-        <p><code>npm run dev</code> a créé le dossier <code>dist/</code> et le met à jour à chaque modification du code. C’est ce dossier que Chrome va charger.</p>
-        <p class="g-chemin">Dossier : <code class="chemin-dist">…/AMIRA/dist</code> <button class="g-copier" data-copier-dist>Copier</button></p>
+        <p><code>npm run dev</code> a créé le dossier <code>front/dist</code> et le met à jour à chaque modification du code. C’est ce dossier que Chrome va charger.</p>
+        <p class="g-chemin">Dans le dossier du projet : <code class="chemin">AMIRA</code> <span aria-hidden="true">›</span> <code class="chemin">front</code> <span aria-hidden="true">›</span> <code class="chemin">dist</code></p>
       </div>
       <div class="g-maquette terminal" aria-hidden="true">
         <div class="t-barre"><i></i><i></i><i></i></div>
         <pre><span class="t-l l1">$ npm run dev</span>
 <span class="t-l l2 doux">vite build — panneau, service worker</span>
 <span class="t-l l3 doux">vite build — script de contenu</span>
-<span class="t-l l4 ok">✓ dist/ prêt à charger dans Chrome</span>
+<span class="t-l l4 ok">✓ front/dist prêt à charger dans Chrome</span>
 <span class="t-l l5 doux">surveillance des modifications…</span><span class="t-curseur"></span></pre>
       </div>
     </section>
@@ -86,12 +86,12 @@
     </section>
 
     <!-- 4 -->
-    <section class="g-slide" data-titre="Charger dist/">
+    <section class="g-slide" data-titre="Charger front/dist">
       <div class="g-texte">
         <p class="g-num">5 / 9</p>
-        <h1>Chargez le dossier dist/</h1>
-        <p>Cliquez sur <b>Charger l’extension non empaquetée</b>, choisissez le dossier <code>dist</code> du projet, puis <b>Sélectionner</b>. Amira apparaît avec son logo.</p>
-        <p class="g-chemin"><code class="chemin-dist">…/AMIRA/dist</code> <button class="g-copier" data-copier-dist>Copier</button></p>
+        <h1>Chargez le dossier dist</h1>
+        <p>Cliquez sur <b>Charger l’extension non empaquetée</b>. Dans la fenêtre qui s’ouvre, allez là où vous avez placé le projet, ouvrez <b>AMIRA</b>, puis <b>front</b>, choisissez <b>dist</b> et cliquez sur <b>Sélectionner</b>. Amira apparaît avec son logo.</p>
+        <p class="g-chemin">Dans le dossier du projet : <code class="chemin">AMIRA</code> <span aria-hidden="true">›</span> <code class="chemin">front</code> <span aria-hidden="true">›</span> <code class="chemin">dist</code></p>
       </div>
       <div class="g-maquette navigateur" aria-hidden="true">
         <div class="n-barre"><span class="n-adresse">chrome://extensions</span></div>
@@ -100,9 +100,10 @@
           <div class="x-dialogue">
             <p class="x-d-titre">Sélectionner le dossier de l’extension</p>
             <p class="x-d-ligne">📁 AMIRA</p>
-            <p class="x-d-ligne retrait">📁 docs</p>
-            <p class="x-d-ligne retrait choisi">📁 dist</p>
-            <p class="x-d-ligne retrait">📁 src</p>
+            <p class="x-d-ligne retrait">📁 backend</p>
+            <p class="x-d-ligne retrait">📁 front</p>
+            <p class="x-d-ligne retrait2 choisi">📁 dist</p>
+            <p class="x-d-ligne retrait2">📁 src</p>
             <span class="x-d-ok">Sélectionner</span>
           </div>
           <div class="x-carte"><img src="/icons/icon-48.png" alt="" /><span><b>Amira</b> 0.1.0<br /><small>Rend un service financier compréhensible en fulfulde.</small></span></div>

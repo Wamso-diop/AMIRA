@@ -61,6 +61,7 @@ code { font: 700 0.92em ui-monospace, monospace; background: rgba(255,255,255,.1
 .x-d-titre { font-weight: 700; margin: 0 0 8px; }
 .x-d-ligne { margin: 0; padding: 4px 8px; border-radius: 4px; }
 .x-d-ligne.retrait { margin-left: 20px; }
+.x-d-ligne.retrait2 { margin-left: 40px; }
 .x-d-ok { display: inline-block; margin-top: 10px; float: right; background: #1a73e8; color: #fff; padding: 5px 12px; border-radius: 4px; font-weight: 600; }
 .x-carte { display: flex; gap: 12px; align-items: center; margin-top: 26px; border: 1px solid #dadce0; border-radius: 8px; padding: 12px; width: 78%; opacity: 0; }
 .x-carte img { width: 40px; height: 40px; }

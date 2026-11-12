@@ -1,6 +1,6 @@
 /**
  * Contrat avec le back-end Amira (voir docs/API.md).
- * Le front ne connaît que ces interfaces : brancher le vrai serveur = renseigner son URL dans les réglages.
+ * Le front ne connaît que ces interfaces : brancher le vrai serveur = renseigner VITE_AMIRA_API_URL dans .env, puis reconstruire.
  */
 
 export type SourceLang = 'fr' | 'en' | 'auto' | 'ff';

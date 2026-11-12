@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { newRequestId, type SegmentStatus, type Variety } from '../../services/api';
+import { newRequestId, type SegmentStatus } from '../../services/api';
 import type { DisplayMode, Settings } from '../../services/settings';
 import type { PageStats, StatusResult, TranslateResult } from '../../shared/messages';
 import { mask, unmask } from '../../content/mask';
@@ -119,12 +119,6 @@ export function TranslateTab(props: TabProps & { toggle: (on: boolean) => Promis
             options={[{ value: 'fr', label: t('translate.fr') }, { value: 'en', label: t('translate.en') }]}
           />
         )}
-        <Segmented<Variety>
-          legend={t('translate.variety')}
-          value={settings.variety}
-          onChange={(v) => void update({ variety: v })}
-          options={(['ngaoundere', 'garoua', 'maroua'] as Variety[]).map((v) => ({ value: v, label: t(`translate.varieties.${v}`) }))}
-        />
         <div className="bloc">
           <Segmented<DisplayMode>
             legend={t('translate.display')}

@@ -85,7 +85,7 @@ Vérifié sur l'ordinateur les marqueurs {N0} {N1} sont-ils tous là, une seule 
 
 ## Langue et validation linguistique
 
-**Langue prise en charge : le fulfulde de l'Adamaoua** (variétés de Ngaoundéré, Garoua et Maroua), depuis et vers le français et l'anglais.
+**Langue prise en charge : le fulfulde de l'Adamaoua**, depuis et vers le français et l'anglais.
 Le ghomálá', l'ewondo, le duala, le bassa, le bulu et le pidgin sont prévus : ajouter une langue ne change pas l'architecture.
 
 Notre règle : **aucun mot de fulfulde n'est inventé ni généré par le front.** La qualité linguistique repose sur des personnes :
@@ -122,7 +122,7 @@ Notre règle : **aucun mot de fulfulde n'est inventé ni généré par le front.
 
 - **Front** : TypeScript, React 18, Vite, Manifest V3. Polices embarquées, icônes dessinées à la main, **aucune ressource distante**.
 - **Back-end** : API Flask séparée. L'extension ne connaît que son adresse, fixée à la construction. Sans back-end, une simulation intégrée fait tourner tout le parcours (le texte est préfixé `⟦FF⟧`, la pastille affiche « démo »).
-- **Contrat d'API complet** : [front/docs/API.md](front/docs/API.md).
+- **Contrat d'API complet** : [front/docs/API.md](front/docs/API.md). **Construire l'API Flask** : [backend/README.md](backend/README.md).
 
 ## Essayer en deux minutes
 
@@ -171,7 +171,7 @@ AMIRA/
 │   ├── src/services/      client d'API, simulation, réglages, journal
 │   ├── tests/             tests unitaires et de bout en bout
 │   └── docs/              API.md · DESIGN.md · COMPOSANTS-TIERS.md · captures/
-├── backend/               API Flask (traduction, voix, validation)
+├── backend/               API Flask (traduction, voix, validation) : voir backend/README.md
 └── preview.png
 ```
 

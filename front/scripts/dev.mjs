@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 
 const vite = resolve('node_modules/vite/bin/vite.js');
 const node = process.execPath;
-const env = { ...process.env, VITE_DIST_PATH: resolve('dist') };
+const env = { ...process.env };
 const children = [];
 
 function run(args, { wait = true, label } = {}) {
