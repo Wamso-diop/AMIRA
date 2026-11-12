@@ -35,20 +35,46 @@ Commande : `.venv/bin/python tools/check_model.py`
 
 Lecture : la conversion en `{V1}`, `{V2}`… fonctionne. Avec un seuil de 0,5, presque tout passe : il faut **calibrer** sur le fichier relu par le natif. Avec le budget réel (6 s), environ 4 segments par requête passent par le moteur ; les autres reviennent `uncertain`.
 
-## S10 : lot de 40, mémoire et moteur (2026-11-12)
+## S10 et S11 : lot de 40, mémoire, moteur et cache (2026-11-12)
 
-Commande : `pytest -m model -s tests/test_perf.py`. Même machine ; budget 6 s, paquets de 4, 0,8 s estimées par segment.
+Commande : `pytest -m model -s tests/test_perf.py`. Même machine (CPU seulement) ; budget de 6 s, paquets de 4, 0,8 s estimées par segment. Le lot : la même page de 40 segments, soit **20 textes du gold** (servis par la mémoire) et **20 textes inconnus** (moteur ou rien).
+
+### Une requête, sans cache (S10)
 
 | Mesure | Valeur |
 |---|---|
-| Lot de 40 (20 du gold + 20 phrases inconnues), 5 essais | médiane **3,55 s**, p95 **3,77 s** |
-| Statuts, à chaque essai | 20 `validated`, 4 `machine`, 16 `uncertain` |
-| 4 requêtes simultanées (lots différents) | 3,57 s / 2,81 s / 2,81 s / 2,81 s ; segments `machine` : 4 / 0 / 0 / 0 |
-| Premier appel puis suivant (après l'échauffement) | 1,91 s puis 1,59 s |
+| Durée (5 essais) | médiane 3,55 s, p95 3,77 s |
+| Textes du gold | 20 sur 20 `validated` |
+| **Textes inconnus traduits** | **4 sur 20** (`machine`) |
+| **Textes inconnus non traduits** | **16 sur 20** (`uncertain` : le front garde l'original) |
 
-### Lecture
+**Le 3,55 s ne mesure pas une page traduite.** Il couvre 20 segments servis par la mémoire, presque gratuits, et seulement 4 des 20 segments inconnus. Un paquet de 4 prend environ 3,5 s, le suivant ne tient plus dans le budget. Sans cache, chaque visite redemandait les mêmes 16 segments et retraduisait les mêmes 4 : une page avec plus de 4 textes inconnus n'en avait jamais plus de 4 traduits.
 
-- **Latence tenue** : p95 de 3,8 s, sous les 6 s du budget et les 8 s du front. Les mesures de secours du brief (cache, CTranslate2) ne sont donc pas déclenchées par la latence. De toute façon, CTranslate2 demande de **convertir** le modèle, ce que le brief interdit (§5).
-- **Couverture limitée** : un paquet de 4 segments prend environ 3,5 s, donc le paquet suivant ne tient jamais dans le budget. Au-delà de la mémoire, **4 segments par requête** passent par le moteur, toujours les 4 premiers. Ceux qui reviennent `uncertain` sont redemandés à la visite suivante, et redonnent les mêmes 4 : sans cache côté serveur, une page qui a plus de 4 textes inconnus n'en verra jamais plus de 4 traduits.
-- **Requêtes simultanées** : le modèle ne traite qu'une génération à la fois (un seul en RAM). Les requêtes qui attendent rendent la main avant les 8 s, avec des segments `uncertain`. Rien ne bloque, mais un seul utilisateur à la fois profite du moteur.
-- **Échauffement** : la phrase traduite pendant le chargement ne change presque rien (1,9 s contre 1,6 s, comme avant l'échauffement) ; l'écart vient de la phrase, pas d'un démarrage à froid.
+### Visites successives de la même page, avec le cache des sorties machine (S11)
+
+| Visite | Durée | Gold `validated` | Inconnus traduits (`machine`) | dont servis par le cache | Inconnus non traduits (`uncertain`) |
+|---|---|---|---|---|---|
+| 1 | 3,13 s | 20 | 4 | 0 | 16 |
+| 2 | 3,44 s | 20 | 8 | 4 | 12 |
+| 3 | 3,53 s | 20 | 12 | 8 | 8 |
+| 4 | 3,68 s | 20 | 16 | 12 | 4 |
+| 5 | 4,24 s | 20 | 20 | 16 | 0 |
+| 6 et 7 | < 0,01 s | 20 | 20 | 20 | 0 |
+
+Lecture :
+- Chaque visite ajoute 4 traductions (un paquet par requête) ; la page entière est couverte à la 5ᵉ visite. Le cache est partagé : ce sont les visites **de tous les utilisateurs** qui comptent, pas celles d'une seule personne.
+- Le choix des segments envoyés au moteur est fixe : erreurs et instructions d'abord, puis les textes courts. Un texte refusé n'est pas retenté pendant 10 minutes (cache négatif), pour ne pas occuper les 4 places.
+- Le cache est en mémoire vive (texte masqué seulement), vidé à chaque redémarrage ; ses sorties restent `machine`, jamais `validated`. La seule couverture durable reste la mémoire validée par le natif.
+
+### Requêtes simultanées
+
+4 requêtes en même temps, sur des lots différents : 2,81 s à 3,09 s chacune, toutes sous les 8 s. **Une seule requête profite du moteur** (4 segments traduits, 0 pour les trois autres) : le modèle ne fait qu'une génération à la fois, et les requêtes qui attendent rendent la main avant les 8 s, avec des segments `uncertain`.
+
+### Échauffement
+
+Une phrase est traduite pendant le chargement, avant que `/v1/ready` passe au vert. Gain faible (premier appel 1,6 s, suivant 1,4 s) : l'écart vient surtout des phrases elles-mêmes.
+
+### Ce qui n'a pas été fait
+
+- CTranslate2 : le brief interdit de convertir le modèle (§5), et la latence tient dans le budget.
+- La qualité des sorties `machine` n'est pas mesurée ici (chrF++ 44,7 sur 29 entrées, selon le brief) ; le seuil de confiance de 0,5 laisse passer presque tout et reste à calibrer avec le natif.

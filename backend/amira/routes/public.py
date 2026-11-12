@@ -96,7 +96,7 @@ def translate():
             raise ApiError("BAD_REQUEST", "Variété inconnue")
 
     out = translator.translate_segments(get_db(), segments, source, target, variety,
-                                        current_app.extensions["amira"]["engine"], cfg, t0)
+                                        current_app.extensions["amira"]["engine"], cfg, t0, current_app.extensions["amira"]["cache"])
     refused = sum(not translator.check(s["text"]) for s in segments)
     g.stats = {"n": len(out), **{k: sum(o["status"] == v for o in out) for k, v in
                                   (("memory", "validated"), ("machine", "machine"), ("uncertain", "uncertain"))}, "refused": refused}

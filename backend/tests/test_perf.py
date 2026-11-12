@@ -18,10 +18,21 @@ NEW = [f"{a} {b}." for a in ("Votre demande", "Ce service", "Votre carte", "Le p
        for b in ("est en cours de traitement", "a été refusé par la banque", "sera disponible demain", "nécessite une vérification")]
 
 
+engine_calls = [0]  # segments réellement envoyés au modèle
+
+
 @pytest.fixture(scope="module")
 def engine():
     e = NllbEngine(str(Path(__file__).parents[1] / "models" / "nllb_ff"), {"fr": "fra_Latn", "en": "eng_Latn", "ff": "fuv_Latn"})
     e.load()
+    real = e.translate
+
+    def counting(texts, *args, **kwargs):
+        out = real(texts, *args, **kwargs)
+        engine_calls[0] += len(texts)
+        return out
+
+    e.translate = counting
     return e
 
 
@@ -38,17 +49,23 @@ def timed(client, body):
     return time.perf_counter() - t0, r.get_json()["segments"]
 
 
-def test_lot_de_40(engine, db_path):
+def test_lot_de_40_visites_successives(engine, db_path):
+    """Même page (20 textes du gold + 20 inconnus) visitée plusieurs fois : latence, et segments traduits ou non."""
     client = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "nllb"}, engine=engine).test_client()
-    runs = [timed(client, batch()) for _ in range(5)]
-    durations = sorted(d for d, _ in runs)
-    statuses = [[s["status"] for s in segs] for _, segs in runs]
-    median, p95 = statistics.median(durations), durations[-1]  # 5 essais : p95 = le plus lent
-    print(f"\nlot de 40 : médiane {median:.2f} s, p95 {p95:.2f} s, essais {[round(d, 2) for d in durations]}")
-    for st in statuses:
-        print("  validated", st.count("validated"), "machine", st.count("machine"), "uncertain", st.count("uncertain"))
-    assert p95 < 8.0  # le front coupe à 8 s
-    assert all(st[:20].count("validated") == 20 for st in statuses)  # la mémoire ne dépend pas du moteur
+    print("\nvisite | durée | validated (mémoire) | machine (dont cache) | uncertain")
+    covered, durations = [], []
+    for visit in range(1, 8):
+        calls_before = engine_calls[0]
+        d, segs = timed(client, batch())
+        st = [s["status"] for s in segs]
+        new = engine_calls[0] - calls_before
+        durations.append(d)
+        covered.append(st[20:].count("machine"))
+        print(f"{visit:6} | {d:5.2f} s | {st.count('validated'):19} | {st.count('machine'):3} ({st.count('machine') - new:2} du cache) "
+              f"| {st.count('uncertain'):9}")
+        assert st[:20].count("validated") == 20  # la mémoire ne dépend pas du moteur
+        assert d < 8.0  # le front coupe à 8 s
+    assert covered == sorted(covered) and covered[-1] > covered[0]  # la couverture ne fait que croître
 
 
 def test_quatre_requetes_simultanees(engine, db_path):

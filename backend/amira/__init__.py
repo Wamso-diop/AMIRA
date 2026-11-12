@@ -15,6 +15,7 @@ from .cors import extension_allowed, register_cors
 from .errors import ApiError, register_errors
 from .routes.admin import admin, export_admin
 from .routes.public import public
+from .services.translator import MachineCache
 
 log = logging.getLogger("amira")
 RID_RE = re.compile(r"[A-Za-z0-9_-]{1,64}")
@@ -28,7 +29,10 @@ def create_app(env: Mapping[str, str] | None = None, engine=_FROM_CONFIG) -> Fla
     app = Flask(__name__)
     app.config.update(config.load(os.environ if env is None else env))
     app.debug = app.config["ENV"] == "development" and app.debug
-    app.extensions["amira"] = {"engine": engines.from_config(app.config) if engine is _FROM_CONFIG else engine}
+    app.extensions["amira"] = {
+        "engine": engines.from_config(app.config) if engine is _FROM_CONFIG else engine,
+        "cache": MachineCache(app.config["CACHE_SIZE"], app.config["NEGATIVE_TTL_S"]),
+    }
     if not log.handlers:
         handler = logging.StreamHandler()
         handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))

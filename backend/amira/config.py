@@ -35,6 +35,9 @@ def load(env: Mapping[str, str]) -> dict:
         "ADMIN_TOKENS": _list(get("AMIRA_ADMIN_TOKENS")),
         "ADMIN_NETWORKS": _list(get("AMIRA_ADMIN_NETWORKS", "127.0.0.0/8,::1/128,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16")),
         "RECORDINGS_DIR": get("AMIRA_RECORDINGS_DIR", "media/recordings"),
+        # cache des sorties machine (mémoire vive) : taille LRU et durée du cache négatif
+        "CACHE_SIZE": int(get("AMIRA_CACHE_SIZE", "10000")),
+        "NEGATIVE_TTL_S": float(get("AMIRA_NEGATIVE_TTL_S", "600")),
         "API_KEYS": _list(get("AMIRA_API_KEYS")),
         "RATE_LIMIT_PER_MIN": int(get("AMIRA_RATE_LIMIT_PER_MIN", "600")),
         "RETENTION_DAYS": int(get("AMIRA_RETENTION_DAYS", "90")),
