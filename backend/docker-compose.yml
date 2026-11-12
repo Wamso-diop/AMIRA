@@ -1,0 +1,27 @@
+# Le service n'est joignable que depuis le réseau « interne » (internal: true : aucun accès à Internet, aucun port publié).
+# La passerelle de la banque (TLS, authentification, quotas) rejoint ce réseau et relaie vers amira:8000.
+# Variables : .env (voir .env.example) ; en production AMIRA_ALLOWED_ORIGINS et AMIRA_ADMIN_TOKENS sont obligatoires.
+services:
+  amira:
+    build: .
+    image: amira-backend
+    env_file: .env
+    environment:
+      AMIRA_ENV: production
+    volumes:
+      - ./models/nllb_ff:/models/nllb_ff:ro   # modèle en lecture seule, remplaçable sans reconstruire l'image
+      - amira-data:/data                      # base SQLite et enregistrements des natifs
+    networks: [interne]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 5g
+    restart: unless-stopped
+
+networks:
+  interne:
+    internal: true
+
+volumes:
+  amira-data:
