@@ -84,7 +84,7 @@ def translate():
     source, target = req.get("source"), req.get("target")
     if source == "auto":
         # détection sur les seuls textes qui passent la garde
-        source = translator.detect([s["text"] for s in segments if translator.check(s["text"])])
+        source = translator.detect([s["text"] for s in segments if check(s["text"])])
     if f"{source}>{target}" not in cfg["DIRECTIONS"]:
         raise ApiError("UNSUPPORTED_LANGUAGE", "Sens de traduction non pris en charge")
 
@@ -97,7 +97,7 @@ def translate():
 
     out = translator.translate_segments(get_db(), segments, source, target, variety,
                                         current_app.extensions["amira"]["engine"], cfg, t0, current_app.extensions["amira"]["cache"])
-    refused = sum(not translator.check(s["text"]) for s in segments)
+    refused = sum(not check(s["text"]) for s in segments)
     g.stats = {"n": len(out), **{k: sum(o["status"] == v for o in out) for k, v in
                                   (("memory", "validated"), ("machine", "machine"), ("uncertain", "uncertain"))}, "refused": refused}
     request_id = req.get("requestId")
