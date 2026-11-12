@@ -1,0 +1,5 @@
+# Outils de test et d'audit seulement : jamais dans l'image Docker (voir docs/EXPLOITATION.md).
+-r requirements.txt
+PyYAML==6.0.3
+jsonschema==4.26.0
+pip-audit==2.10.1

@@ -1,0 +1,210 @@
+openapi: 3.1.0
+info:
+  title: Amira API
+  version: 1.0.0
+  description: |
+    Contrat entre l'extension Amira et le back-end. Source : front/src/services/api.ts et
+    front/docs/API.md, qui font foi. Versionnement /v1 : on ajoute des champs, on n'en retire aucun.
+    Tous les textes reçus sont DÉJÀ MASQUÉS : {N0} (valeur masquée), {B0}…{/B0} (balise), {E0} (élément).
+paths:
+  /v1/health:
+    get:
+      summary: Service vivant (immédiat, ne touche ni modèle ni base)
+      responses:
+        '200':
+          description: Vivant
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Health'}
+  /v1/ready:
+    get:
+      summary: Prêt à traduire (modèle et base chargés). Ajout côté serveur, non appelé par l'extension.
+      responses:
+        '200':
+          description: Prêt
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Health'}
+        '503':
+          $ref: '#/components/responses/Error'
+  /v1/capabilities:
+    get:
+      summary: Fonctions disponibles
+      responses:
+        '200':
+          description: Capacités
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Capabilities'}
+  /v1/translate:
+    post:
+      summary: Traduit des segments masqués
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TranslateRequest'}
+      responses:
+        '200':
+          description: Un segment en sortie par segment en entrée, même id, même ordre
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TranslateResponse'}
+        default:
+          $ref: '#/components/responses/Error'
+  /v1/tts:
+    post:
+      summary: Audio d'un passage (enregistrement d'un natif, sinon 204)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TtsRequest'}
+      responses:
+        '200':
+          description: Audio
+          headers:
+            X-Amira-Voice:
+              description: Exposé par CORS
+              schema: {type: string, enum: [recorded, synthetic]}
+          content:
+            audio/*:
+              schema: {type: string, contentMediaType: audio/*}
+        '204':
+          description: Pas d'audio côté serveur ; le navigateur lit avec sa propre voix
+        default:
+          $ref: '#/components/responses/Error'
+  /v1/stt:
+    post:
+      summary: Dictée (appelée seulement si capabilities.stt vaut true)
+      parameters:
+        - {name: language, in: query, required: false, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          audio/*:
+            schema: {type: string, contentMediaType: audio/*}
+      responses:
+        '200':
+          description: Texte dicté
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [text]
+                properties:
+                  text: {type: string}
+        default:
+          $ref: '#/components/responses/Error'
+  /v1/feedback:
+    post:
+      summary: Signalement d'un utilisateur (file de relecture « pending », jamais « validated »)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/FeedbackRequest'}
+      responses:
+        '204':
+          description: Reçu
+        default:
+          $ref: '#/components/responses/Error'
+components:
+  responses:
+    Error:
+      description: Erreur (tout code HTTP >= 400)
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+  schemas:
+    SourceLang: {type: string, enum: [fr, en, auto, ff]}
+    TargetLang: {type: string, enum: [ff, fr, en]}
+    Variety: {type: string, enum: [ngaoundere, garoua, maroua]}
+    CategoryHint: {type: string, enum: [label, instruction, fees, security_warning, error]}
+    SegmentStatus: {type: string, enum: [validated, machine, uncertain]}
+    SegmentOrigin: {type: string, enum: [memory, template, llm]}
+    Health:
+      type: object
+      required: [ok]
+      properties:
+        ok: {type: boolean}
+        version: {type: string}
+    Capabilities:
+      type: object
+      required: [translate, tts, stt, languages, varietes]
+      properties:
+        translate: {type: boolean}
+        tts: {type: boolean}
+        stt: {type: boolean}
+        languages: {type: array, items: {type: string}}
+        varietes: {type: array, items: {type: string}}
+    TranslateSegmentIn:
+      type: object
+      required: [id, text, placeholders]
+      properties:
+        id: {type: string}
+        text: {type: string, maxLength: 1000, description: Texte déjà masqué}
+        categoryHint: {$ref: '#/components/schemas/CategoryHint'}
+        placeholders: {type: array, items: {type: string}}
+    TranslateRequest:
+      type: object
+      required: [requestId, source, target, variety, segments]
+      properties:
+        requestId: {type: string}
+        source: {$ref: '#/components/schemas/SourceLang'}
+        target: {$ref: '#/components/schemas/TargetLang'}
+        variety:
+          oneOf:
+            - {$ref: '#/components/schemas/Variety'}
+            - {type: 'null'}
+        segments:
+          type: array
+          minItems: 1
+          maxItems: 40
+          items: {$ref: '#/components/schemas/TranslateSegmentIn'}
+    TranslateSegmentOut:
+      type: object
+      required: [id, text, status, confidence, origin]
+      properties:
+        id: {type: string}
+        text: {type: string}
+        status: {$ref: '#/components/schemas/SegmentStatus'}
+        confidence: {type: number, minimum: 0, maximum: 1}
+        origin: {$ref: '#/components/schemas/SegmentOrigin'}
+    TranslateResponse:
+      type: object
+      required: [requestId, engineVersion, latencyMs, segments]
+      properties:
+        requestId: {type: string}
+        engineVersion: {type: string}
+        latencyMs: {type: integer, minimum: 0}
+        segments:
+          type: array
+          items: {$ref: '#/components/schemas/TranslateSegmentOut'}
+    TtsRequest:
+      type: object
+      required: [text, language]
+      properties:
+        text: {type: string, description: Texte masqué, marqueurs déjà retirés}
+        language: {type: string, enum: [ff, fr, en]}
+        speed: {type: number}
+        segmentKey: {type: string, pattern: '^k[0-9a-f]{8}$'}
+    FeedbackRequest:
+      type: object
+      required: [segmentId, originalMasked, shown, suggestion]
+      properties:
+        segmentId: {type: string}
+        originalMasked: {type: string}
+        shown: {type: string}
+        suggestion: {type: string}
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: {type: string, enum: [RATE_LIMITED, UNAVAILABLE, TIMEOUT, BAD_REQUEST, UNSUPPORTED_LANGUAGE]}
+            message: {type: string, maxLength: 200}
+            retryAfterMs: {type: integer, minimum: 0}

@@ -8,7 +8,7 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
   - Vérification : `python tools/check_model.py`.
   - Fichiers : `.gitignore`, `requirements.txt`, `tools/check_model.py`, `docs/PERF.md`.
 
-- [ ] **S1. Contrat et squelette**
+- [x] **S1. Contrat et squelette**
   - Acceptation : `docs/openapi.yaml` (3.1) écrit d'après `api.ts`, avec `/v1/ready` ; `create_app`, configuration, erreurs `{error:{code,message,retryAfterMs?}}`, CORS `chrome-extension://` avec `X-Amira-Voice` exposé ; `/health`, `/ready`, `/capabilities`.
   - Tests : `test_app.py` (erreurs, 404 JSON, 413, préflight, `ready` 503 puis 200, conformité à openapi).
   - Fichiers : `docs/openapi.yaml`, `amira/__init__.py`, `config.py`, `errors.py`, `cors.py`, `routes/public.py`, `tests/conftest.py`, `tests/openapi_check.py`, `.env.example`, `wsgi.py`.

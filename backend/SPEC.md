@@ -30,7 +30,7 @@ Réussite : la pastille du front affiche « Prêt » (sans « démo ») ; une pa
 ## 3. Hypothèses (à corriger maintenant)
 
 1. **Variété du gold** : `ngaoundere` (le CSV n'a pas de colonne variété).
-2. **Auteur des validations du gold** : l'import exige `--by "<nom du natif>"`, qui est inscrit dans `validated_by` et dans `audit`.
+2. **Auteur des validations du gold** : `--validator natif-1` (obligatoire), inscrit dans `validated_by` et dans `audit`. *(Confirmé.)*
 3. **Variantes** : `fr_variants`, `en_variants` et `ff_variants` sont des clés sources supplémentaires qui pointent vers la traduction principale. Séparateur `|` (à vérifier sur les 10 lignes concernées en S4).
 4. **Garde dans `/v1/tts` et `/v1/feedback`** : un texte refusé reçoit `204`, rien n'est stocké, `unmasked_total` augmente.
 5. **Délai de 6 s dépassé** : les segments restants reviennent `uncertain`, ceux servis par la mémoire restent `validated`.
@@ -49,12 +49,12 @@ cd backend
 python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
 cp .env.example .env                                     # puis AMIRA_ADMIN_TOKENS
 python tools/check_model.py                              # S0 : chargement, 5 phrases, RAM, latence
-python tools/import_gold.py data/gold_fulfulde.csv --by "<nom du natif>"   # rejouable
+python tools/import_gold.py data/gold_fulfulde.csv --validator natif-1   # rejouable
 flask --app amira run --port 5000                        # AMIRA_ENGINE=fake pour travailler sans modèle
 flask --app amira purge                                  # rétention (90 jours)
 pytest -q                                                # tout sauf le vrai modèle
 pytest -q -m model                                       # vrai modèle (chargement, lot de 40)
-pip-audit -r requirements.txt
+pip-audit -r requirements.txt -r requirements-dev.txt
 gunicorn -w 1 --threads 4 -b 0.0.0.0:8000 --timeout 30 wsgi:app
 docker compose up                                        # réseau internal: true
 ```
@@ -197,6 +197,6 @@ Les tests utilisent pytest, sont écrits **avant** le code et vivent dans `backe
 
 ## 12. Questions ouvertes
 
-1. **Validation contre `openapi.yaml`** : il faut lire du YAML et valider un schéma, et le brief n'autorise pas PyYAML ni jsonschema. **Par défaut**, j'écris `openapi.yaml` en YAML de style JSON (que `json.load` sait lire) et un validateur d'une trentaine de lignes dans `tests/`. Si tu préfères, on ajoute les deux bibliothèques **pour les tests seulement** : moins de code, mais une exception au brief.
-2. **Licences des jeux d'entraînement** : lesquels ont servi aux deux étapes d'affinage ? Le cache Hugging Face contient `FredMike23/english-FULFULDE-ADAMAOUA` et `FredMike23/french-FULFULDE-ADAMAOUA`. Y en a-t-il d'autres ?
+1. ~~Validation contre `openapi.yaml`~~ **Tranché** : PyYAML et jsonschema dans `requirements-dev.txt` seulement (versions figées, `pip-audit`, hors image Docker). `openapi.yaml` est écrit en vrai YAML. L'exception est notée dans `docs/EXPLOITATION.md`.
+2. ~~Licences~~ **Tranché** : la liste est donnée par l'humain (voir `LICENSES.md`, S11).
 3. **Paires `segmentKey`** (S8) : il me faudra 5 paires (texte masqué, clé) produites par le front.
