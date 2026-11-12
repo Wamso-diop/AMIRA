@@ -20,6 +20,27 @@ class EngineError(Exception):
         super().__init__("échec du moteur")
 
 
+def generate(tok, model, texts: list[str], src_code: str, tgt_code: str, strict: bool) -> list[tuple[str, float]]:
+    import torch
+
+    tok.src_lang = src_code
+    enc = tok(texts, return_tensors="pt", padding=True, truncation=True, max_length=128)
+    with torch.inference_mode():
+        out = model.generate(
+            **enc,
+            forced_bos_token_id=tok.convert_tokens_to_ids(tgt_code),
+            num_beams=8 if strict else 4,
+            no_repeat_ngram_size=3 if strict else 0,
+            max_new_tokens=96,
+            max_length=None,  # sinon generation_config (200) entre en conflit avec max_new_tokens
+            output_scores=True,
+            return_dict_in_generate=True,
+        )
+    decoded = tok.batch_decode(out.sequences, skip_special_tokens=True)
+    # exp(score moyen par jeton) : probabilité moyenne par jeton, à calibrer
+    return [(t, math.exp(s)) for t, s in zip(decoded, out.sequences_scores.tolist())]
+
+
 class NllbEngine:
     def __init__(self, model_dir: str, codes: dict[str, str]):
         self.model_dir, self.codes = model_dir, codes
@@ -37,8 +58,12 @@ class NllbEngine:
             os.environ["TRANSFORMERS_OFFLINE"] = "1"
             from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
-            self._tok = AutoTokenizer.from_pretrained(self.model_dir)
-            self._model = AutoModelForSeq2SeqLM.from_pretrained(self.model_dir).eval()
+            tok = AutoTokenizer.from_pretrained(self.model_dir)
+            model = AutoModelForSeq2SeqLM.from_pretrained(self.model_dir).eval()
+            # échauffement : la première génération est plus lente ; /v1/ready ne passe au vert qu'après
+            codes = list(self.codes.values())
+            generate(tok, model, ["Bonjour."], codes[0], codes[-1], strict=False)
+            self._tok, self._model = tok, model
 
     def start_loading(self) -> None:
         """Chargement en tâche de fond, une fois. Un échec est journalisé (sinon /v1/ready resterait à 503 sans explication)."""
@@ -63,25 +88,7 @@ class NllbEngine:
         if not self._lock.acquire(timeout=timeout):
             raise TimeoutError("moteur occupé")
         try:
-            import torch
-
-            tok = self._tok
-            tok.src_lang = self.codes[src]
-            enc = tok(texts, return_tensors="pt", padding=True, truncation=True, max_length=128)
-            with torch.inference_mode():
-                out = self._model.generate(
-                    **enc,
-                    forced_bos_token_id=tok.convert_tokens_to_ids(self.codes[tgt]),
-                    num_beams=8 if strict else 4,
-                    no_repeat_ngram_size=3 if strict else 0,
-                    max_new_tokens=96,
-                    max_length=None,  # sinon generation_config (200) entre en conflit avec max_new_tokens
-                    output_scores=True,
-                    return_dict_in_generate=True,
-                )
-            decoded = tok.batch_decode(out.sequences, skip_special_tokens=True)
-            # exp(score moyen par jeton) : probabilité moyenne par jeton, à calibrer
-            return [(t, math.exp(s)) for t, s in zip(decoded, out.sequences_scores.tolist())]
+            return generate(self._tok, self._model, texts, self.codes[src], self.codes[tgt], strict)
         except Exception as e:
             log.error("moteur : %s", type(e).__name__)
             raise EngineError() from None

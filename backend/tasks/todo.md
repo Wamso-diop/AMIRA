@@ -50,7 +50,7 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
   - Acceptation : journaux sans texte, exceptions sans texte, débogage coupé, `socket.connect` interdit, limites, 429, en-têtes, `flask purge`, `AMIRA_API_KEYS`, `pip-audit`.
   - Tests : `test_privacy.py`, `test_offline.py`, `test_limits.py`.
 
-- [ ] **S10. Performance**
+- [x] **S10. Performance**
   - Acceptation : lot de 40 mixte (médiane et p95) et 4 requêtes simultanées mesurés dans `docs/PERF.md` ; échauffement au démarrage ; cache ou CTranslate2 seulement si nécessaire.
   - Tests : `test_perf.py` (`model`).
 

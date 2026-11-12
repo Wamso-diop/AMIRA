@@ -35,6 +35,20 @@ Commande : `.venv/bin/python tools/check_model.py`
 
 Lecture : la conversion en `{V1}`, `{V2}`… fonctionne. Avec un seuil de 0,5, presque tout passe : il faut **calibrer** sur le fichier relu par le natif. Avec le budget réel (6 s), environ 4 segments par requête passent par le moteur ; les autres reviennent `uncertain`.
 
-## S10 : lot de 40, mémoire et moteur
+## S10 : lot de 40, mémoire et moteur (2026-11-12)
 
-À mesurer.
+Commande : `pytest -m model -s tests/test_perf.py`. Même machine ; budget 6 s, paquets de 4, 0,8 s estimées par segment.
+
+| Mesure | Valeur |
+|---|---|
+| Lot de 40 (20 du gold + 20 phrases inconnues), 5 essais | médiane **3,55 s**, p95 **3,77 s** |
+| Statuts, à chaque essai | 20 `validated`, 4 `machine`, 16 `uncertain` |
+| 4 requêtes simultanées (lots différents) | 3,57 s / 2,81 s / 2,81 s / 2,81 s ; segments `machine` : 4 / 0 / 0 / 0 |
+| Premier appel puis suivant (après l'échauffement) | 1,91 s puis 1,59 s |
+
+### Lecture
+
+- **Latence tenue** : p95 de 3,8 s, sous les 6 s du budget et les 8 s du front. Les mesures de secours du brief (cache, CTranslate2) ne sont donc pas déclenchées par la latence. De toute façon, CTranslate2 demande de **convertir** le modèle, ce que le brief interdit (§5).
+- **Couverture limitée** : un paquet de 4 segments prend environ 3,5 s, donc le paquet suivant ne tient jamais dans le budget. Au-delà de la mémoire, **4 segments par requête** passent par le moteur, toujours les 4 premiers. Ceux qui reviennent `uncertain` sont redemandés à la visite suivante, et redonnent les mêmes 4 : sans cache côté serveur, une page qui a plus de 4 textes inconnus n'en verra jamais plus de 4 traduits.
+- **Requêtes simultanées** : le modèle ne traite qu'une génération à la fois (un seul en RAM). Les requêtes qui attendent rendent la main avant les 8 s, avec des segments `uncertain`. Rien ne bloque, mais un seul utilisateur à la fois profite du moteur.
+- **Échauffement** : la phrase traduite pendant le chargement ne change presque rien (1,9 s contre 1,6 s, comme avant l'échauffement) ; l'écart vient de la phrase, pas d'un démarrage à froid.
