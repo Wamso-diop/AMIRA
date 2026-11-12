@@ -78,3 +78,19 @@ Une phrase est traduite pendant le chargement, avant que `/v1/ready` passe au ve
 
 - CTranslate2 : le brief interdit de convertir le modèle (§5), et la latence tient dans le budget.
 - La qualité des sorties `machine` n'est pas mesurée ici (chrF++ 44,7 sur 29 entrées, selon le brief) ; le seuil de confiance de 0,5 laisse passer presque tout et reste à calibrer avec le natif.
+
+## Lire le compteur `unmasked_total` sur la page de test réelle
+
+`unmasked_total` compte les segments refusés par la garde : une trace de donnée réelle (chiffre, devise, e-mail) que le masquage n'a pas retirée. Ce compteur ne contient aucun texte. Pour le lire après une visite de https://safinum.cm/hackathon-test avec l'extension branchée sur le serveur :
+
+```bash
+cd backend
+# avant la visite
+.venv/bin/python -c "import sqlite3; print(dict(sqlite3.connect('data/amira.sqlite3').execute('SELECT name, value FROM counters')))"
+# visiter la page avec l'extension (pastille « Prêt »), activer la traduction, puis relire le compteur
+.venv/bin/python -c "import sqlite3; print(dict(sqlite3.connect('data/amira.sqlite3').execute('SELECT name, value FROM counters')))"
+```
+
+- La différence entre les deux lectures = le nombre de segments de la page refusés par la garde. Le journal du serveur donne le même nombre, requête par requête : `refused=<n>` sur chaque ligne `POST /v1/translate`.
+- Si `AMIRA_DB_PATH` est réglé, lire ce fichier au lieu de `data/amira.sqlite3`.
+- Un compteur qui augmente signale un trou dans le masquage du front. C'est le cas, par exemple, de « francs CFA » écrit sans montant, que le front ne masque pas et que la garde refuse volontairement (voir `docs/MASQUAGE.md`). Ce compteur ne donne pas la liste des textes concernés : le serveur ne les garde jamais.

@@ -151,6 +151,8 @@ Une ligne dont les marqueurs diffèrent entre la source et la traduction est ref
 - **Limites** : 5 Mo par corps ; JSON > 256 Ko → `413` (`request.max_content_length`, qui couvre aussi un corps sans `Content-Length`). Limiteur : 600 requêtes par minute et par adresse par défaut (`AMIRA_RATE_LIMIT_PER_MIN`), sauf `/health` et `/ready`. En-têtes `nosniff` et `no-store` sur toutes les réponses. Le limiteur est un seau à jetons par IP, en mémoire, avec `429` et `retryAfterMs` (`shortcut:` en mémoire, à remplacer par les quotas de la passerelle de la banque).
 - **Rétention** : `flask purge` et purge au démarrage pour `feedback` (`pending`) et `unmatched` au-delà de `AMIRA_RETENTION_DAYS` (90).
 - **Débogage** : forcé à `False` sauf avec `AMIRA_ENV=development`.
+- **Proxy** : `AMIRA_TRUSTED_PROXIES=n` (0 par défaut) active `ProxyFix(x_for=n)` ; sinon `X-Forwarded-For` est ignoré. Le limiteur et les réseaux admin (validés au démarrage) utilisent l'adresse réelle.
+- **Troncature** : confiance mise à 0 si l'entrée dépasse 128 jetons ou si la sortie atteint 96 jetons sans `</s>`.
 
 ## 8. Style de code
 

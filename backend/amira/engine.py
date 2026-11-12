@@ -12,6 +12,8 @@ import time
 
 log = logging.getLogger("amira")
 
+MAX_INPUT_TOKENS, MAX_NEW_TOKENS = 128, 96
+
 
 class EngineError(Exception):
     """Échec du moteur. Message fixe : l'exception d'origine peut contenir le texte traduit."""
@@ -21,24 +23,29 @@ class EngineError(Exception):
 
 
 def generate(tok, model, texts: list[str], src_code: str, tgt_code: str, strict: bool) -> list[tuple[str, float]]:
+    """Confiance mise à 0 pour une traduction partielle : entrée tronquée, ou sortie arrêtée par max_new_tokens."""
     import torch
 
     tok.src_lang = src_code
-    enc = tok(texts, return_tensors="pt", padding=True, truncation=True, max_length=128)
+    too_long = [len(ids) > MAX_INPUT_TOKENS for ids in tok(texts)["input_ids"]]
+    enc = tok(texts, return_tensors="pt", padding=True, truncation=True, max_length=MAX_INPUT_TOKENS)
     with torch.inference_mode():
         out = model.generate(
             **enc,
             forced_bos_token_id=tok.convert_tokens_to_ids(tgt_code),
             num_beams=8 if strict else 4,
             no_repeat_ngram_size=3 if strict else 0,
-            max_new_tokens=96,
+            max_new_tokens=MAX_NEW_TOKENS,
             max_length=None,  # sinon generation_config (200) entre en conflit avec max_new_tokens
             output_scores=True,
             return_dict_in_generate=True,
         )
     decoded = tok.batch_decode(out.sequences, skip_special_tokens=True)
+    # position 0 = jeton de départ du décodeur (</s> pour NLLB) : la fin se cherche après
+    ended = [bool((row[1:] == tok.eos_token_id).any()) for row in out.sequences]
     # exp(score moyen par jeton) : probabilité moyenne par jeton, à calibrer
-    return [(t, math.exp(s)) for t, s in zip(decoded, out.sequences_scores.tolist())]
+    return [(t, 0.0 if cut or not done else math.exp(s))
+            for t, s, cut, done in zip(decoded, out.sequences_scores.tolist(), too_long, ended)]
 
 
 class NllbEngine:

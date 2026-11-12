@@ -36,9 +36,9 @@ ou changé. `/v1` ne fait qu'ajouter.
 |---|---|---|
 | P1 | Aucune donnée réelle (montant, nom, numéro, e-mail, IBAN) n'atteint le moteur, la base, les journaux ni le réseau. | `tests/test_guard.py`, `tests/test_privacy.py` (canari, moteur espion) |
 | P2 | `validated` uniquement pour une entrée de la mémoire relue par un natif, jamais pour une sortie du moteur. | `tests/test_status.py` |
-| P3 | `categoryHint` = `security_warning` ou `fees` : mémoire validée UNIQUEMENT, le moteur n'est jamais appelé. | `tests/test_sensitive.py` (espion) |
-| P4 | Chaque marqueur revient intact, le même nombre de fois, `{B}` bien imbriqués. Le moteur n'ajoute aucun chiffre. | `tests/test_markers.py`, `tests/test_engine_checks.py` |
-| P5 | Dans le doute : `uncertain` + texte source masqué. | `tests/test_engine_checks.py` |
+| P3 | `categoryHint` = `security_warning` ou `fees` : mémoire validée UNIQUEMENT, le moteur n'est jamais appelé. | `tests/test_status.py` (moteur espion), `tests/test_cache.py` (jamais servi par le cache) |
+| P4 | Chaque marqueur revient intact, le même nombre de fois, `{B}` bien imbriqués. Le moteur n'ajoute aucun chiffre. | `tests/test_markers.py`, `tests/test_engine.py` |
+| P5 | Dans le doute : `uncertain` + texte source masqué. | `tests/test_engine.py`, `tests/test_truncation.py` |
 | P6 | Fonctionne sans Internet. Aucun appel sortant pendant translate, tts, feedback. | `tests/test_offline.py` (socket bloqué), docker-compose `internal: true` |
 | P7 | Aucun fulfulde écrit à la main dans le code ou les tests : les exemples viennent du CSV gold ou de fixtures de données. | `tests/test_no_fulfulde.py` |
 
@@ -48,14 +48,14 @@ ou changé. `/v1` ne fait qu'ajouter.
 |---|---|---|
 | Journaux | méthode, chemin, statut, durée, requestId, compteurs. Jamais de texte, même masqué, ni de corps. | canari dans `tests/test_privacy.py` (caplog) |
 | Exceptions | aucun message ne contient de texte utilisateur | `tests/test_privacy.py` (moteur qui lève) |
-| Debug | désactivé hors développement | `tests/test_config.py` |
-| Feedback | écrit seulement dans `pending`, après la garde ; jamais `validated` | `tests/test_status.py` |
-| Admin | jeton comparé en temps constant (`hmac.compare_digest`), 401 sans jeton, nom du natif obligatoire, audit (qui, quand, quoi) | `tests/test_admin.py` |
-| Limites | 40 segments, 1000 caractères/segment, 256 Ko/JSON, 5 Mo/audio | `tests/test_contract.py` |
-| Débit | 429 + `retryAfterMs` | `tests/test_contract.py` |
-| Délai moteur | 6 s max par lot (le front coupe à 8 s) | `tests/test_engine_checks.py` (moteur lent factice) |
-| Rétention | `pending` et `unmatched` purgés après `AMIRA_RETENTION_DAYS` (90 par défaut) | `tests/test_db.py` |
-| CORS | limité à `AMIRA_ALLOWED_ORIGINS` en production ; `X-Amira-Voice` exposé | `tests/test_contract.py` |
+| Debug | désactivé hors développement | `tests/test_app.py` |
+| Feedback | écrit seulement dans `pending`, après la garde ; jamais `validated` | `tests/test_feedback.py` |
+| Admin | jeton comparé en temps constant (`hmac.compare_digest`), 401 sans jeton, nom du natif obligatoire, audit (qui, quand, quoi) ; réseaux validés au démarrage ; adresse réelle derrière un proxy de confiance | `tests/test_admin.py`, `tests/test_proxy.py` |
+| Limites | 40 segments, 1000 caractères/segment, 256 Ko/JSON, 5 Mo/audio | `tests/test_translate_memory.py`, `tests/test_limits.py`, `tests/test_admin.py` |
+| Débit | 429 + `retryAfterMs` | `tests/test_limits.py`, `tests/test_proxy.py` |
+| Délai moteur | 6 s max par lot (le front coupe à 8 s) | `tests/test_engine.py` (moteur lent factice), `tests/test_perf.py` (vrai modèle) |
+| Rétention | `pending` et `unmatched` purgés après `AMIRA_RETENTION_DAYS` (90 par défaut) | `tests/test_limits.py` |
+| CORS | limité à `AMIRA_ALLOWED_ORIGINS` en production ; `X-Amira-Voice` exposé | `tests/test_app.py` |
 | Dépendances | versions figées (`==`) ; aucune vulnérabilité connue | `pip-audit -r requirements.txt` (avis externe) |
 
 Dépendances autorisées : Flask, gunicorn, python-dotenv, pytest ; transformers/torch (ou ctranslate2)
@@ -69,7 +69,7 @@ tâches, pas de micro-services.
 | Écrire du fulfulde dans le code ou les tests | `tests/test_no_fulfulde.py` : aucune valeur de la colonne `ff` de `gold_fulfulde.csv` n'apparaît dans `amira/` ni `tests/` (ignoré si le CSV est absent) |
 | Produire `validated` sans relecture d'un natif | P2 |
 | Journaliser ou stocker un texte non masqué ; journaliser un texte quelconque | P1, journaux |
-| Changer le contrat du front | `tests/test_contract.py` valide chaque réponse contre `docs/openapi.yaml` |
+| Changer le contrat du front | `tests/openapi_check.py`, appelé par `test_app.py`, `test_translate_memory.py`, `test_status.py`, `test_voice.py`, `test_feedback.py`, `test_limits.py` |
 | Ajouter une dépendance non indispensable | revue de `requirements.txt` |
 
 ## Commandes

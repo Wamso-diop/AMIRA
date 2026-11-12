@@ -15,7 +15,7 @@ from ..errors import ApiError
 from ..guard import check
 from ..markers import MARKER_RE, canonicalize, markers_ok, restore
 from ..services.voice import KEY_RE
-from .public import MAX_CHARS, get_db
+from .public import MAX_CHARS, _json, get_db
 
 admin = Blueprint("admin", __name__)
 
@@ -36,7 +36,7 @@ def require_token_and_network():
         addr = ipaddress.ip_address(request.remote_addr or "")
     except ValueError:
         raise refused() from None
-    if not any(addr in ipaddress.ip_network(n, strict=False) for n in cfg["ADMIN_NETWORKS"]):
+    if not any(addr in network for network in cfg["ADMIN_NETWORKS"]):
         raise refused()
     auth = request.headers.get("Authorization", "")
     given = auth[len("Bearer "):].encode() if auth.startswith("Bearer ") else b""
@@ -63,7 +63,7 @@ def language(value) -> str:
 
 @admin.put("/translations")
 def put_translation():
-    cfg, req = current_app.config, request.get_json(silent=True) or {}
+    cfg, req = current_app.config, _json()
     who = validator(req.get("validatedBy"))
     source, target = req.get("source"), req.get("target")
     if f"{source}>{target}" not in cfg["DIRECTIONS"]:
@@ -118,7 +118,7 @@ def list_feedback():
 
 @admin.post("/feedback/<int:fid>/resolve")
 def resolve_feedback(fid: int):
-    who = validator((request.get_json(silent=True) or {}).get("validatedBy"))
+    who = validator(_json().get("validatedBy"))
     conn = get_db()
     with conn:
         cur = conn.execute("UPDATE feedback SET status = 'resolved' WHERE id = ? AND status = 'pending'", (fid,))

@@ -1,4 +1,5 @@
 """Configuration : variables d'environnement uniquement (voir .env.example)."""
+import ipaddress
 from collections.abc import Mapping
 
 
@@ -34,6 +35,8 @@ def load(env: Mapping[str, str]) -> dict:
         # outils des natifs : plusieurs jetons pour la rotation (ajouter le nouveau, puis retirer l'ancien)
         "ADMIN_TOKENS": _list(get("AMIRA_ADMIN_TOKENS")),
         "ADMIN_NETWORKS": _list(get("AMIRA_ADMIN_NETWORKS", "127.0.0.0/8,::1/128,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16")),
+        # derrière la passerelle : nombre de proxys de confiance devant le service (0 = X-Forwarded-For ignoré)
+        "TRUSTED_PROXIES": get("AMIRA_TRUSTED_PROXIES", "0"),
         "RECORDINGS_DIR": get("AMIRA_RECORDINGS_DIR", "media/recordings"),
         # cache des sorties machine (mémoire vive) : taille LRU et durée du cache négatif
         "CACHE_SIZE": int(get("AMIRA_CACHE_SIZE", "10000")),
@@ -43,6 +46,14 @@ def load(env: Mapping[str, str]) -> dict:
         "RETENTION_DAYS": int(get("AMIRA_RETENTION_DAYS", "90")),
         "MAX_CONTENT_LENGTH": 5 * 1024 * 1024,
     }
+    # validés au démarrage : une faute de frappe ne doit pas casser l'admin à la première connexion
+    try:
+        cfg["ADMIN_NETWORKS"] = [ipaddress.ip_network(n, strict=False) for n in cfg["ADMIN_NETWORKS"]]
+    except ValueError:
+        raise RuntimeError("AMIRA_ADMIN_NETWORKS : réseau invalide (exemple : 10.0.0.0/8)") from None
+    if not cfg["TRUSTED_PROXIES"].isdigit():
+        raise RuntimeError("AMIRA_TRUSTED_PROXIES : nombre entier de proxys de confiance (0 par défaut)")
+    cfg["TRUSTED_PROXIES"] = int(cfg["TRUSTED_PROXIES"])
     if cfg["ENGINE"] not in ("nllb", "memory"):
         raise RuntimeError("AMIRA_ENGINE vaut nllb ou memory")
     if cfg["ENV"] != "development" and not cfg["ALLOWED_ORIGINS"]:

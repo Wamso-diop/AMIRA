@@ -9,6 +9,7 @@ from collections.abc import Mapping
 import click
 from flask import Flask, abort, current_app, g, request
 from flask.cli import with_appcontext
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from . import config, db, engine as engines
 from .cors import extension_allowed, register_cors
@@ -29,6 +30,9 @@ def create_app(env: Mapping[str, str] | None = None, engine=_FROM_CONFIG) -> Fla
     app = Flask(__name__)
     app.config.update(config.load(os.environ if env is None else env))
     app.debug = app.config["ENV"] == "development" and app.debug
+    if app.config["TRUSTED_PROXIES"]:
+        # X-Forwarded-For : seules les n dernières adresses, ajoutées par nos proxys, comptent (le reste est forgeable)
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=app.config["TRUSTED_PROXIES"])
     app.extensions["amira"] = {
         "engine": engines.from_config(app.config) if engine is _FROM_CONFIG else engine,
         "cache": MachineCache(app.config["CACHE_SIZE"], app.config["NEGATIVE_TTL_S"]),

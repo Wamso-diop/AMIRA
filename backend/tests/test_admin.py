@@ -228,3 +228,10 @@ def test_admin_hors_contrat_public(c):
     # l'extension n'appelle jamais l'admin : pas d'en-tête CORS pour elle
     r = c.get("/v1/admin/feedback", headers={**AUTH, "Origin": "chrome-extension://abcdefghijklmnop"})
     assert "Access-Control-Allow-Origin" not in r.headers
+
+
+@pytest.mark.parametrize("path,method", [("/v1/admin/translations", "put"), ("/v1/admin/feedback/1/resolve", "post")])
+@pytest.mark.parametrize("payload", [[1], "texte", 5])
+def test_corps_json_qui_n_est_pas_un_objet(c, path, method, payload):
+    r = getattr(c, method)(path, json=payload, headers=AUTH)
+    assert r.status_code == 400 and r.get_json()["error"]["code"] == "BAD_REQUEST"
