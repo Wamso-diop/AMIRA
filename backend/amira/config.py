@@ -43,6 +43,9 @@ def load(env: Mapping[str, str]) -> dict:
         "NEGATIVE_TTL_S": float(get("AMIRA_NEGATIVE_TTL_S", "600")),
         "API_KEYS": _list(get("AMIRA_API_KEYS")),
         "RATE_LIMIT_PER_MIN": int(get("AMIRA_RATE_LIMIT_PER_MIN", "600")),
+        # CSV gold rechargé dès qu'il change (vide : import à la main seulement, par tools.import_gold)
+        "GOLD_PATH": get("AMIRA_GOLD_PATH", "data/gold_fulfulde.csv"),
+        "GOLD_VALIDATOR": get("AMIRA_GOLD_VALIDATOR"),
         "RETENTION_DAYS": int(get("AMIRA_RETENTION_DAYS", "90")),
         "MAX_CONTENT_LENGTH": 5 * 1024 * 1024,
     }

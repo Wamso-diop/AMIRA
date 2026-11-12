@@ -215,6 +215,9 @@
     "export": "Exporter en JSON",
     "clear": "Effacer",
     "confirmClear": "Effacer tout le journal ?",
+    "clearCache": "Vider le cache des traductions",
+    "confirmClearCache": "Vider tout le cache des traductions ? Les pages seront retraduites.",
+    "cacheCleared": "Cache vidé. Rechargez la page.",
     "detail": "Détail",
     "levels": {
       "info": "info",

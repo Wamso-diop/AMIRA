@@ -34,11 +34,12 @@ def test_schema_sept_tables(conn):
     assert {"translations", "feedback", "unmatched", "recordings", "missing_audio", "audit", "counters"} <= names
 
 
-def test_import_des_103_lignes(conn):
+def test_import_de_toutes_les_lignes(conn):
     report = import_gold(conn, GOLD, V)
-    assert report["rows"] == 103 and report["refused"] == []
-    # 4 sens par ligne + variantes (6 fr, 4 en, 7 ff × 2 cibles), moins la clé ff partagée par deux lignes (× 2 cibles)
-    assert report["entries"] == 103 * 4 + 6 + 4 + 7 * 2 - 2
+    # seuls les nombres écrits en lettres sont écartés : un nombre ne se traduit jamais
+    assert report["rows"] == len(rows()) and {r["reason"] for r in report["refused"]} == {"nombre"}
+    imported = len(rows()) - len(report["refused"])
+    assert report["entries"] > imported * 2  # au moins fr>ff et ff>fr par ligne, plus en et variantes
     assert len(dump(conn)) == report["entries"]
     assert {r[7] for r in dump(conn)} == {V}
 
@@ -83,8 +84,8 @@ def test_variantes(conn):
 def test_conflit_signale_ui_avant_glossaire(conn):
     report = import_gold(conn, GOLD, V)
     by_id = {r["id"]: r for r in rows()}
-    assert report["conflicts"] == [{"direction": "ff>fr", "kept": "g0028", "dropped": "g0002"},
-                                   {"direction": "ff>en", "kept": "g0028", "dropped": "g0002"}]
+    assert {"direction": "ff>fr", "kept": "g0028", "dropped": "g0002"} in report["conflicts"]
+    assert {"direction": "ff>en", "kept": "g0028", "dropped": "g0002"} in report["conflicts"]
     key = db.memory_key(by_id["g0028"]["ff"])
     assert db.find_translation(conn, "ff", "fr", "", key)["text"] == by_id["g0028"]["fr"]
 

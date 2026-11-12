@@ -5,7 +5,7 @@ from amira import create_app, db
 from conftest import DEV
 from openapi_check import assert_conforms
 
-OK = {"segmentId": "s12", "originalMasked": "Frais : {N0}", "shown": "<<Frais : {N0}>>", "suggestion": "Frais à payer : {N0}"}
+OK = {"segmentId": "s12", "originalMasked": "Frais de dossier : {N0}", "shown": "<<Frais de dossier : {N0}>>", "suggestion": "Frais à payer : {N0}"}
 
 
 @pytest.fixture

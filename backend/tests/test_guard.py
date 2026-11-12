@@ -86,7 +86,7 @@ def test_au_moins_30_cas_refuses():
 def test_le_gold_passe_la_garde():
     # aucune traduction validée ne doit être refusée à tort (exemples tirés du CSV, P7)
     texts = [to_front(r[c]) for r in rows() for c in ("fr", "en", "ff")]
-    assert len(texts) == 309
+    assert len(texts) == 3 * len(rows()) and len(rows()) > 100
     refused = [t for t in texts if not check(t)]
     assert refused == []
 

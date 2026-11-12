@@ -46,6 +46,8 @@ async function syncDynamicScripts() {
 
 chrome.runtime.onInstalled.addListener(() => {
   void syncDynamicScripts();
+  // nouvelle version ou extension rechargée : les traductions gardées peuvent dater d'un ancien gold ou du mode démo
+  void chrome.storage.local.remove('amira.cache');
   void appendLog({ niveau: 'info', source: 'extension', code: 'INSTALLED', message: 'Extension installée ou mise à jour' });
 });
 chrome.permissions.onAdded.addListener(() => void syncDynamicScripts());

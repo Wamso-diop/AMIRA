@@ -95,6 +95,7 @@ def translate():
         if variety not in cfg["VARIETIES"]:
             raise ApiError("BAD_REQUEST", "Variété inconnue")
 
+    current_app.extensions["amira"]["gold"](get_db())  # CSV gold modifié : rechargé avant de traduire
     out = translator.translate_segments(get_db(), segments, source, target, variety,
                                         current_app.extensions["amira"]["engine"], cfg, t0, current_app.extensions["amira"]["cache"])
     refused = sum(not check(s["text"]) for s in segments)

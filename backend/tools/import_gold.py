@@ -16,6 +16,11 @@ from amira.markers import MARKER_RE, canonicalize, markers_ok, restore
 FF_VARIETY = "ngaoundere"  # le CSV n'a pas de colonne variété : fulfulde de l'Adamaoua
 PRIORITY = {"ui": 0, "message": 0, "glossaire": 1}  # en cas de conflit, ui et message passent devant le glossaire
 DIRECTIONS = [("fr", "ff"), ("en", "ff"), ("ff", "fr"), ("ff", "en")]
+# Un nombre ne se traduit jamais (chiffres masqués par le front, garde côté serveur) : pas même écrit en lettres.
+NUMBER_WORDS = set("""un une deux trois quatre cinq six sept huit neuf dix onze douze treize quatorze quinze seize vingt
+trente quarante cinquante soixante cent cents mille million millions milliard milliards et
+one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen
+nineteen twenty thirty forty fifty sixty seventy eighty ninety hundred thousand million billion and""".split())
 
 
 def to_front(text: str) -> str:
@@ -26,7 +31,14 @@ def variants(cell: str) -> list[str]:
     return [v.strip() for v in re.split(r"[|;]", cell) if v.strip()]
 
 
+def is_number(text: str) -> bool:
+    words = re.findall(r"[^\W\d_]+", text.lower())
+    return bool(set(words) - {"et", "and"}) and all(w in NUMBER_WORDS for w in words)
+
+
 def refusal(row: dict) -> str | None:
+    if any(is_number(row[c]) for c in ("fr", "en")):
+        return "nombre"
     # une ligne exportée de l'admin n'a que deux colonnes remplies : on compare celles qui existent
     texts = [to_front(row[c]) for c in ("ff", "fr", "en") if row[c].strip()]
     if not all(markers_ok(texts[0], t) for t in texts[1:]):

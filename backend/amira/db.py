@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS counters (name TEXT PRIMARY KEY, value INTEGER NOT NU
 """
 # shortcut: « id INTEGER PRIMARY KEY » est l'auto-incrément de SQLite ; en PostgreSQL : GENERATED ALWAYS AS IDENTITY.
 
+APOSTROPHES = str.maketrans({"\u2019": "'", "\u2018": "'", "\u02bc": "'", "`": "'", "\u00b4": "'"})
 TRAILING_PUNCT_RE = re.compile(r"[\s.!?:;,…]+$")
 
 
@@ -53,10 +54,14 @@ def connect(path: str) -> sqlite3.Connection:
 
 
 def memory_key(masked: str) -> str:
-    """Clé de mémoire : {N} renumérotés, NFC, minuscules, espaces simples, ponctuation finale retirée.
+    """Clé de mémoire : {N} renumérotés, NFC, minuscules, apostrophes droites, espaces simples (aucun avant « : ; ! ? »),
+    ponctuation finale retirée.
     Les repères {B}/{E} sont gardés : un texte balisé n'est servi que par une entrée qui a les mêmes repères."""
     canon, _ = canonicalize(masked)
-    text = re.sub(r"\s+", " ", unicodedata.normalize("NFC", canon)).strip().lower()
+    text = unicodedata.normalize("NFC", canon).translate(APOSTROPHES).replace("\u2026", "...")
+    # espaces autour de la ponctuation : « Attention : » = « Attention: », « « mot » » = « «mot» »
+    text = re.sub(r"\s+([:;!?»])", r"\1", re.sub(r"«\s+", "«", text))
+    text = re.sub(r"\s+", " ", text).strip().lower()
     # les marqueurs gardent leur casse ({N0}, pas {n0})
     text = re.sub(r"\{(/?)([nbe])(\d+)\}", lambda m: "{" + m.group(1) + m.group(2).upper() + m.group(3) + "}", text)
     return TRAILING_PUNCT_RE.sub("", text)

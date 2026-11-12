@@ -215,6 +215,9 @@
     "export": "Export as JSON",
     "clear": "Clear",
     "confirmClear": "Clear the whole log?",
+    "clearCache": "Clear translation cache",
+    "confirmClearCache": "Clear the whole translation cache? Pages will be translated again.",
+    "cacheCleared": "Cache cleared. Reload the page.",
     "detail": "Detail",
     "levels": {
       "info": "info",

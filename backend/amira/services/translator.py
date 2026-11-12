@@ -124,6 +124,31 @@ def run_engine(engine, todo: list[dict], source: str, target: str, cfg: dict, t0
     return accepted, refused
 
 
+# Fin de segment sans mot à traduire : numéros masqués, codes en capitales (« CM »), ponctuation.
+TAIL_RE = re.compile(r"(?:[\s:,;!?/()#+.\-\u2013\u2014]|\{N\d+\}|\b[A-Z]{1,4}\b)+$")
+
+
+def from_memory(conn, text: str, source: str, target: str, variety: str) -> str | None:
+    """Traduction validée du texte entier ; sinon du début, quand la fin n'est que numéros masqués, codes et ponctuation
+    (« Numéro de compte : CM {N0} ») : cette fin est recopiée telle quelle, un nombre n'est jamais traduit."""
+    tail = TAIL_RE.search(text)
+    tries = [(text, "")]
+    if tail and tail.start() > 0 and "{N" in tail.group():
+        tries.append((text[:tail.start()], tail.group()))
+    for head, rest in tries:
+        key = db.memory_key(head)
+        hit = db.find_translation(conn, source, target, variety, key)
+        if not hit:
+            continue
+        translated = restore(hit["text"], canonicalize(head)[1])
+        translated = translated.rstrip() + rest if rest else translated
+        if markers_ok(text, translated):
+            return translated
+        db.bump(conn, "memory_bad_markers")
+        log.warning("entrée de mémoire ignorée : marqueurs différents (clé %s)", hashlib.sha256(key.encode()).hexdigest()[:12])
+    return None
+
+
 def machine(text: str, confidence: float) -> dict:
     return {"id": None, "text": text, "status": "machine", "confidence": confidence, "origin": "llm"}
 
@@ -144,14 +169,10 @@ def translate_segments(conn, segments: list[dict], source: str, target: str, var
         key = db.memory_key(text)
         _, table = canonicalize(text)
         # 2. mémoire validée par un natif
-        hit = db.find_translation(conn, source, target, variety, key)
-        if hit:
-            translated = restore(hit["text"], table)
-            if markers_ok(text, translated):
-                out[i] = {"id": seg_id, "text": translated, "status": "validated", "confidence": 1.0, "origin": "memory"}
-                continue
-            db.bump(conn, "memory_bad_markers")
-            log.warning("entrée de mémoire ignorée : marqueurs différents (clé %s)", hashlib.sha256(key.encode()).hexdigest()[:12])
+        translated = from_memory(conn, text, source, target, variety)
+        if translated is not None:
+            out[i] = {"id": seg_id, "text": translated, "status": "validated", "confidence": 1.0, "origin": "memory"}
+            continue
         # 3. catégorie sensible sans mémoire : ni cache ni moteur (P3), liste à faire valider en priorité
         if s["category"] in SENSITIVE:
             db.note_unmatched(conn, source, target, variety, key, text)

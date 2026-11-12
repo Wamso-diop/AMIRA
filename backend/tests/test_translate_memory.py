@@ -39,7 +39,7 @@ def out(app, body):
 
 @pytest.mark.parametrize("src,tgt", [("fr", "ff"), ("en", "ff"), ("ff", "fr"), ("ff", "en")])
 def test_quatre_sens_depuis_la_memoire(gold_app, src, tgt):
-    row = BY_ID["g0035"]
+    row = BY_ID["g0077"]
     (s,) = out(gold_app, req([seg(to_front(row[src]))], src, tgt))
     assert s == {"id": "s1", "text": to_front(row[tgt]), "status": "validated", "confidence": 1.0, "origin": "memory"}
 
@@ -57,14 +57,14 @@ def test_casse_espaces_et_ponctuation(gold_app):
 
 
 def test_marqueurs_renumerotes(gold_app):
-    row = BY_ID["g0035"]
+    row = BY_ID["g0077"]
     (s,) = out(gold_app, req([seg(to_front(row["fr"]).replace("{N0}", "{N4}"))]))
     assert s["status"] == "validated" and s["text"] == to_front(row["ff"]).replace("{N0}", "{N4}")
 
 
 def test_reperes_B_exiges(gold_app):
     # un segment balisé n'est servi que par une entrée qui a les mêmes repères
-    row = BY_ID["g0035"]
+    row = BY_ID["g0077"]
     (s,) = out(gold_app, req([seg("{B0}" + to_front(row["fr"]) + "{/B0}")]))
     assert s["status"] == "uncertain" and s["origin"] == "llm"
 
@@ -102,7 +102,7 @@ def test_entree_aux_marqueurs_abimes_ignoree(gold_app, db_path, caplog):
 
 def test_un_segment_par_segment_meme_ordre(gold_app):
     segments = [seg(UNKNOWN, "a"), seg(BY_ID["g0015"]["fr"], "b"), seg("Payer 500 FCFA", "c"),
-                seg(UNKNOWN, "d", "security_warning"), seg(BY_ID["g0035"]["fr"].replace("{V1}", "{N0}"), "e")]
+                seg(UNKNOWN, "d", "security_warning"), seg(BY_ID["g0077"]["fr"].replace("{V1}", "{N0}"), "e")]
     res = out(gold_app, req(segments))
     assert [s["id"] for s in res] == ["a", "b", "c", "d", "e"]
     assert [s["status"] for s in res] == ["uncertain", "validated", "uncertain", "uncertain", "validated"]

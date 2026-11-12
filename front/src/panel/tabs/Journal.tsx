@@ -16,7 +16,7 @@ export function JournalTab({ showToast }: TabProps) {
   const [entries, setEntries] = useState<LogEntry[] | null>(null);
   const [filter, setFilter] = useState<Filter>('all');
   const [open, setOpen] = useState<string | null>(null);
-  const [confirming, setConfirming] = useState(false);
+  const [confirming, setConfirming] = useState<'log' | 'cache' | null>(null);
 
   useEffect(() => {
     void readLog().then(setEntries);
@@ -35,6 +35,16 @@ export function JournalTab({ showToast }: TabProps) {
   }, [entries, filter]);
 
   const fmt = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  // 'log' : le journal ; 'cache' : les traductions gardées par l'arrière-plan (chrome.storage.local)
+  const confirmClear = async () => {
+    if (confirming === 'log') await clearLog();
+    else {
+      await bg<BgResult<null>>({ type: 'amira:clearCache' });
+      showToast(t('journal.cacheCleared'));
+    }
+    setConfirming(null);
+  };
 
   const download = () => {
     const blob = new Blob([exportLog(shown)], { type: 'application/json' });
@@ -71,14 +81,19 @@ export function JournalTab({ showToast }: TabProps) {
         </button>
         {confirming ? (
           <>
-            <span style={{ fontWeight: 600 }}>{t('journal.confirmClear')}</span>
-            <button className="btn rose" onClick={() => void clearLog().then(() => setConfirming(false))}>{t('journal.clear')}</button>
-            <button className="lien" onClick={() => setConfirming(false)}>{t('onboarding.skip')}</button>
+            <span style={{ fontWeight: 600 }}>{t(confirming === 'log' ? 'journal.confirmClear' : 'journal.confirmClearCache')}</span>
+            <button className="btn rose" onClick={() => void confirmClear()}>
+              {t(confirming === 'log' ? 'journal.clear' : 'journal.clearCache')}
+            </button>
+            <button className="lien" onClick={() => setConfirming(null)}>{t('onboarding.skip')}</button>
           </>
         ) : (
-          <button className="pastille" aria-label={t('journal.clear')} title={t('journal.clear')} disabled={!entries?.length} onClick={() => setConfirming(true)}>
-            <IconTrash />
-          </button>
+          <>
+            <button className="pastille" aria-label={t('journal.clear')} title={t('journal.clear')} disabled={!entries?.length} onClick={() => setConfirming('log')}>
+              <IconTrash />
+            </button>
+            <button className="lien" onClick={() => setConfirming('cache')}>{t('journal.clearCache')}</button>
+          </>
         )}
       </div>
 

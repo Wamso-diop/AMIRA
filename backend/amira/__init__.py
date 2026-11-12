@@ -14,6 +14,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from . import config, db, engine as engines
 from .cors import extension_allowed, register_cors
 from .errors import ApiError, register_errors
+from .gold_sync import GoldSync
 from .routes.admin import admin, export_admin
 from .routes.public import public
 from .services.translator import MachineCache
@@ -36,6 +37,7 @@ def create_app(env: Mapping[str, str] | None = None, engine=_FROM_CONFIG) -> Fla
     app.extensions["amira"] = {
         "engine": engines.from_config(app.config) if engine is _FROM_CONFIG else engine,
         "cache": MachineCache(app.config["CACHE_SIZE"], app.config["NEGATIVE_TTL_S"]),
+        "gold": GoldSync(app.config["GOLD_PATH"], app.config["GOLD_VALIDATOR"]),
     }
     if not log.handlers:
         handler = logging.StreamHandler()
