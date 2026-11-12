@@ -21,8 +21,20 @@ def load(env: Mapping[str, str]) -> dict:
         # sens autorisés : jamais fr↔en ; ajouter une langue = un modèle, une mémoire et cette liste
         "DIRECTIONS": _list(get("AMIRA_DIRECTIONS", "fr>ff,en>ff,ff>fr,ff>en")),
         "DB_PATH": get("AMIRA_DB_PATH", "data/amira.sqlite3"),
+        # moteur : nllb (modèle local) ou memory (mémoire validée seule)
+        "ENGINE": get("AMIRA_ENGINE", "nllb"),
+        "MODEL_DIR": get("AMIRA_MODEL_DIR", "models/nllb_ff"),
+        "LANG_CODES": dict(p.split("=", 1) for p in _list(get("AMIRA_LANG_CODES", "fr=fra_Latn,en=eng_Latn,ff=fuv_Latn"))),
+        "MIN_CONFIDENCE": float(get("AMIRA_MIN_CONFIDENCE", "0.5")),
+        "MIN_CONFIDENCE_FROM_FF": float(get("AMIRA_MIN_CONFIDENCE_FROM_FF", "0.7")),
+        "ENGINE_BUDGET_S": float(get("AMIRA_ENGINE_BUDGET_S", "6")),
+        "ENGINE_BATCH": int(get("AMIRA_ENGINE_BATCH", "4")),
+        # shortcut: durée par segment estimée une fois (docs/PERF.md), à mesurer en continu si le modèle change souvent
+        "ENGINE_SEG_S": float(get("AMIRA_ENGINE_SEG_S", "0.8")),
         "MAX_CONTENT_LENGTH": 5 * 1024 * 1024,
     }
+    if cfg["ENGINE"] not in ("nllb", "memory"):
+        raise RuntimeError("AMIRA_ENGINE vaut nllb ou memory")
     if cfg["ENV"] != "development" and not cfg["ALLOWED_ORIGINS"]:
         raise RuntimeError("AMIRA_ALLOWED_ORIGINS est obligatoire hors développement (identifiant de l'extension publiée)")
     return cfg

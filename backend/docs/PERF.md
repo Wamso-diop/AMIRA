@@ -22,6 +22,19 @@ Commande : `.venv/bin/python tools/check_model.py`
 - **RAM** : prévoir au moins 4 Go pour le conteneur.
 - **Confiance** : les phrases hors gold donnent de 0,64 à 0,73. Avec un seuil de 0,5, tout passerait en `machine` : le seuil reste à calibrer sur un fichier relu par le natif.
 
+## S6 : marqueurs à travers le vrai modèle (2026-11-12)
+
+10 phrases masquées (fr → ff), passées par la chaîne complète (`model_view` → NLLB → `from_model` → contrôles), budget ouvert à 60 s :
+
+| Mesure | Valeur |
+|---|---|
+| Marqueurs intacts (`{N}`, `{B}…{/B}`, `{E}`) | 10 sur 10 |
+| Statut | 10 `machine` |
+| Confiance | 0,51 à 0,90 |
+| Durée du lot de 10 | 15,8 s |
+
+Lecture : la conversion en `{V1}`, `{V2}`… fonctionne. Avec un seuil de 0,5, presque tout passe : il faut **calibrer** sur le fichier relu par le natif. Avec le budget réel (6 s), environ 4 segments par requête passent par le moteur ; les autres reviennent `uncertain`.
+
 ## S10 : lot de 40, mémoire et moteur
 
 À mesurer.

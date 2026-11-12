@@ -39,7 +39,7 @@ def health():
 @public.get("/ready")
 def ready():
     engine = current_app.extensions["amira"]["engine"]
-    if engine is None or not engine.ready():
+    if current_app.config["ENGINE"] != "memory" and (engine is None or not engine.ready()):
         raise ApiError("UNAVAILABLE", "Modèle en cours de chargement", status=503)
     get_db().execute("SELECT 1")
     return {"ok": True, "version": current_app.config["ENGINE_VERSION"]}
@@ -90,7 +90,8 @@ def translate():
         if variety not in cfg["VARIETIES"]:
             raise ApiError("BAD_REQUEST", "Variété inconnue")
 
-    out = translator.translate_segments(get_db(), segments, source, target, variety)
+    out = translator.translate_segments(get_db(), segments, source, target, variety,
+                                        current_app.extensions["amira"]["engine"], cfg, t0)
     request_id = req.get("requestId")
     return {
         "requestId": request_id if isinstance(request_id, str) else "",

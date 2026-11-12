@@ -31,14 +31,14 @@ def test_capabilities_par_defaut(client):
 
 @pytest.mark.parametrize("engine", [None, FakeEngine(loaded=False)])
 def test_ready_503_avant_chargement(engine):
-    r = create_app(DEV, engine=engine).test_client().get("/v1/ready")
+    r = create_app({**DEV, "AMIRA_ENGINE": "nllb"}, engine=engine).test_client().get("/v1/ready")
     assert r.status_code == 503 and r.get_json()["error"]["code"] == "UNAVAILABLE"
     assert_conforms(r, "/v1/ready")
 
 
 def test_ready_200_apres_chargement():
     engine = FakeEngine(loaded=False)
-    client = create_app(DEV, engine=engine).test_client()
+    client = create_app({**DEV, "AMIRA_ENGINE": "nllb"}, engine=engine).test_client()
     assert client.get("/v1/ready").status_code == 503
     engine.loaded = True
     r = client.get("/v1/ready")

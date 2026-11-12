@@ -33,7 +33,7 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
   - Tests : `test_translate_memory.py` (exemples tirés du CSV).
   - Fichiers : `amira/services/translator.py`, `routes/public.py`, test.
 
-- [ ] **S6. Moteur**
+- [x] **S6. Moteur**
   - Acceptation : `engine.py` (NLLB paresseux, un seul chargement, verrou, `model_view`), contrôles de sortie, tentative stricte, seuils 0,5 et 0,7, budget de 6 s, `FakeEngine`.
   - Tests : `test_engine.py` (7 cas avec faux moteur + 1 `model`).
   - Fichiers : `amira/engine.py`, `services/translator.py`, test.
