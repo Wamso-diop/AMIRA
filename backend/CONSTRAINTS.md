@@ -1,8 +1,23 @@
 # Contraintes du back-end Amira
 
-Dernière relecture : 2026-11-12. Source : brief back-end, sections 2, 5 et 8.
+Dernière relecture : 2026-11-12. Source : `BRIEF.md` (version 2), sections 2, 5 et 6.
 Ce fichier ne s'affaiblit jamais pour faire passer un changement. Le resserrer est libre ; l'assouplir
 se discute en revue, dans un commit séparé.
+
+## Les dix règles (brief v2, section 6)
+
+1. Aucune donnée réelle ne sort du navigateur ; le serveur la refuse si elle arrive.
+2. « validated » = relu par un natif, et rien d'autre.
+3. Avertissements de sécurité et frais : mémoire uniquement.
+4. Marqueurs intacts, même nombre, ou on déclare le doute.
+5. Aucun texte dans les journaux, les exceptions ou les métriques.
+6. Aucun appel sortant dans translate, tts, feedback.
+7. Tout nouveau comportement est précédé d'un test qui échoue.
+8. Réponses conformes à docs/openapi.yaml.
+9. Une étape à la fois, validée par un humain.
+10. Le moins de code possible, sauf pour le code de sécurité.
+
+Le détail et le test qui vérifie chaque règle suivent.
 
 Le contrat (`front/docs/API.md`, `front/src/services/api.ts`) fait foi : aucun champ renommé, retiré
 ou changé. `/v1` ne fait qu'ajouter.
@@ -25,6 +40,7 @@ ou changé. `/v1` ne fait qu'ajouter.
 | P4 | Chaque marqueur revient intact, le même nombre de fois, `{B}` bien imbriqués. Le moteur n'ajoute aucun chiffre. | `tests/test_markers.py`, `tests/test_engine_checks.py` |
 | P5 | Dans le doute : `uncertain` + texte source masqué. | `tests/test_engine_checks.py` |
 | P6 | Fonctionne sans Internet. Aucun appel sortant pendant translate, tts, feedback. | `tests/test_offline.py` (socket bloqué), docker-compose `internal: true` |
+| P7 | Aucun fulfulde écrit à la main dans le code ou les tests : les exemples viennent du CSV gold ou de fixtures de données. | `tests/test_no_fulfulde.py` |
 
 ## Sécurité (section 5)
 
@@ -60,9 +76,9 @@ tâches, pas de micro-services.
 
 | Étape | Commande | Budget |
 |---|---|---|
-| après chaque modification | `cd backend && pytest -q -m "not slow"` | < 10 s |
+| après chaque modification | `cd backend && pytest -q` (les tests `model` sont ignorés par défaut) | < 10 s |
 | fin de tâche, CI | `pytest -q && pip-audit -r requirements.txt` | minutes |
-| avant livraison | `pytest -q -m slow` (vrai modèle, mesure médiane/p95 d'un lot de 40) + bout en bout avec l'extension | manuel |
+| avant livraison | `pytest -q -m model` (vrai modèle, lot de 40 : médiane et p95 dans `docs/PERF.md`) + bout en bout avec l'extension | manuel |
 
 ## Mesuré, pas encore imposé
 

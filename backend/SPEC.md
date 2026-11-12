@@ -1,179 +1,202 @@
 # Spec : back-end Amira (API Flask)
 
 Statut : **à relire par un humain avant toute ligne de code.**
-Sources : brief back-end (2026-11-12), `backend/README.md` (§4), `front/docs/API.md`, `front/src/services/api.ts`.
-Règles : [CONSTRAINTS.md](CONSTRAINTS.md). En cas de conflit, le contrat du front l'emporte, puis CONSTRAINTS.md, puis ce document.
+Sources : `BRIEF.md` (version 2), `README.md` §4, `front/docs/API.md`, `front/src/services/api.ts`.
+Règles : [CONSTRAINTS.md](CONSTRAINTS.md). En cas de conflit : le contrat du front, puis CONSTRAINTS.md, puis ce document.
 
 ## 1. Objectif
 
 Une API Flask sans état, dans `backend/`, qui :
 - traduit des textes **déjà masqués** par l'extension : `fr → ff`, `en → ff`, `ff → fr`, `ff → en` ;
-- sert d'abord les traductions **validées par des locuteurs natifs** (mémoire), et le moteur local seulement en dehors des catégories sensibles ;
-- renvoie l'audio enregistré par un natif (`/v1/tts`), sinon `204` ;
-- reçoit les signalements (`/v1/feedback`) dans une file de relecture, et offre aux natifs des outils internes (`/v1/admin`).
+- sert d'abord la **mémoire validée** par des natifs (`data/gold_fulfulde.csv`, puis l'admin), et le modèle NLLB affiné seulement comme repli, jamais pour `security_warning` ni `fees` ;
+- renvoie l'audio d'un natif (`/v1/tts`), sinon `204` ;
+- reçoit les signalements (`/v1/feedback`) dans une file `pending`, et offre aux natifs des outils internes (`/v1/admin`).
 
-Utilisateurs : l'extension Chrome (public), les locuteurs natifs (admin), plus tard un serveur de la banque qui masque avec les mêmes règles (`docs/MASQUAGE.md`).
+Réussite : la pastille du front affiche « Prêt » (sans « démo ») ; une page de test est traduite ; chaque marqueur revient intact ; aucune donnée réelle ni aucun texte n'atteint le moteur, la base ou les journaux sans avoir passé la garde.
 
-Réussite : la pastille du front affiche « Prêt » (sans « démo »), une page de test est traduite, chaque marqueur revient intact, et aucune donnée réelle ni aucun texte n'atteint le moteur, la base ou les journaux sans avoir passé la garde.
+## 2. Ce qui a été vérifié (S0, sans code)
 
-## 2. Hypothèses (à corriger maintenant)
+| Point | Constat |
+|---|---|
+| Dossier du modèle | `backend/model_stage2/`, et non `backend/models/nllb_ff` comme le demande le brief |
+| Poids | `model-001.safetensors`, 2 460 354 912 octets (≈ 2,46 Go) : taille attendue, pas de partie manquante apparente. À renommer en `model.safetensors` |
+| Autres fichiers | `config.json` (M2M100, transformers 5.22.2), `generation_config.json` (`num_beams` 4, `forced_bos_token_id` 256059), `tokenizer.json`, `tokenizer_config.json` (NllbTokenizer) : présents |
+| CSV gold | `model_stage2/gold_fulfulde.csv`, 103 lignes. Il diffère de `~/Téléchargements/gold_fulfulde.csv` (le premier octet de l'en-tête change, probablement une marque BOM) : c'est le plus récent qui fait foi |
+| Git | **les poids ne sont pas ignorés par `.gitignore`** : un `git add backend/` les commiterait (2,4 Go) |
+| Python | 3.12.3 ; Flask, torch et transformers ne sont pas installés |
+| RAM | 15,8 Go au total, ≈ 1,9 Go disponibles en ce moment. Le modèle en float32 en demande environ 2,5 à 3 Go : il faut fermer des applications avant S0 |
+| Numérotation `{N}` côté front | `front/src/content/mask.ts` : `{N0}`, `{N1}`… par segment, dans l'ordre d'apparition, chacun unique (renumérotés à travers les `{B}` par `maskAroundMarkers`) |
 
-1. **Variété du fichier gold** : `gold_fulfulde.csv` n'a pas de colonne variété. Ses 103 entrées sont importées en `ngaoundere` (Adamaoua).
-2. **Relecteur du fichier gold** : il a été écrit par un natif. L'import crée donc des entrées `validated`, avec `validated_by` = le nom passé en argument (`--by "<nom>"`, obligatoire) et une ligne d'audit.
-3. **Un fichier gold donne quatre sens** : chaque ligne crée `fr→ff`, `en→ff`, `ff→fr` et `ff→en`. Les colonnes `*_variants` (séparées par `|` ou `;`) ajoutent des clés sources de plus vers la même traduction ; pour la cible, seule la colonne principale sert.
-4. **`source: "auto"`** : le contrat l'accepte, l'extension ne l'envoie plus. Le serveur ne détecte pas la langue : chaque segment revient `uncertain` (P5), sans appeler le moteur.
-5. **Segment refusé par la garde dans `/v1/tts` et `/v1/feedback`** : réponse `204`, rien n'est stocké ni journalisé, le compteur `unmasked_total` augmente. Pas d'erreur, pour ne pas renseigner un appelant sur ce que la garde attrape.
-6. **Délai du moteur dépassé (6 s)** : les segments non traités reviennent `uncertain` ; ceux servis par la mémoire restent `validated`. Pas d'erreur `TIMEOUT` (le front perdrait tout le lot).
-7. **Moteur** : `facebook/nllb-200-distilled-600M` (≈ 2,5 Go, CPU), code `fuv_Latn` pour `ff` (fulfulde du Nigeria, le plus proche de l'Adamaoua dans NLLB). Le moteur ignore la variété ; elle sert seulement à la clé de mémoire. Le modèle n'est **pas** encore téléchargé sur cette machine.
-8. **Voix de synthèse** : aucune pour le fulfulde. `/v1/tts` renvoie l'enregistrement d'un natif ou `204`. `tts: true` dans les capacités (les enregistrements existent), `stt: false` (point d'accès présent, renvoie `BAD_REQUEST` tant que désactivé).
-9. **Rotation du jeton admin** : `AMIRA_ADMIN_TOKENS` accepte plusieurs jetons séparés par des virgules ; on ajoute le nouveau, puis on retire l'ancien.
-10. **Seuil `ff → fr/en`** : 0,7 au départ (contre 0,5 vers `ff`), réglable.
+## 3. Hypothèses (à corriger maintenant)
 
-## 3. Pile technique
+1. **Variété du gold** : `ngaoundere` (le CSV n'a pas de colonne variété).
+2. **Auteur des validations du gold** : l'import exige `--by "<nom du natif>"`, qui est inscrit dans `validated_by` et dans `audit`.
+3. **Variantes** : `fr_variants`, `en_variants` et `ff_variants` sont des clés sources supplémentaires qui pointent vers la traduction principale. Séparateur `|` (à vérifier sur les 10 lignes concernées en S4).
+4. **Garde dans `/v1/tts` et `/v1/feedback`** : un texte refusé reçoit `204`, rien n'est stocké, `unmasked_total` augmente.
+5. **Délai de 6 s dépassé** : les segments restants reviennent `uncertain`, ceux servis par la mémoire restent `validated`.
+6. **`source: "auto"`** : détection minimale par mots outils fr/en (une vingtaine de mots par langue, comptés sur l'ensemble du lot). Sinon `UNSUPPORTED_LANGUAGE`.
+7. **Aucune voix de synthèse** : `tts: true` (enregistrements de natifs), `stt: false`.
+8. **Rotation du jeton admin** : `AMIRA_ADMIN_TOKENS` accepte plusieurs jetons séparés par des virgules.
 
-Python 3.12. `requirements.txt` figé (`==`) : Flask, gunicorn, python-dotenv, pytest ; `transformers` + `torch` (CPU) **importés uniquement dans `amira/engine.py`**. Tout le reste : `sqlite3`, `logging`, `hmac`, `json`, `re`, `unicodedata`, `ipaddress`, `concurrent.futures`, `csv`.
+## 4. Pile technique
 
-## 4. Commandes
+Python 3.12. `requirements.txt` figé (`==`) : Flask, gunicorn, python-dotenv, pytest ; `transformers` + `torch` (CPU) **importés uniquement dans `amira/engine.py`, et seulement au premier appel**. Le reste vient de la bibliothèque standard.
+
+## 5. Commandes
 
 ```bash
 cd backend
 python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
-cp .env.example .env                                  # puis AMIRA_ADMIN_TOKENS
-flask --app amira run --port 5000                     # développement (moteur factice si AMIRA_ENGINE=fake)
-pytest -q -m "not slow"                               # après chaque modification (< 10 s)
-pytest -q && pip-audit -r requirements.txt            # fin de tâche
-pytest -q -m slow                                     # vrai modèle : mesure d'un lot de 40 (médiane, p95)
-python tools/import_gold.py ~/Téléchargements/gold_fulfulde.csv --by "<nom du natif>"
-gunicorn -w 1 --threads 4 -b 0.0.0.0:8000 --timeout 30 wsgi:app   # production : UN worker
-docker compose up                                     # réseau internal: true
+cp .env.example .env                                     # puis AMIRA_ADMIN_TOKENS
+python tools/check_model.py                              # S0 : chargement, 5 phrases, RAM, latence
+python tools/import_gold.py data/gold_fulfulde.csv --by "<nom du natif>"   # rejouable
+flask --app amira run --port 5000                        # AMIRA_ENGINE=fake pour travailler sans modèle
+flask --app amira purge                                  # rétention (90 jours)
+pytest -q                                                # tout sauf le vrai modèle
+pytest -q -m model                                       # vrai modèle (chargement, lot de 40)
+pip-audit -r requirements.txt
+gunicorn -w 1 --threads 4 -b 0.0.0.0:8000 --timeout 30 wsgi:app
+docker compose up                                        # réseau internal: true
 ```
 
-## 5. Arborescence
+## 6. Arborescence
 
-Celle de `backend/README.md` §4.1, plus `guard.py` et `engine.py`. Rien d'autre.
+L'arborescence de `README.md` §4.1, plus `guard.py` et `engine.py`, et rien d'autre.
 
 ```
 backend/
-├── CONSTRAINTS.md  SPEC.md  README.md  LICENSES.md
-├── requirements.txt  .env.example  wsgi.py  Dockerfile  docker-compose.yml
-├── docs/openapi.yaml       contrat 3.1, écrit AVANT le code
-├── docs/MASQUAGE.md        règles de masquage pour un appelant serveur
-├── tools/import_gold.py    import du fichier gold
+├── BRIEF.md CONSTRAINTS.md SPEC.md README.md LICENSES.md
+├── requirements.txt .env.example wsgi.py Dockerfile docker-compose.yml
+├── data/gold_fulfulde.csv          mémoire validée (source)
+├── models/nllb_ff/                 AMIRA_MODEL_DIR (ignoré par git, monté en lecture seule)
+├── docs/openapi.yaml PERF.md MASQUAGE.md EXPLOITATION.md
+├── tools/check_model.py import_gold.py
 ├── amira/
-│   ├── __init__.py         create_app() : config, CORS, erreurs, journaux, limiteur, blueprints
-│   ├── config.py           variables d'environnement uniquement
-│   ├── errors.py           ApiError → {error:{code,message,retryAfterMs?}}
-│   ├── cors.py
-│   ├── markers.py          markers_ok, well_nested, speakable, normalize_key
-│   ├── guard.py            garde de confidentialité
-│   ├── engine.py           translate(textes, src, tgt) → [(texte, confiance)] ; seul fichier qui importe le modèle
-│   ├── db.py               SQLite, SQL standard
-│   ├── services/translator.py  voice.py  stt.py
-│   └── routes/public.py  admin.py
+│   ├── __init__.py config.py errors.py cors.py
+│   ├── markers.py   same_markers, well_nested, markers_ok, canonicalize, model_view, from_model, speakable, segment_key
+│   ├── guard.py     check(text) -> bool
+│   ├── engine.py    translate(textes, src, tgt) -> [(texte, confiance)] ; FakeEngine pour les tests
+│   ├── db.py        sqlite3, requêtes paramétrées, SQL standard
+│   ├── services/translator.py voice.py stt.py
+│   └── routes/public.py admin.py
 └── tests/
 ```
 
-## 6. Comportement
+## 7. Comportement
 
-### 6.1 Chaîne d'un segment (`/v1/translate`)
+### 7.1 Marqueurs (`markers.py`)
 
-1. **Requête** : `source`/`target` dans la config, sinon `UNSUPPORTED_LANGUAGE` ; `fr↔en` et `source == target` refusés. 1 à 40 segments ; chaque segment a `id` (texte) et `text` (texte, ≤ 1000 caractères), sinon `BAD_REQUEST` pour la requête entière. `variety` ignorée si `target != "ff"`.
-2. **Garde** (`guard.check(text) -> bool`) : marqueurs `{N0}` `{B0}` `{/B0}` `{E0}` retirés, puis refus si le reste contient un chiffre (tout `\d` Unicode), une devise (`FCFA`, `XAF`, `CFA`, `francs?`, `€`, `$`), un e-mail ou un motif IBAN (`[A-Z]{2}\d{2}[A-Z0-9 ]{10,}`). Refusé → `{text: <reçu>, status: uncertain, confidence: 0, origin: "llm"}`, rien n'est transmis, stocké ni journalisé, `unmasked_total += 1`. Le lot continue.
-3. **Clé de mémoire** = `normalize_key(text)` : NFC, minuscules, espaces simples, ponctuation finale retirée, **tous les marqueurs conservés** ; plus `source`, `target`, et `variety` si `target == "ff"`.
-4. **Mémoire** : trouvée et `markers_ok(text, entrée)` → `validated`, `confidence: 1`, `origin: "memory"`. Marqueurs différents → entrée ignorée, `memory_bad_markers += 1`, alerte au journal (clé hachée, pas de texte).
-5. **Catégorie sensible** (`security_warning`, `fees`) sans mémoire → `uncertain` avec le texte source, moteur **non appelé**, `unmatched(clé, texte masqué, demandes += 1)`.
-6. **Moteur** (tous les segments restants en un seul appel, délai 6 s). Sortie acceptée si : `markers_ok`, aucun chiffre hors marqueurs, non vide, différente de la source (après `normalize_key`), confiance ≥ seuil du sens. Sinon une seconde tentative `strict=True` pour ces segments seulement, sinon `uncertain` + texte source. Acceptée → `machine`, `origin: "llm"`.
-7. **Réponse** : mêmes `id`, même ordre, un segment par segment reçu ; `requestId` renvoyé tel quel ; `engineVersion` ; `latencyMs`.
+- `markers_ok(src, out)` = même multiensemble de `{N}`, `{B}`, `{/B}`, `{E}` et `{B}` bien imbriqués dans `out`.
+- `canonicalize(masked) -> (canon, table)` : renumérote les `{N}` dans l'ordre d'apparition (`{N0}`, `{N1}`…). `table` sert à restaurer les numéros d'origine dans la traduction de la mémoire. Pour une entrée du front c'est l'identité, mais un appelant serveur peut numéroter autrement.
+- `model_view(masked) -> (vue, table)` : chaque marqueur distinct devient `{V1}`, `{V2}`… dans l'ordre d'apparition (le modèle n'a appris que ce format). `from_model(text, table)` fait l'inverse ; un `{Vk}` inconnu ou une accolade parasite fait échouer `markers_ok`.
+- Les accolades qui ne sont pas des marqueurs sont du texte : elles doivent revenir telles quelles. Si elles ne reviennent pas, le segment est `uncertain`.
 
-`origin: "template"` n'est jamais produit (pas de gabarits pour l'instant ; le contrat l'autorise).
+### 7.2 Garde (`guard.py`)
 
-### 6.2 Autres points d'accès publics
+Après retrait des marqueurs, le texte est refusé s'il contient : un chiffre (`\d` Unicode), une devise (`FCFA`, `XAF`, `CFA`, `francs?`, `€`, `$`), un e-mail ou un motif IBAN (deux lettres, deux chiffres, puis au moins 10 caractères alphanumériques ou espaces). Un segment refusé renvoie `{text: <reçu>, status: "uncertain", confidence: 0, origin: "llm"}`. Il n'est ni cherché en mémoire, ni transmis, ni stocké, ni journalisé. `unmasked_total += 1`, et le lot continue.
+
+### 7.3 Chaîne d'un segment (`/v1/translate`)
+
+1. **Requête** : `source` et `target` doivent faire partie des langues de la configuration, sinon `UNSUPPORTED_LANGUAGE`. `fr↔en` et `source == target` sont refusés. `auto` passe par la détection (hypothèse 6). La requête contient de 1 à 40 segments ; chacun a un `id` (texte) et un `text` (texte, ≤ 1000 caractères), sinon `BAD_REQUEST`. `variety` vaut `None` si `target != "ff"`.
+2. **Garde** (§7.2).
+3. **Clé** = `normalize(canon)` : NFC, minuscules, espaces simples, ponctuation finale retirée, marqueurs conservés. S'y ajoutent le sens et la variété.
+4. **Mémoire** : si la clé est trouvée et que `markers_ok` passe après restauration des numéros, le segment est `validated`, `confidence: 1`, `origin: "memory"`. Si les marqueurs diffèrent, l'entrée est ignorée, `memory_bad_markers += 1`, et le journal reçoit une alerte avec la clé hachée.
+5. **Catégorie sensible** (`security_warning`, `fees`) sans mémoire : `uncertain`, avec le texte source. Le moteur **n'est pas appelé** ; `unmatched` reçoit `+1` demande.
+6. **Moteur** : tous les segments restants en un appel, à travers `model_view`/`from_model`. La sortie est acceptée si `markers_ok`, aucun chiffre hors marqueurs, non vide, différente de la source, et confiance ≥ seuil (0,5 vers `ff`, 0,7 depuis `ff`). Sinon, une seconde tentative stricte pour ces segments seulement, puis `uncertain`. Une sortie acceptée est `machine`, avec `origin: "llm"`. Le budget est de 6 s par requête.
+7. **Réponse** : mêmes `id`, même ordre, un segment par segment reçu ; `requestId` renvoyé tel quel. En-têtes `X-Content-Type-Options: nosniff` et `Cache-Control: no-store`.
+
+`origin: "template"` n'est jamais produit (le contrat l'autorise).
+
+### 7.4 Moteur (`engine.py`)
+
+`transformers` est importé au premier appel, sur CPU, sous `torch.inference_mode()`. Le modèle est chargé une seule fois, et `generate` est protégé par un verrou. Paramètres : codes `fra_Latn`, `eng_Latn` et `fuv_Latn` (configurables), `forced_bos_token_id` sur la cible, `num_beams=4`, `max_new_tokens=96`, entrée tronquée à 128 jetons. Confiance = `exp(sequences_scores)`. La tentative stricte utilise `num_beams=8` et `no_repeat_ngram_size=3`. Une exception levée par le moteur est remplacée par `EngineError("échec du moteur")`, sans texte, et tous les segments concernés deviennent `uncertain`.
+
+### 7.5 Autres points d'accès
 
 | Point d'accès | Comportement |
 |---|---|
-| `GET /v1/health` | `{ok: true, version}` ; vivant, ne touche ni modèle ni base |
-| `GET /v1/ready` (ajout) | `200 {ok: true}` si modèle et base chargés, sinon `503` `UNAVAILABLE` |
-| `GET /v1/capabilities` | champs du contrat, depuis la config ; ajout : `directions: ["fr-ff", …]` |
-| `POST /v1/tts` | `speakable(text)` → garde → enregistrement natif (`segmentKey`, `language`) avec `X-Amira-Voice: recorded`, sinon `missing_audio += 1` et `204` |
-| `POST /v1/stt` | `BAD_REQUEST` tant que `AMIRA_STT_ENABLED=false` |
-| `POST /v1/feedback` | 4 champs texte obligatoires ; garde sur chacun ; écrit dans `feedback` (`pending`) ; `204` |
+| `GET /v1/health` | `{ok: true, version}`, immédiat |
+| `GET /v1/ready` (ajout) | `200 {ok: true}` si le modèle et la base sont chargés, sinon `503 UNAVAILABLE`. Avec `AMIRA_ENGINE=memory`, la base suffit |
+| `GET /v1/capabilities` | les champs du contrat, tirés de la configuration |
+| `POST /v1/tts` | `speakable` → garde → enregistrement (`X-Amira-Voice: recorded`) ; sinon `note_missing` + `synthesize()` → `None` → `204` |
+| `POST /v1/stt` | `BAD_REQUEST` tant qu'il est désactivé |
+| `POST /v1/feedback` | 4 champs texte, garde sur chacun, écriture `pending`, `204` |
 
-### 6.3 Admin (`/v1/admin`, jamais appelé par l'extension)
+### 7.6 Admin (`/v1/admin`, jamais appelé par l'extension)
 
-Accès : `Authorization: Bearer <jeton>` comparé avec `hmac.compare_digest` à chaque jeton de `AMIRA_ADMIN_TOKENS`, **et** adresse cliente dans `AMIRA_ADMIN_NETWORKS` (par défaut `127.0.0.1/32,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16`). Sinon `401`. Toute écriture exige `validatedBy` (nom du natif) et ajoute une ligne `audit(qui, quand, action, clé)`.
+Accès : `Authorization: Bearer <jeton>`, comparé avec `hmac.compare_digest` à chaque jeton de `AMIRA_ADMIN_TOKENS`, **et** adresse cliente dans `AMIRA_ADMIN_NETWORKS` (réseaux privés par défaut). Sinon `401`. Toute écriture exige `validatedBy` et ajoute une ligne `audit(at, who, action, key)`.
 
-Points d'accès du README §4.7, plus :
-- `GET /v1/admin/unmatched` : textes sensibles sans mémoire, les plus demandés d'abord ;
-- `GET|PUT /v1/admin/memory?format=csv|json` : export / import de la mémoire (mêmes contrôles que `PUT translations`) ;
-- `POST /v1/admin/purge` : purge `feedback` (pending) et `unmatched` plus vieux que `AMIRA_RETENTION_DAYS` (90). La purge tourne aussi au démarrage.
+Points d'accès : ceux de `README.md` §4.7, plus `GET /unmatched` et `GET|PUT /memory?format=csv|json` (export et import). `PUT /translations` passe par la garde et `markers_ok`, sinon `400`. Pour le dépôt d'audio, la clé doit correspondre à `^k[0-9a-f]{8}$`, le type MIME doit être audio (`mpeg`, `ogg`, `webm`, `wav`, `mp4`) et la taille ≤ 5 Mo. Le chemin est construit par le serveur à partir de la clé.
 
-`PUT /v1/admin/translations` : garde sur la source **et** la traduction, `markers_ok` obligatoire, sinon `400`.
+### 7.7 Données (SQLite)
 
-### 6.4 Données (SQLite, SQL standard)
+- `translations` : `key`, `source`, `target`, `variety`, `source_masked`, `text`, `kind`, `validated_by`, `updated_at`. Clé primaire : `(source, target, variety, key)`. Les sorties du moteur n'y sont jamais écrites.
+- Autres tables : `feedback`, `recordings`, `missing_audio` (selon le README), `unmatched(key, source, target, variety, text_masked, requests, last_at)`, `audit`, `counters(name, value)`.
+- `variety` vaut `''` (et non `NULL`) quand la cible n'est pas `ff`, pour que la clé primaire fonctionne de la même façon dans SQLite et PostgreSQL.
 
-Tables du README §4.8 (`translations` sans ligne `machine` : on ne stocke pas les sorties du moteur), plus :
-`unmatched(key, source, target, variety, text_masked, requests, last_at)`, `audit(id, at, who, action, key)`, `counters(name, value)` (`unmasked_total`, `memory_bad_markers`).
-`translations.key` = clé normalisée ; `source_masked` garde le texte d'origine pour l'export.
+### 7.8 Import du gold (`tools/import_gold.py`)
 
-### 6.5 Transverse
+Le script est idempotent (UPSERT sur la clé) et ne modifie jamais le CSV. Il convertit `{Vk}` en `{N(k-1)}`, puis indexe :
+- `fr` + `fr_variants` → `ff` (sens `fr>ff`) ;
+- `en` + `en_variants` → `ff` (sens `en>ff`) ;
+- `ff` + `ff_variants` → `fr` et `en` (sens `ff>fr` et `ff>en`).
 
-- **Journaux** : une ligne par requête : méthode, chemin, statut, durée, `requestId`, compteurs du lot (`n`, `memory`, `machine`, `uncertain`, `refused`). Jamais de texte ni de corps. Les exceptions sont journalisées par type et ligne, sans message.
-- **CORS** : README §4.2 ; en production `AMIRA_ALLOWED_ORIGINS` est obligatoire (refus de démarrer sinon, hors `AMIRA_ENV=development`).
-- **`AMIRA_API_KEYS`** (facultatif) : si défini, une requête sans origine d'extension autorisée doit porter `X-Amira-Key` valide, sinon `401`.
-- **Limiteur** : seau à jetons par adresse en mémoire (un seul worker), `429` + `retryAfterMs`. `shortcut: en mémoire, à remplacer par les quotas de la passerelle de la banque.`
-- **Limites** : `MAX_CONTENT_LENGTH` 5 Mo ; JSON > 256 Ko → `413 BAD_REQUEST`.
-- **Moteur distant** : aucun. S'il en vient un : `AMIRA_REMOTE_ENGINE=1` + `AMIRA_REMOTE_HOSTS`, texte gardé uniquement.
-- **Debug** : `debug` forcé à `False` sauf `AMIRA_ENV=development`.
+Une ligne dont les marqueurs diffèrent entre la source et la traduction est refusée. En cas de conflit (même clé, traductions différentes), `ui` et `message` passent devant `glossaire`, et le conflit est signalé. Le rapport donne le nombre d'entrées importées, de lignes refusées et de conflits.
 
-## 7. Style de code
+### 7.9 Transverse
+
+- **Journaux** : une ligne par requête : méthode, chemin, statut, durée, `requestId`, et les compteurs `n`, `memory`, `machine`, `uncertain`, `refused`. Ni texte ni corps de requête. Une exception est journalisée par son type et son emplacement, sans son message.
+- **CORS** : seulement `chrome-extension://`. `AMIRA_ALLOWED_ORIGINS` est obligatoire hors développement : sans lui, le service refuse de démarrer. `X-Amira-Voice` est exposé.
+- **`AMIRA_API_KEYS`** (facultatif) : une requête sans origine d'extension autorisée doit porter un `X-Amira-Key` valide.
+- **Limites** : 5 Mo par corps ; JSON > 256 Ko → `413`. Le limiteur est un seau à jetons par IP, en mémoire, avec `429` et `retryAfterMs` (`shortcut:` en mémoire, à remplacer par les quotas de la passerelle de la banque).
+- **Rétention** : `flask purge` et purge au démarrage pour `feedback` (`pending`) et `unmatched` au-delà de `AMIRA_RETENTION_DAYS` (90).
+- **Débogage** : forcé à `False` sauf avec `AMIRA_ENV=development`.
+
+## 8. Style de code
 
 ```python
 def check(text: str) -> bool:
-    """True si le texte peut quitter la garde : aucun chiffre, devise, e-mail ni IBAN hors marqueurs."""
+    """True si le texte peut quitter la garde : ni chiffre, ni devise, ni e-mail, ni IBAN hors marqueurs."""
     rest = MARKER_RE.sub(" ", text)
     return not (DIGIT_RE.search(rest) or CURRENCY_RE.search(rest) or EMAIL_RE.search(rest) or IBAN_RE.search(rest))
 ```
 
-Fonctions courtes, modules au lieu de classes, pas de couche d'abstraction. Messages d'erreur en français, sans texte utilisateur. Aucun fulfulde dans le code ni dans les tests : les tests utilisent des textes neutres (`"Bonjour {N0}"`) et un moteur factice qui renvoie `"<<" + texte + ">>"`.
+Fonctions courtes, des modules plutôt que des classes, pas de couche d'abstraction. Messages d'erreur en français, sans texte utilisateur. Les tests prennent leurs exemples fulfulde dans le CSV (P7). Le faux moteur renvoie le texte source entouré de `<<…>>`, ou une sortie dégradée choisie par le test.
 
-## 8. Tests
+## 9. Tests
 
-pytest, dans `backend/tests/`, écrits **avant** le code. Le moteur est injecté (`app.config["ENGINE"]`) : factice ou espion dans tous les tests sauf ceux marqués `slow`.
+Les tests utilisent pytest, sont écrits **avant** le code et vivent dans `backend/tests/`. Le moteur est injecté par `create_app(engine=…)`. Les tests marqués `@pytest.mark.model` sont ignorés par défaut (`addopts = -m "not model"`).
 
-| Brief | Fichier | Contenu |
+| Étape | Fichier | Contenu |
 |---|---|---|
-| a | `test_markers.py` | cas du front + `{B0}` mal imbriqué, doublon, marqueur absent |
-| b | `test_guard.py` | 30 cas paramétrés ; espion : aucun refusé n'atteint moteur, base, journaux |
-| c | `test_privacy.py` | canari dans journaux, base, exception, entrée moteur ; moteur qui lève |
-| d | `test_offline.py` | `socket.socket.connect` bloqué ; translate, tts, feedback passent |
-| e | `test_engine_checks.py` | marqueur perdu, chiffre inventé, vide, identique, confiance basse, délai → `uncertain` ; correct → `machine` |
-| f | `test_sensitive.py` | sensible sans mémoire : espion jamais appelé, `unmatched` alimenté |
-| g | `test_status.py`, `test_admin.py` | `validated` impossible sans mémoire ; feedback jamais `validated` ; 401 sans jeton / hors réseau |
-| h | `test_contract.py` | chaque réponse validée contre `docs/openapi.yaml` ; erreurs ; CORS ; `X-Amira-Voice` exposé ; fr↔en ; variété ignorée ; limites ; 429 |
-| i | `test_import_gold.py` | 103 entrées, `{V1}→{N0}`, lignes invalides refusées, rapport |
-| — | `test_no_fulfulde.py` | aucune valeur `ff` du CSV dans `amira/` ni `tests/` |
-| j | `test_perf.py` (`slow`) | lot de 40, vrai modèle, médiane et p95 ; mesure notée dans CONSTRAINTS.md |
-| k | manuel | extension reconstruite, « Prêt », page traduite, avertissement lu ; noté dans le README |
+| S1 | `test_app.py` | format des erreurs, 404 JSON, 413, CORS et préflight, `ready` avant et après chargement |
+| S2 | `test_markers.py` | imbrication, doublons, renumérotation, aller-retour `model_view`, marqueur ajouté ou perdu, accolades inconnues |
+| S3 | `test_guard.py` | 30 cas ou plus ; canari absent du moteur espion, de la base, des journaux et des exceptions |
+| S4 | `test_import_gold.py` | 103 lignes, refus attendus, double import identique, `{V1}→{N0}`, sens inverse, conflit |
+| S5 | `test_translate_memory.py` | forme, garde, mémoire, sensible → `unmatched`, ordre et `id`, fr↔en, variété, `auto` |
+| S6 | `test_engine.py` | faux moteur : marqueur perdu, chiffre inventé, vide, identique, confiance basse, exception sans texte, délai ; `model` : chargement réel |
+| S7 | `test_status.py` | espion jamais appelé pour les sensibles ; `validated` impossible sans mémoire ; réponses validées contre `openapi.yaml` |
+| S8 | `test_voice.py`, `test_admin.py`, `test_feedback.py` | 5 paires `segmentKey` du front, 401, traversée, MIME, taille, feedback jamais `validated` |
+| S9 | `test_privacy.py`, `test_offline.py`, `test_limits.py` | canari partout ; `socket.connect` interdit ; 40, 1000, 256 Ko, 429, en-têtes |
+| S10 | `test_perf.py` (`model`) | lot de 40 (médiane, p95), 4 requêtes simultanées |
+| — | `test_no_fulfulde.py` | aucune valeur `ff` du CSV dans `amira/` ni dans `tests/*.py` |
 
-## 9. Limites
+## 10. Limites
 
-- **Toujours** : garde avant toute écriture, tout appel au moteur, toute ligne de journal ; `markers_ok` avant toute réponse ; tests avant le code.
-- **Demander d'abord** : nouvelle dépendance ; changement de schéma SQLite ; tout champ ajouté au contrat au-delà de `/v1/ready` et `capabilities.directions` ; changer de modèle.
-- **Jamais** : `validated` sans natif ; texte dans les journaux ; fulfulde écrit à la main ; appel sortant pendant une requête ; modifier le contrat existant.
+- **Toujours** : la garde passe avant toute écriture, tout appel au moteur et toute ligne de journal ; `markers_ok` passe avant toute réponse ; le test est écrit avant le code ; un commit par étape, puis on attend le « go ».
+- **Demander d'abord** : déplacer ou renommer le modèle ou le CSV ; ajouter une dépendance ; ajouter un champ au contrat au-delà de `/v1/ready`.
+- **Jamais** : réentraîner ou convertir le modèle ; `validated` sans mémoire ; un texte dans les journaux ; du fulfulde dans le code ; un appel sortant pendant une requête ; modifier le contrat existant.
 
-## 10. Terminé quand
+## 11. Terminé quand
 
-- `pytest -q` passe (lents compris), `pip-audit` sans vulnérabilité.
-- Mesure réelle du lot de 40 notée (cible p95 < 6 s ; sinon mémoire d'abord, puis CTranslate2).
-- Bout en bout validé avec l'extension (pastille « Prêt »).
-- README (≤ 10 lignes pour lancer, tester, brancher), `LICENSES.md`, `docs/MASQUAGE.md`, `docs/openapi.yaml` à jour.
-- `/ponytail-audit` sans problème de priorité haute ; `/ponytail-debt` lisible.
+- `pytest -q` et `pytest -q -m model` passent, et `pip-audit` est propre.
+- Le lot de 40 est mesuré et noté dans `docs/PERF.md` (cible p95 < 6 s).
+- Le parcours de bout en bout avec l'extension fonctionne (pastille « Prêt »).
+- README (≤ 10 lignes), `LICENSES.md`, `docs/MASQUAGE.md`, `docs/EXPLOITATION.md` et `docs/openapi.yaml` sont à jour. Les limites connues sont écrites : un nom propre non masqué par le front, et une qualité mesurée sur 29 entrées seulement.
+- `/ponytail-audit` ne signale aucun problème de priorité haute, et `/ship` donne « on livre ».
 
-## 11. Questions ouvertes
+## 12. Questions ouvertes
 
-1. **Validation contre openapi.yaml sans nouvelle dépendance** : il faut lire du YAML et valider un schéma JSON. Deux options :
-   - (a) **recommandée, la plus courte** : ajouter `PyYAML` et `jsonschema` en dépendances de test seulement (`requirements-dev.txt`) ;
-   - (b) écrire `openapi.yaml` en YAML de style JSON (lisible par `json.load`) et un petit validateur maison dans `tests/` (≈ 30 lignes).
-2. **Modèle** : il faut télécharger NLLB-600M une fois (≈ 2,5 Go, réseau requis à ce moment-là seulement). La machine n'a qu'environ 1 Go de RAM libre en ce moment : le test `slow` risque d'échouer ici. Où le lancer ?
-3. **Jeux de données `FredMike23/english-FULFULDE-ADAMAOUA` et `french-FULFULDE-ADAMAOUA`** (présents dans le cache Hugging Face) : servent-ils à l'entraînement ou à la calibration ? Leur licence doit figurer dans `LICENSES.md`.
-4. **Hypothèses 1 à 5** ci-dessus : à confirmer, en particulier le nom du natif à inscrire pour l'import gold.
+1. **Validation contre `openapi.yaml`** : il faut lire du YAML et valider un schéma, et le brief n'autorise pas PyYAML ni jsonschema. **Par défaut**, j'écris `openapi.yaml` en YAML de style JSON (que `json.load` sait lire) et un validateur d'une trentaine de lignes dans `tests/`. Si tu préfères, on ajoute les deux bibliothèques **pour les tests seulement** : moins de code, mais une exception au brief.
+2. **Licences des jeux d'entraînement** : lesquels ont servi aux deux étapes d'affinage ? Le cache Hugging Face contient `FredMike23/english-FULFULDE-ADAMAOUA` et `FredMike23/french-FULFULDE-ADAMAOUA`. Y en a-t-il d'autres ?
+3. **Paires `segmentKey`** (S8) : il me faudra 5 paires (texte masqué, clé) produites par le front.

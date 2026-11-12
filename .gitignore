@@ -96,3 +96,9 @@ htmlcov/
 backend/uploads/
 backend/media/
 backend/audio_cache/
+
+# ---------- backend : modèle, base, audio ----------
+backend/models/
+backend/data/*.sqlite3
+backend/media/
+backend/.venv/
