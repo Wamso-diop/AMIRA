@@ -54,5 +54,5 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
   - Acceptation : lot de 40 mixte (médiane et p95) et 4 requêtes simultanées mesurés dans `docs/PERF.md` ; échauffement au démarrage ; cache ou CTranslate2 seulement si nécessaire.
   - Tests : `test_perf.py` (`model`).
 
-- [ ] **S11. Livraison**
+- [x] **S11. Livraison**
   - Acceptation : `Dockerfile` (non root, modèle en lecture seule), `docker-compose.yml` (`internal: true`), README (≤ 10 lignes), `LICENSES.md`, `docs/MASQUAGE.md`, `docs/EXPLOITATION.md`, bout en bout avec l'extension, puis `/code-simplify`, `/ponytail-audit`, `/ponytail-debt`, `/ship`.
