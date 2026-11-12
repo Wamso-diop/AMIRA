@@ -76,3 +76,15 @@ def test_vrai_modele_texte_trop_long():
     long = ("Votre demande de virement a été reçue et sera traitée dans les meilleurs délais par nos services. " * 8)[:1000]
     ((_, conf),) = e.translate([long], "fr", "ff")
     assert conf == 0.0
+
+
+def test_generate_transmet_max_time():
+    seen = {}
+
+    class Recorder(FakeModel):
+        def generate(self, **kw):
+            seen.update(kw)
+            return super().generate(**kw)
+
+    generate(FakeTok(), Recorder([[50, EOS]]), ["Texte"], "fra_Latn", "fuv_Latn", strict=False, max_time=1.5)
+    assert seen["max_time"] == 1.5

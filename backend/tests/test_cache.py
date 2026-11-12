@@ -28,9 +28,10 @@ def translate(app, segments, source="fr", target="ff"):
     return r.get_json()["segments"]
 
 
-# le budget se mesure en temps réel : faux moteur de 0,15 s, paquet de 2 estimé à 0,3 s, budget de 0,4 s = un seul paquet
-DELAY = 0.15
-ONE_CHUNK = {"AMIRA_ENGINE_BATCH": "2", "AMIRA_ENGINE_SEG_S": "0.15", "AMIRA_ENGINE_BUDGET_S": "0.4"}
+# un seul paquet de 2 par requête : estimation 0,1 s par segment, budget 0,25 s (2 segments tiennent),
+# faux moteur de 0,2 s par appel ; ensuite il reste 0,05 s, pas de quoi lancer un autre segment
+DELAY, SEG_S = 0.2, 0.1
+ONE_CHUNK = {"AMIRA_ENGINE_BATCH": "2", "AMIRA_ENGINE_BUDGET_S": "0.25"}
 
 
 def sent(engine):
@@ -152,7 +153,7 @@ def test_echec_repete_en_cache_negatif(db_path, monkeypatch):
 
 def test_cache_negatif_libere_les_creneaux(db_path):
     # budget d'un seul paquet de 2 : les deux premiers échouent, la requête suivante essaie les deux autres
-    engine = FakeEngine(lambda t, *_: (t if "raté" in t else f"<<{t}>>", 0.9), delay=DELAY)
+    engine = FakeEngine(lambda t, *_: (t if "raté" in t else f"<<{t}>>", 0.9), delay=DELAY, seconds_per_segment=SEG_S)
     app = make(db_path, engine, **ONE_CHUNK)
     texts = [seg("Un raté", "a"), seg("Deux raté", "b"), seg("Trois long texte", "c"), seg("Quatre long texte", "d")]
     translate(app, texts)
@@ -177,14 +178,14 @@ def test_erreurs_et_instructions_d_abord_puis_courts(db_path):
 def test_choix_deterministe(db_path):
     orders = []
     for _ in range(3):
-        engine = FakeEngine(delay=DELAY)
+        engine = FakeEngine(delay=DELAY, seconds_per_segment=SEG_S)
         translate(make(db_path, engine, **ONE_CHUNK), BATCH)
         orders.append(sent(engine))
     assert orders[0] == orders[1] == orders[2] == ["Suivez cette instruction", "Une erreur longue de saisie du formulaire"]
 
 
 def test_couverture_progressive(db_path):
-    engine = FakeEngine(delay=DELAY)
+    engine = FakeEngine(delay=DELAY, seconds_per_segment=SEG_S)
     app = make(db_path, engine, **ONE_CHUNK)
     texts = [seg(f"Texte {c}", c) for c in "abcdef"]
     counts = [sum(r["status"] == "machine" for r in translate(app, texts)) for _ in range(3)]

@@ -110,8 +110,8 @@ def test_engine_error_sans_texte():
 
 
 def test_budget_depasse_segments_restants_incertains(db_path):
-    engine = FakeEngine(wrap, delay=0.2)
-    app = app_with(db_path, engine, AMIRA_ENGINE_BUDGET_S="0.5", AMIRA_ENGINE_BATCH="1", AMIRA_ENGINE_SEG_S="0.2")
+    engine = FakeEngine(wrap, delay=0.2, seconds_per_segment=0.2)
+    app = app_with(db_path, engine, AMIRA_ENGINE_BUDGET_S="0.5", AMIRA_ENGINE_BATCH="1")
     t0 = time.perf_counter()
     res = translate(app, [f"Texte {c}" for c in "abcdefgh"])
     elapsed = time.perf_counter() - t0
@@ -190,7 +190,7 @@ def test_echec_de_chargement_journalise(tmp_path, caplog):
     from amira.engine import from_config
 
     with caplog.at_level(logging.ERROR):
-        engine = from_config({"ENGINE": "nllb", "MODEL_DIR": str(tmp_path / "absent"), "LANG_CODES": {}})
+        engine = from_config({"ENGINE": "nllb", "MODEL_DIR": str(tmp_path / "absent"), "LANG_CODES": {}, "ENGINE_SEG_S": 0.8})
         assert engine.loader is None  # rien n'est chargé avant le premier ready() (flask export-admin, purge…)
         assert not engine.ready()
         engine.loader.join(timeout=60)

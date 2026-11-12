@@ -30,7 +30,7 @@ def load(env: Mapping[str, str]) -> dict:
         "MIN_CONFIDENCE_FROM_FF": float(get("AMIRA_MIN_CONFIDENCE_FROM_FF", "0.7")),
         "ENGINE_BUDGET_S": float(get("AMIRA_ENGINE_BUDGET_S", "6")),
         "ENGINE_BATCH": int(get("AMIRA_ENGINE_BATCH", "4")),
-        # shortcut: durée par segment estimée une fois (docs/PERF.md), à mesurer en continu si le modèle change souvent
+        # estimation de départ ; le moteur la remesure après chaque génération
         "ENGINE_SEG_S": float(get("AMIRA_ENGINE_SEG_S", "0.8")),
         # outils des natifs : plusieurs jetons pour la rotation (ajouter le nouveau, puis retirer l'ancien)
         "ADMIN_TOKENS": _list(get("AMIRA_ADMIN_TOKENS")),

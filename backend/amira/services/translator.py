@@ -97,14 +97,18 @@ def run_engine(engine, todo: list[dict], source: str, target: str, cfg: dict, t0
     accepted, refused = {}, set()
     for strict in (False, True):  # une seconde tentative, stricte, pour les sorties refusées seulement
         failed = []
-        for start in range(0, len(todo), cfg["ENGINE_BATCH"]):
-            chunk = todo[start:start + cfg["ENGINE_BATCH"]]
-            # ne jamais commencer un paquet sans le temps de le finir : le front coupe à 8 s
-            wait = deadline - time.perf_counter() - len(chunk) * cfg["ENGINE_SEG_S"]
-            if wait < 0:
+        start = 0
+        while start < len(todo):
+            # taille du paquet : ce que le temps restant permet, d'après la durée mesurée par le moteur ;
+            # le moteur s'arrête de toute façon à l'échéance (le front coupe à 8 s)
+            per_segment = engine.seconds_per_segment * (2 if strict else 1)
+            fits = int((deadline - time.perf_counter()) / per_segment) if per_segment > 0 else cfg["ENGINE_BATCH"]
+            chunk = todo[start:start + min(cfg["ENGINE_BATCH"], fits)]
+            if not chunk:
                 break
+            start += len(chunk)
             try:
-                results = engine.translate([p["view"] for p in chunk], source, target, strict=strict, timeout=wait)
+                results = engine.translate([p["view"] for p in chunk], source, target, strict=strict, deadline=deadline)
             except (EngineError, TimeoutError):
                 continue  # ces segments restent incertains
             for p, (raw, confidence) in zip(chunk, results):

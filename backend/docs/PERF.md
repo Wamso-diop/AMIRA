@@ -94,3 +94,19 @@ cd backend
 - La différence entre les deux lectures = le nombre de segments de la page refusés par la garde. Le journal du serveur donne le même nombre, requête par requête : `refused=<n>` sur chaque ligne `POST /v1/translate`.
 - Si `AMIRA_DB_PATH` est réglé, lire ce fichier au lieu de `data/amira.sqlite3`.
 - Un compteur qui augmente signale un trou dans le masquage du front. C'est le cas, par exemple, de « francs CFA » écrit sans montant, que le front ne masque pas et que la garde refuse volontairement (voir `docs/MASQUAGE.md`). Ce compteur ne donne pas la liste des textes concernés : le serveur ne les garde jamais.
+
+## Correctif du 2026-11-12 : textes longs et délai du front
+
+**Constat sur la vraie page** : `POST /v1/translate` en 8,4 s, puis 9,3 s (28 segments). Le front coupe à 8 s et ne montre rien, même les segments servis par la mémoire. Sur le serveur, **un paquet de 4 phrases longues prenait 16,9 s**. Les mesures de S10 ne portaient que sur des phrases **courtes** : l'estimation fixe de 0,8 s par segment était 5 fois trop basse pour des textes réels.
+
+**Correctif** :
+- **Plafond dur** : `generate()` reçoit `max_time`, le temps restant avant l'échéance. Les phrases inachevées n'ont pas de `</s>`, donc leur confiance vaut 0 et elles reviennent `uncertain`.
+- **Estimation remesurée par le moteur après chaque génération** : elle remonte aussitôt si le moteur est plus lent que prévu, et ne redescend que de moitié s'il est plus rapide. La tentative stricte compte double.
+- **Taille du paquet** : calculée sur le temps restant, au lieu d'être fixée à 4.
+
+| 28 phrases longues, vrai modèle (`pytest -m model -s tests/test_deadline.py`) | Durée | Traduites par le moteur |
+|---|---|---|
+| 1re requête (estimation de départ 0,8 s, trop basse) | 6,32 s | 0 (paquet coupé à l'échéance) |
+| 2e requête (estimation remesurée) | 6,42 s | 3 |
+
+Les deux requêtes restent sous les 8 s du front : la mémoire validée s'affiche toujours. Avec des textes longs, le moteur ne traduit que 1 à 3 segments par requête. La couverture repose d'autant plus sur le cache, qui accumule les traductions de visite en visite, et sur la mémoire validée par le natif.
