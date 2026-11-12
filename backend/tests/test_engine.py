@@ -195,7 +195,7 @@ def test_echec_de_chargement_journalise(tmp_path, caplog):
         assert not engine.ready()
         engine.loader.join(timeout=60)
     assert not engine.ready()
-    assert "chargement du modèle impossible" in caplog.text
+    assert "chargement du modèle impossible" in caplog.text and "FileNotFoundError" in caplog.text
 
 
 @pytest.mark.parametrize("name,fn", [

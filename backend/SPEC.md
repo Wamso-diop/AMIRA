@@ -148,7 +148,7 @@ Une ligne dont les marqueurs diffèrent entre la source et la traduction est ref
 - **Journaux** : une ligne par requête : méthode, chemin, statut, durée, `requestId`, et les compteurs `n`, `memory`, `machine`, `uncertain`, `refused`. Ni texte ni corps de requête. Une exception est journalisée par son type et son emplacement, sans son message.
 - **CORS** : seulement `chrome-extension://`. `AMIRA_ALLOWED_ORIGINS` est obligatoire hors développement : sans lui, le service refuse de démarrer. `X-Amira-Voice` est exposé.
 - **`AMIRA_API_KEYS`** (facultatif) : une requête sans origine d'extension autorisée doit porter un `X-Amira-Key` valide.
-- **Limites** : 5 Mo par corps ; JSON > 256 Ko → `413`. Le limiteur est un seau à jetons par IP, en mémoire, avec `429` et `retryAfterMs` (`shortcut:` en mémoire, à remplacer par les quotas de la passerelle de la banque).
+- **Limites** : 5 Mo par corps ; JSON > 256 Ko → `413` (`request.max_content_length`, qui couvre aussi un corps sans `Content-Length`). Limiteur : 600 requêtes par minute et par adresse par défaut (`AMIRA_RATE_LIMIT_PER_MIN`), sauf `/health` et `/ready`. En-têtes `nosniff` et `no-store` sur toutes les réponses. Le limiteur est un seau à jetons par IP, en mémoire, avec `429` et `retryAfterMs` (`shortcut:` en mémoire, à remplacer par les quotas de la passerelle de la banque).
 - **Rétention** : `flask purge` et purge au démarrage pour `feedback` (`pending`) et `unmatched` au-delà de `AMIRA_RETENTION_DAYS` (90).
 - **Débogage** : forcé à `False` sauf avec `AMIRA_ENV=development`.
 

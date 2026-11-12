@@ -46,7 +46,7 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
 - [x] **S8b. Feedback** : garde puis `pending`, jamais `validated`. Tests : `test_feedback.py`.
 - [x] **S8c. Admin** : jeton (`compare_digest`, rotation), réseaux, audit, listes, `PUT translations`, mémoire CSV/JSON, dépôt d'audio (clé, MIME, taille). Tests : `test_admin.py`.
 
-- [ ] **S9. Sécurité transversale**
+- [x] **S9. Sécurité transversale**
   - Acceptation : journaux sans texte, exceptions sans texte, débogage coupé, `socket.connect` interdit, limites, 429, en-têtes, `flask purge`, `AMIRA_API_KEYS`, `pip-audit`.
   - Tests : `test_privacy.py`, `test_offline.py`, `test_limits.py`.
 

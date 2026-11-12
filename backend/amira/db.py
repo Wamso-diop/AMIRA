@@ -3,7 +3,7 @@ Tous les textes stockés sont masqués et ont passé la garde."""
 import re
 import sqlite3
 import unicodedata
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from .markers import canonicalize
 
@@ -94,3 +94,13 @@ def bump(conn, name: str) -> None:
 def counter(conn, name: str) -> int:
     row = conn.execute("SELECT value FROM counters WHERE name = ?", (name,)).fetchone()
     return row[0] if row else 0
+
+
+def purge(conn, days: int) -> tuple[int, int]:
+    """Rétention : signalements en attente et textes « unmatched » plus vieux que `days` jours. Renvoie (feedback, unmatched)."""
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat(timespec="seconds")
+    with conn:
+        fb = conn.execute("DELETE FROM feedback WHERE status = 'pending' AND created_at < ?", (cutoff,)).rowcount
+        um = conn.execute("DELETE FROM unmatched WHERE last_at < ?", (cutoff,)).rowcount
+        audit(conn, "systeme", "purge", f"feedback={fb} unmatched={um} jours={days}")
+    return fb, um

@@ -31,6 +31,8 @@ class NllbEngine:
         with self._lock:
             if self._model is not None:
                 return
+            if not os.path.isfile(os.path.join(self.model_dir, "config.json")):
+                raise FileNotFoundError("dossier du modèle incomplet")  # avant d'importer transformers (2 à 3 s)
             os.environ["HF_HUB_OFFLINE"] = "1"  # P6 : jamais de téléchargement
             os.environ["TRANSFORMERS_OFFLINE"] = "1"
             from transformers import AutoModelForSeq2SeqLM, AutoTokenizer

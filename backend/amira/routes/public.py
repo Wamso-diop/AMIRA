@@ -66,6 +66,7 @@ def translate():
     t0 = time.perf_counter()
     cfg = current_app.config
     req = _json()
+    g.request_id = req.get("requestId")
 
     raw = req.get("segments")
     if not isinstance(raw, list) or not 1 <= len(raw) <= MAX_SEGMENTS:
@@ -96,6 +97,9 @@ def translate():
 
     out = translator.translate_segments(get_db(), segments, source, target, variety,
                                         current_app.extensions["amira"]["engine"], cfg, t0)
+    refused = sum(not translator.check(s["text"]) for s in segments)
+    g.stats = {"n": len(out), **{k: sum(o["status"] == v for o in out) for k, v in
+                                  (("memory", "validated"), ("machine", "machine"), ("uncertain", "uncertain"))}, "refused": refused}
     request_id = req.get("requestId")
     return {
         "requestId": request_id if isinstance(request_id, str) else "",
