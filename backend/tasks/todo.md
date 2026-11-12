@@ -38,7 +38,7 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
   - Tests : `test_engine.py` (7 cas avec faux moteur + 1 `model`).
   - Fichiers : `amira/engine.py`, `services/translator.py`, test.
 
-- [ ] **S7. Statuts et catégories sensibles**
+- [x] **S7. Statuts et catégories sensibles**
   - Acceptation : espion jamais appelé pour `security_warning` et `fees` ; `validated` uniquement depuis la mémoire ; parcours complet validé contre openapi.
   - Tests : `test_status.py`.
 
