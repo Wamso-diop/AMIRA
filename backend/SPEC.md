@@ -109,7 +109,7 @@ Texte normalisé (NFKC, caractères invisibles retirés), marqueurs du front ret
 
 ### 7.4 Moteur (`engine.py`)
 
-`transformers` est importé au premier appel, sur CPU, sous `torch.inference_mode()`. Le modèle est chargé une seule fois, et `generate` est protégé par un verrou. Paramètres : codes `fra_Latn`, `eng_Latn` et `fuv_Latn` (configurables), `forced_bos_token_id` sur la cible, `num_beams=4`, `max_new_tokens=96`, entrée tronquée à 128 jetons. Confiance = `exp(sequences_scores)`. La tentative stricte utilise `num_beams=8` et `no_repeat_ngram_size=3`. Une exception levée par le moteur est remplacée par `EngineError("échec du moteur")`, sans texte, et tous les segments concernés deviennent `uncertain`.
+Le chargement commence au premier `ready()` (`wsgi.py` l'appelle au démarrage ; les commandes `flask` ne chargent jamais le modèle). `transformers` est importé à ce moment-là, sur CPU, sous `torch.inference_mode()`. Le modèle est chargé une seule fois, et `generate` est protégé par un verrou. Paramètres : codes `fra_Latn`, `eng_Latn` et `fuv_Latn` (configurables), `forced_bos_token_id` sur la cible, `num_beams=4`, `max_new_tokens=96`, entrée tronquée à 128 jetons. Confiance = `exp(sequences_scores)`. La tentative stricte utilise `num_beams=8` et `no_repeat_ngram_size=3`. Une exception levée par le moteur est remplacée par `EngineError("échec du moteur")`, sans texte, et tous les segments concernés deviennent `uncertain`.
 
 ### 7.5 Autres points d'accès
 
@@ -120,13 +120,13 @@ Texte normalisé (NFKC, caractères invisibles retirés), marqueurs du front ret
 | `GET /v1/capabilities` | les champs du contrat, tirés de la configuration |
 | `POST /v1/tts` | `speakable` → garde → enregistrement (`X-Amira-Voice: recorded`) ; sinon `note_missing` + `synthesize()` → `None` → `204` |
 | `POST /v1/stt` | `BAD_REQUEST` tant qu'il est désactivé |
-| `POST /v1/feedback` | 4 champs texte, garde sur chacun, écriture `pending`, `204` |
+| `POST /v1/feedback` | `segmentId` au format `^[A-Za-z0-9_-]{1,64}$` (un identifiant, hors garde) ; garde sur `originalMasked`, `shown`, `suggestion` (≤ 1000 caractères) ; écriture `pending`, `204` |
 
 ### 7.6 Admin (`/v1/admin`, jamais appelé par l'extension)
 
 Accès : `Authorization: Bearer <jeton>`, comparé avec `hmac.compare_digest` à chaque jeton de `AMIRA_ADMIN_TOKENS`, **et** adresse cliente dans `AMIRA_ADMIN_NETWORKS` (réseaux privés par défaut). Sinon `401`. Toute écriture exige `validatedBy` et ajoute une ligne `audit(at, who, action, key)`.
 
-Points d'accès : ceux de `README.md` §4.7, plus `GET /unmatched` et `GET|PUT /memory?format=csv|json` (export et import). `PUT /translations` passe par la garde et `markers_ok`, sinon `400`. Pour le dépôt d'audio, la clé doit correspondre à `^k[0-9a-f]{8}$`, le type MIME doit être audio (`mpeg`, `ogg`, `webm`, `wav`, `mp4`) et la taille ≤ 5 Mo. Le chemin est construit par le serveur à partir de la clé.
+Points d'accès : ceux de `README.md` §4.7 (sauf `GET /translations?status=machine` : les sorties du moteur ne sont jamais stockées), plus `GET /unmatched`. Mémoire admin (décision du 2026-11-12) : `PUT /translations` crée une entrée `ref = 'admin'` ; **l'import du gold ne touche jamais une entrée admin** et signale chaque conflit (même clé, texte différent) sans trancher ; `flask export-admin <fichier.csv>` écrit les entrées admin au format du CSV gold (`{N0}` → `{V1}`, `{B}`/`{E}` inchangés), réimportable tel quel. L'extension n'appelle jamais l'admin : pas d'en-têtes CORS sur `/v1/admin`. `PUT /translations` passe par la garde et `markers_ok`, sinon `400`. Pour le dépôt d'audio, la clé doit correspondre à `^k[0-9a-f]{8}$`, le type MIME doit être audio (`mpeg`, `ogg`, `webm`, `wav`, `mp4`) et la taille ≤ 5 Mo. Le chemin est construit par le serveur à partir de la clé.
 
 ### 7.7 Données (SQLite)
 

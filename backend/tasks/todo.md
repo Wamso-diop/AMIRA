@@ -42,9 +42,9 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
   - Acceptation : espion jamais appelé pour `security_warning` et `fees` ; `validated` uniquement depuis la mémoire ; parcours complet validé contre openapi.
   - Tests : `test_status.py`.
 
-- [ ] **S8a. Voix** : `/v1/tts`, `segment_key` (5 paires du front), `note_missing`, `204`. Tests : `test_voice.py`.
-- [ ] **S8b. Feedback** : garde puis `pending`, jamais `validated`. Tests : `test_feedback.py`.
-- [ ] **S8c. Admin** : jeton (`compare_digest`, rotation), réseaux, audit, listes, `PUT translations`, mémoire CSV/JSON, dépôt d'audio (clé, MIME, taille). Tests : `test_admin.py`.
+- [x] **S8a. Voix** : `/v1/tts`, `segment_key` (5 paires du front), `note_missing`, `204`. Tests : `test_voice.py`.
+- [x] **S8b. Feedback** : garde puis `pending`, jamais `validated`. Tests : `test_feedback.py`.
+- [x] **S8c. Admin** : jeton (`compare_digest`, rotation), réseaux, audit, listes, `PUT translations`, mémoire CSV/JSON, dépôt d'audio (clé, MIME, taille). Tests : `test_admin.py`.
 
 - [ ] **S9. Sécurité transversale**
   - Acceptation : journaux sans texte, exceptions sans texte, débogage coupé, `socket.connect` interdit, limites, 429, en-têtes, `flask purge`, `AMIRA_API_KEYS`, `pip-audit`.

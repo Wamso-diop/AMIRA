@@ -25,6 +25,7 @@ class NllbEngine:
         self.model_dir, self.codes = model_dir, codes
         self._lock = threading.Lock()  # un seul generate à la fois : un seul modèle en RAM
         self._tok = self._model = None
+        self.loader: threading.Thread | None = None
 
     def load(self) -> None:
         with self._lock:
@@ -37,7 +38,23 @@ class NllbEngine:
             self._tok = AutoTokenizer.from_pretrained(self.model_dir)
             self._model = AutoModelForSeq2SeqLM.from_pretrained(self.model_dir).eval()
 
+    def start_loading(self) -> None:
+        """Chargement en tâche de fond, une fois. Un échec est journalisé (sinon /v1/ready resterait à 503 sans explication)."""
+        if self.loader is not None:
+            return
+
+        def load():
+            try:
+                self.load()
+            except Exception as e:
+                log.error("chargement du modèle impossible (%s) : %s", self.model_dir, type(e).__name__)
+
+        self.loader = threading.Thread(target=load, name="amira-load", daemon=True)
+        self.loader.start()
+
     def ready(self) -> bool:
+        """Le premier appel lance le chargement : les commandes flask (export, purge) ne chargent jamais le modèle."""
+        self.start_loading()
         return self._model is not None
 
     def translate(self, texts: list[str], src: str, tgt: str, strict: bool = False, timeout: float = -1):
@@ -95,17 +112,7 @@ class FakeEngine:
 
 
 def from_config(cfg: dict):
-    """Moteur décrit par la configuration, chargé en tâche de fond (/v1/ready répond 503 d'ici là)."""
+    """Moteur décrit par la configuration ; chargé en tâche de fond au premier ready() (/v1/ready répond 503 d'ici là)."""
     if cfg["ENGINE"] == "memory":
         return None
-    engine = NllbEngine(cfg["MODEL_DIR"], cfg["LANG_CODES"])
-
-    def load():
-        try:
-            engine.load()
-        except Exception as e:  # sinon le fil meurt en silence et /v1/ready reste à 503 sans explication
-            log.error("chargement du modèle impossible (%s) : %s", cfg["MODEL_DIR"], type(e).__name__)
-
-    engine.loader = threading.Thread(target=load, name="amira-load", daemon=True)
-    engine.loader.start()
-    return engine
+    return NllbEngine(cfg["MODEL_DIR"], cfg["LANG_CODES"])

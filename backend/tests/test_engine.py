@@ -191,6 +191,8 @@ def test_echec_de_chargement_journalise(tmp_path, caplog):
 
     with caplog.at_level(logging.ERROR):
         engine = from_config({"ENGINE": "nllb", "MODEL_DIR": str(tmp_path / "absent"), "LANG_CODES": {}})
+        assert engine.loader is None  # rien n'est chargé avant le premier ready() (flask export-admin, purge…)
+        assert not engine.ready()
         engine.loader.join(timeout=60)
     assert not engine.ready()
     assert "chargement du modèle impossible" in caplog.text

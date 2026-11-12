@@ -6,6 +6,7 @@ from flask import Flask, abort, request
 from . import config, engine as engines
 from .cors import register_cors
 from .errors import register_errors
+from .routes.admin import admin, export_admin
 from .routes.public import public
 
 
@@ -29,4 +30,6 @@ def create_app(env: Mapping[str, str] | None = None, engine=_FROM_CONFIG) -> Fla
     register_cors(app)
     register_errors(app)
     app.register_blueprint(public, url_prefix="/v1")
+    app.register_blueprint(admin, url_prefix="/v1/admin")
+    app.cli.add_command(export_admin)
     return app

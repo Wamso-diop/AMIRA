@@ -27,10 +27,11 @@ def variants(cell: str) -> list[str]:
 
 
 def refusal(row: dict) -> str | None:
-    texts = {c: to_front(row[c]) for c in ("fr", "en", "ff")}
-    if not (markers_ok(texts["ff"], texts["fr"]) and markers_ok(texts["ff"], texts["en"])):
+    # une ligne exportée de l'admin n'a que deux colonnes remplies : on compare celles qui existent
+    texts = [to_front(row[c]) for c in ("ff", "fr", "en") if row[c].strip()]
+    if not all(markers_ok(texts[0], t) for t in texts[1:]):
         return "marqueurs"
-    if row.get("n_markers", "").strip() and int(row["n_markers"]) != len(MARKER_RE.findall(texts["ff"])):
+    if row.get("n_markers", "").strip() and int(row["n_markers"]) != len(MARKER_RE.findall(texts[0] if texts else "")):
         return "n_markers"
     if not all(check(to_front(t)) for c in ("fr", "en", "ff", "fr_variants", "en_variants", "ff_variants") for t in [row[c]]):
         return "garde"
@@ -71,6 +72,15 @@ def import_gold(conn, path, validator: str) -> dict:
                 elif not old:
                     chosen[k] = entry
 
+    # l'import ne touche jamais une entrée créée par l'admin : il signale la différence sans trancher
+    admin = {tuple(r[:4]): r[4] for r in conn.execute(
+        "SELECT source, target, variety, key, text FROM translations WHERE ref = 'admin'").fetchall()}
+    for k, e in list(chosen.items()):
+        if k in admin:
+            if admin[k] != e["text"]:
+                conflicts.append({"direction": f"{k[0]}>{k[1]}", "kept": "admin", "dropped": e["ref"][5:], "decided": False})
+            del chosen[k]
+
     stamp = db.now()
     with conn:
         for (src, tgt, variety, key), e in chosen.items():
@@ -80,9 +90,10 @@ def import_gold(conn, path, validator: str) -> dict:
                 "ON CONFLICT (source, target, variety, key) DO UPDATE SET source_masked = excluded.source_masked, "
                 "text = excluded.text, kind = excluded.kind, validated_by = excluded.validated_by, ref = excluded.ref, "
                 "updated_at = excluded.updated_at "
-                "WHERE translations.text <> excluded.text OR translations.kind <> excluded.kind "
+                # protection atomique : même une écriture admin arrivée pendant l'import n'est jamais écrasée
+                "WHERE translations.ref <> 'admin' AND (translations.text <> excluded.text OR translations.kind <> excluded.kind "
                 "OR translations.validated_by <> excluded.validated_by OR translations.ref <> excluded.ref "
-                "OR translations.source_masked <> excluded.source_masked",
+                "OR translations.source_masked <> excluded.source_masked)",
                 (src, tgt, variety, key, e["source_masked"], e["text"], e["kind"], validator, e["ref"], stamp),
             )
         # entrées gold disparues du CSV (source corrigée, ligne retirée)
@@ -107,7 +118,8 @@ def main():
         print(f"  {r['id']} : {r['reason']}")
     print(f"conflits : {len(report['conflicts'])}")
     for c in report["conflicts"]:
-        print(f"  {c['direction']} : {c['kept']} gardée, {c['dropped']} écartée")
+        decided = "" if c.get("decided", True) else " (non tranché : à régler avec le natif)"
+        print(f"  {c['direction']} : {c['kept']} gardée, {c['dropped']} écartée{decided}")
 
 
 if __name__ == "__main__":

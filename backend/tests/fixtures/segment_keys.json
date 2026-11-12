@@ -1,0 +1,45 @@
+{
+  "source": "front/src/content/engine.ts segmentKey() via esbuild, 2026-11-12",
+  "pairs": [
+    {
+      "text": "Votre solde est de {B0}{N0}{/B0} au {N1}.",
+      "key": "k0838aeb6"
+    },
+    {
+      "text": "Été, ÉTÉ, Œuvre, à côté : ÇA VA ?",
+      "key": "k4d948c02"
+    },
+    {
+      "text": "  Espaces   multiples\tet\n retours   ",
+      "key": "kb0dda677"
+    },
+    {
+      "text": "Cliquez sur {B0}Valider{/B0} puis {E0} {B1}ici{/B1}",
+      "key": "kd3306ebd"
+    },
+    {
+      "text": "Lettres de test : ɓɗƴŋ ƁƊƳŊ",
+      "key": "kfe658d81"
+    },
+    {
+      "text": "Majuscules ƁƊƳŊ seules",
+      "key": "k3b579e0d"
+    },
+    {
+      "text": "Émoji 👍 et 🇨🇲 drapeau",
+      "key": "k95d5fce8"
+    },
+    {
+      "text": "😀",
+      "key": "kcb31c4b8"
+    },
+    {
+      "text": "{E0}{E1} Ne partagez jamais votre code {N0}",
+      "key": "k08d1bc50"
+    },
+    {
+      "text": "İstanbul ẞ ß ǅ",
+      "key": "kc01d367a"
+    }
+  ]
+}

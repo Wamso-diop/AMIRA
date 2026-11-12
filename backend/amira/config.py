@@ -31,6 +31,10 @@ def load(env: Mapping[str, str]) -> dict:
         "ENGINE_BATCH": int(get("AMIRA_ENGINE_BATCH", "4")),
         # shortcut: durée par segment estimée une fois (docs/PERF.md), à mesurer en continu si le modèle change souvent
         "ENGINE_SEG_S": float(get("AMIRA_ENGINE_SEG_S", "0.8")),
+        # outils des natifs : plusieurs jetons pour la rotation (ajouter le nouveau, puis retirer l'ancien)
+        "ADMIN_TOKENS": _list(get("AMIRA_ADMIN_TOKENS")),
+        "ADMIN_NETWORKS": _list(get("AMIRA_ADMIN_NETWORKS", "127.0.0.0/8,::1/128,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16")),
+        "RECORDINGS_DIR": get("AMIRA_RECORDINGS_DIR", "media/recordings"),
         "MAX_CONTENT_LENGTH": 5 * 1024 * 1024,
     }
     if cfg["ENGINE"] not in ("nllb", "memory"):

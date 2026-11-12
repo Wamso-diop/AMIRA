@@ -7,6 +7,9 @@ def register_cors(app):
         origin = request.headers.get("Origin", "")
         allowed = current_app.config["ALLOWED_ORIGINS"]
         # développement : toute extension (l'identifiant d'une extension non empaquetée change) ; production : la liste
+        # l'admin n'est jamais appelé par l'extension : pas de CORS
+        if request.path.startswith("/v1/admin"):
+            return resp
         if origin.startswith("chrome-extension://") and (not allowed or origin in allowed):
             resp.headers["Access-Control-Allow-Origin"] = origin
             resp.headers["Vary"] = "Origin"
