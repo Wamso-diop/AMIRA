@@ -23,7 +23,7 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
   - Tests : `test_guard.py` (30 cas ou plus, canari).
   - Fichiers : `amira/guard.py`, `tests/test_guard.py`.
 
-- [ ] **S4. Base et import du gold**
+- [x] **S4. Base et import du gold**
   - Acceptation : schéma (6 tables + `counters`), requêtes paramétrées ; import idempotent, `{Vk}→{N(k-1)}`, 4 sens, variantes, refus, conflits, rapport.
   - Tests : `test_import_gold.py`, `test_no_fulfulde.py`.
   - Fichiers : `amira/db.py`, `tools/import_gold.py`, 2 tests.

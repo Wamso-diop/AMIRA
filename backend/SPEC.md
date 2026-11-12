@@ -49,7 +49,7 @@ cd backend
 python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
 cp .env.example .env                                     # puis AMIRA_ADMIN_TOKENS
 python tools/check_model.py                              # S0 : chargement, 5 phrases, RAM, latence
-python tools/import_gold.py data/gold_fulfulde.csv --validator natif-1   # rejouable
+python -m tools.import_gold data/gold_fulfulde.csv --validator natif-1   # rejouable
 flask --app amira run --port 5000                        # AMIRA_ENGINE=fake pour travailler sans modèle
 flask --app amira purge                                  # rétention (90 jours)
 pytest -q                                                # tout sauf le vrai modèle
