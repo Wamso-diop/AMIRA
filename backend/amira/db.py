@@ -69,6 +69,16 @@ def find_translation(conn, source: str, target: str, variety: str, key: str):
     ).fetchone()
 
 
+def note_unmatched(conn, source: str, target: str, variety: str, key: str, text: str) -> None:
+    """Texte sensible demandé sans traduction validée : la liste que les natifs valident en priorité."""
+    conn.execute(
+        "INSERT INTO unmatched (source, target, variety, key, text_masked, requests, last_at) VALUES (?, ?, ?, ?, ?, 1, ?) "
+        "ON CONFLICT (source, target, variety, key) DO UPDATE SET requests = unmatched.requests + 1, last_at = excluded.last_at",
+        (source, target, variety, key, text, now()),
+    )
+    conn.commit()
+
+
 def audit(conn, who: str, action: str, key: str | None = None) -> None:
     conn.execute("INSERT INTO audit (at, who, action, key) VALUES (?, ?, ?, ?)", (now(), who, action, key))
 

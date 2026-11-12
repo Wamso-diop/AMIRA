@@ -28,7 +28,7 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
   - Tests : `test_import_gold.py`, `test_no_fulfulde.py`.
   - Fichiers : `amira/db.py`, `tools/import_gold.py`, 2 tests.
 
-- [ ] **S5. Traduction par la mémoire seule**
+- [x] **S5. Traduction par la mémoire seule**
   - Acceptation : forme → garde → mémoire → sensible vers `unmatched` → sinon `uncertain` ; ordre et `id` conservés ; fr↔en refusé ; variété ; `auto`.
   - Tests : `test_translate_memory.py` (exemples tirés du CSV).
   - Fichiers : `amira/services/translator.py`, `routes/public.py`, test.

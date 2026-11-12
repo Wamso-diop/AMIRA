@@ -18,6 +18,9 @@ def load(env: Mapping[str, str]) -> dict:
         "STT_ENABLED": get("AMIRA_STT_ENABLED", "false").lower() == "true",
         "LANGUAGES": _list(get("AMIRA_LANGUAGES", "fr,en,ff")),
         "VARIETIES": _list(get("AMIRA_VARIETIES", "ngaoundere,garoua,maroua")),
+        # sens autorisés : jamais fr↔en ; ajouter une langue = un modèle, une mémoire et cette liste
+        "DIRECTIONS": _list(get("AMIRA_DIRECTIONS", "fr>ff,en>ff,ff>fr,ff>en")),
+        "DB_PATH": get("AMIRA_DB_PATH", "data/amira.sqlite3"),
         "MAX_CONTENT_LENGTH": 5 * 1024 * 1024,
     }
     if cfg["ENV"] != "development" and not cfg["ALLOWED_ORIGINS"]:
