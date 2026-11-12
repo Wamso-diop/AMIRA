@@ -93,7 +93,7 @@ backend/
 
 ### 7.2 Garde (`guard.py`)
 
-Après retrait des marqueurs, le texte est refusé s'il contient : un chiffre (`\d` Unicode), une devise (`FCFA`, `XAF`, `CFA`, `francs?`, `€`, `$`), un e-mail ou un motif IBAN (deux lettres, deux chiffres, puis au moins 10 caractères alphanumériques ou espaces). Un segment refusé renvoie `{text: <reçu>, status: "uncertain", confidence: 0, origin: "llm"}`. Il n'est ni cherché en mémoire, ni transmis, ni stocké, ni journalisé. `unmasked_total += 1`, et le lot continue.
+Texte normalisé (NFKC, caractères invisibles retirés), marqueurs du front retirés (index de 1 à 3 chiffres seulement : `{N699123456}` ne cache pas un numéro). Refusé s'il contient : un chiffre Unicode (catégories Nd, No, Nl, avant et après NFKC), un symbole monétaire (Sc : `€`, `$`, `£`, `₦`…), une devise (`FCFA`, `F CFA`, `CFA`, `XAF`, `XOF`, `franc(s)`) ou un e-mail. Un IBAN porte toujours des chiffres de contrôle : la règle des chiffres le refuse. Un segment refusé renvoie `{text: <reçu>, status: "uncertain", confidence: 0, origin: "llm"}`. Il n'est ni cherché en mémoire, ni transmis, ni stocké, ni journalisé. `unmasked_total += 1`, et le lot continue.
 
 ### 7.3 Chaîne d'un segment (`/v1/translate`)
 

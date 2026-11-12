@@ -18,7 +18,7 @@ Vérification commune à chaque étape : `cd backend && pytest -q` vert, aucun t
   - Tests : `test_markers.py` (imbrication, doublons, renumérotation, aller-retour, ajout ou perte, accolades inconnues).
   - Fichiers : `amira/markers.py`, `tests/test_markers.py`.
 
-- [ ] **S3. Garde**
+- [x] **S3. Garde**
   - Acceptation : `guard.check` ; un segment refusé n'est ni cherché, ni transmis, ni stocké, ni journalisé ; `unmasked_total` augmente.
   - Tests : `test_guard.py` (30 cas ou plus, canari).
   - Fichiers : `amira/guard.py`, `tests/test_guard.py`.
