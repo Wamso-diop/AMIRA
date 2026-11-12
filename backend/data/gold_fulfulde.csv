@@ -1,0 +1,104 @@
+id,kind,section,page,fr,en,ff,fr_variants,en_variants,ff_variants,notes,observed,n_markers
+g0001,glossaire,G,1,compte,account,Sigga,,,konte,,oui,0
+g0002,glossaire,G,1,argent,money,ceede,fonds,funds,,,oui,0
+g0003,glossaire,G,1,banque,bank,sarre ceede,,,banke,,oui,0
+g0004,glossaire,G,1,transfert,transfer,neldol,envoi,sending,,verbe : neldugo,oui,0
+g0005,ui,A2,3,Frais,Fees,Yoɓde,,,,,oui,0
+g0006,ui,A7,7,Montant,Amount,Limgal ceede,,,,,oui,0
+g0007,glossaire,G,1,numéro,number,lamba,,,,,oui,0
+g0008,ui,A2,3,Bénéficiaire,Beneficiary,Jaɓɓoowo,,,,,oui,0
+g0009,glossaire,G,1,nom,name,innde,,,,,oui,0
+g0010,glossaire,G,1,motif,reason,huja,raison,,,,oui,0
+g0011,glossaire,G,1,confirmer,confirm,tabitinugo,,,,,oui,0
+g0012,ui,A5,6,Continuer,Continue,Tokkitina,,,,,oui,0
+g0013,ui,A5,6,Retour,Back,Lorra,,,lorta,,oui,0
+g0014,ui,A7,7,Modifier,Edit,Waylugo,,,,,oui,0
+g0015,message,B,10,Annuler,Cancel,Fasitugo,,,Haɗugo,,non,0
+g0016,glossaire,G,2,vérifier,check,laartugo,,,,impératif : laarta,oui,0
+g0017,ui,A4,5,Sécurité,Security,Jam,,,,,oui,0
+g0018,glossaire,G,2,aucun,none,wala,sans,without,,,oui,0
+g0019,glossaire,G,2,terminé,completed,timmi,,,,,oui,0
+g0020,glossaire,G,2,plus que,more than,buri,,,,,oui,0
+g0021,glossaire,G,2,reçu,received,yotti,,,,,oui,0
+g0022,glossaire,G,2,nouveau,new,feere,autre,other,,,oui,0
+g0023,glossaire,G,2,encore,again,fahin,de nouveau,,,,oui,0
+g0024,ui,A1,3,"Environnement de test — données fictives, aucune transaction réelle.","Test environment — fictitious data, no real transaction.","Ɗum ƴeewtirgo tan — habaruuji fenaande, wala neldol ceede goonga.",,,,,oui,0
+g0025,ui,A1,3,Protocole de test,Test protocol,Laawol ƴeewtirgo,,,,,oui,0
+g0026,ui,A1,3,Retour au hackathon,Back to the hackathon,Lorrago ha hackathon,,,,,oui,0
+g0027,ui,A1,3,Banque en ligne,Online bank,Siggorde ceede ha internet,,,Banke ceede ha internet,,oui,0
+g0028,ui,A2,3,Solde,Balance,Ceede,,,,,oui,0
+g0029,ui,A2,3,Récapitulatif,Summary,Jimilla,,,,,oui,0
+g0030,ui,A2,3,Confirmation,Confirmation,Tabitinol,,,,,oui,0
+g0031,ui,A3,4,Votre compte,Your account,Konte maaɗa,,,,,oui,0
+g0032,ui,A3,4,"Bonjour, {V1}","Hello, {V1}","Jam waali, {V1}",,,,,oui,1
+g0033,ui,A3,4,Consultez votre solde et lancez un transfert en toute sécurité.,Check your balance and start a transfer securely.,"Laarta ceede ɗe a mari, fuddu neldol ceede e jam.",,,,,oui,0
+g0034,ui,A3,4,Solde disponible,Available balance,Ceede ɗe a mari jonta,,,,,oui,0
+g0035,ui,A3,4,Numéro de compte : {V1},Account number: {V1},Lamba konte : {V1},,,,,oui,1
+g0036,ui,A3,4,Compte courant,Current account,Konte jonta,,,,,oui,0
+g0037,ui,A3,4,Effectuer un transfert,Make a transfer,Neldugo ceede,,,,,oui,0
+g0038,ui,A3,4,Consulter les frais,View fees,Laarugo yoɓde,,,,,oui,0
+g0039,ui,A3,4,Transactions récentes,Recent transactions,Kuude ceede keese,,,,,oui,0
+g0040,ui,A3,4,Paiement marchand,Merchant payment,Yoɓde yeeɓoowo,,,,,oui,0
+g0041,ui,A3,4,Salaire reçu,Salary received,Njoɓdi yottide,,,,,oui,0
+g0042,ui,A3,4,Transfert reçu,Transfer received,Neldol yottide,,,,,oui,0
+g0043,ui,A3,4,Facture électricité,Electricity bill,Faktir yitte,,,Faktir yitté,,oui,0
+g0044,ui,A4,5,Vérifiez toujours le nom et le numéro du bénéficiaire avant de confirmer un transfert.,Always check the beneficiary's name and number before confirming a transfer.,Larta tum innde e lamba jaɓɓoowo hiddego tabitinugo neldol ceede.,,,,,oui,0
+g0045,ui,A4,5,Connexion sécurisée,Secure connection,Jokkol jam,,,,,oui,0
+g0046,ui,A4,5,Safinum Pay — environnement de démonstration. Ne saisissez aucune donnée personnelle réelle.,Safinum Pay — demo environment. Do not enter any real personal data.,Safinum Pay — babal ƴeewtirgo. Taa winndu habaruuji maaɗa ɗi goonga.,,,,,oui,0
+g0047,ui,A5,5,Frais de transfert,Transfer fees,Yoɓde neldol,,,,,oui,0
+g0048,ui,A5,5,Choisissez le type de transfert et le montant. Les frais sont calculés automatiquement.,Choose the transfer type and the amount. Fees are calculated automatically.,Suɓa noy neldol e limgal ceede. Yoɓde limtaama fere may.,,,,,oui,0
+g0049,ui,A5,5,Type d'opération,Operation type,Noy kuugal,,,,,oui,0
+g0050,ui,A5,5,Compte Safinum,Safinum account,Konte Safinum,,,,,oui,0
+g0051,ui,A5,5,Transfert instantané et gratuit,Instant and free transfer,"Neldol jonta-jonta, wala yoɓde",,,,,oui,0
+g0052,ui,A5,5,Montant à envoyer,Amount to send,Limgal ceede ɗe a neldata,,,,,oui,0
+g0053,ui,A5,6,Gratuit,Free,Wala yoɓde,,,,,oui,0
+g0054,ui,A5,6,Total à débiter,Total to be debited,Jimilla ceede ɗe ittete,,,,,oui,0
+g0055,ui,A5,6,Solde après opération,Balance after operation,Ceede ɗe luttata bawo neldol,,,,,oui,0
+g0056,ui,A6,6,Renseignez les informations du destinataire. Vérifiez toujours le numéro avant de valider.,Enter the recipient's details. Always check the number before validating.,Winndu habaruuji jaɓɓoowo. Laarta lamba hiddeko nelda,,,,,oui,0
+g0057,ui,A6,6,Ce bénéficiaire n'a jamais été utilisé sur ce compte. Vérifiez le numéro avant de continuer.,This beneficiary has never been used on this account. Check the number before continuing.,"Jaɓɓoowo oo, o huutinaaka naa fuu e konte ndee. Ƴeewa limgal adii jokkugo.",,,,,oui,0
+g0058,ui,A6,6,Nom du bénéficiaire,Beneficiary name,Innde jaɓɓoowo,,,,,oui,0
+g0059,ui,A6,6,Numéro de téléphone,Phone number,Lamba telefon,,,,,oui,0
+g0060,ui,A6,6,Motif du transfert,Reason for transfer,Huja neldol,,,,,oui,0
+g0061,ui,A6,6,Paiement de services,Payment for services,Yoɓde wallitorde,,,,,oui,0
+g0062,ui,A6,6,Note (optionnel),Note (optional),Binndol (to a yidi),,,,,oui,0
+g0063,ui,A6,7,J'ai vérifié le nom et le numéro du bénéficiaire.,I have checked the beneficiary's name and number.,Mi laarti innde e lamba jaɓɓoowo.,,,,,oui,0
+g0064,ui,A7,7,Vérifiez les informations avant de confirmer le transfert.,Check the information before confirming the transfer.,Laarta habaruuji ɗin adii tabitinugo neldol.,,,,,oui,0
+g0065,ui,A7,7,Total débité,Total debited,Jimilla ceede ɗe ittaama,,,,,oui,0
+g0066,ui,A7,7,Téléphone,Phone,Telefon,,,,,oui,0
+g0067,ui,A7,7,Référence,Reference,ɓatakewol,,,,,oui,0
+g0068,ui,A7,7,Opération,Operation,kuugal,,,,,oui,0
+g0069,ui,A7,7,Je confirme que les informations ci-dessus sont correctes.,I confirm that the information above is correct.,Mi tabitini habaruuji dow ɗi goonga.,,,,,oui,0
+g0070,ui,A7,8,Confirmer le transfert,Confirm transfer,Tabitinugo neldol,,,,,oui,0
+g0071,ui,A8,8,Transfert effectué,Transfer completed,Neldol timmi,,,,,oui,0
+g0072,ui,A8,8,Votre transfert a été envoyé avec succès.,Your transfer was sent successfully.,Ceede maaɗa neldaama e jam.,,,,,oui,0
+g0073,ui,A8,8,Statut,Status,Wakkere,,,,,oui,0
+g0074,ui,A8,8,Succès,Success,Waddake,,,,,oui,0
+g0075,ui,A8,8,Nouveau transfert,New transfer,Neldol feere,,,,,oui,0
+g0076,message,B,8,Veuillez saisir un montant.,Please enter an amount.,Winndu limgal ceede.,,,,,non,0
+g0077,message,B,8,Le montant doit être supérieur à {V1}.,The amount must be greater than {V1}.,Limgal ceede haani bura {V1}.,,,,,non,1
+g0078,message,B,8,Le montant saisi est invalide.,The amount entered is invalid.,Limgal ceede ngal winndaa wonay goonga.,,,,,non,0
+g0079,message,B,9,Solde insuffisant pour effectuer ce transfert.,Insufficient balance to make this transfer.,Ceede ɗe a mari cikay ngam neldol ngol.,,,,,non,0
+g0080,message,B,9,Le montant dépasse la limite autorisée.,The amount exceeds the allowed limit.,Limgal ceede ngal buri ko fotaa.,,,,,non,0
+g0081,message,B,9,Veuillez sélectionner un type d'opération.,Please select an operation type.,Suɓa noy wonata kuugal.,,,,,non,0
+g0082,message,B,9,Le nom du bénéficiaire est obligatoire.,The beneficiary name is required.,Innde jaɓɓoowo haani winndeede ɗole.,,,,,non,0
+g0083,message,B,9,Veuillez saisir un numéro de téléphone.,Please enter a phone number.,Winndu lamba telefon.,,,,,non,0
+g0084,message,B,9,Numéro de téléphone invalide. Vérifiez le numéro avant de continuer.,Invalid phone number. Check the number before continuing.,Lamba telefon wonay goonga. Laarta lamba hiddeko tokkitina,,,,,non,0
+g0085,message,B,9,Le numéro doit contenir {V1} chiffres.,The number must contain {V1} digits.,Lamba haani ngoodi limgal {V1}.,,,,,non,1
+g0086,message,B,9,Veuillez indiquer le motif du transfert.,Please state the reason for the transfer.,Winndu huja neldol.,,,,,non,0
+g0087,message,B,9,Veuillez cocher la case pour confirmer que vous avez vérifié le nom et le numéro du bénéficiaire.,Please tick the box to confirm you have checked the beneficiary's name and number.,Maata ɗoftaare ngam tabitinugo ko a laarti innde e lamba jaɓɓoowo.,,,,,non,0
+g0088,message,B,9,Veuillez confirmer que les informations sont correctes avant de continuer.,Please confirm the information is correct before continuing.,Tabitina habaruuji ɗi goonga hiddeko tokkitingo,,,,,non,0
+g0089,message,B,9,Le bénéficiaire ne peut pas être votre propre compte.,The beneficiary cannot be your own account.,Jaɓɓoowo fotay wonna konte maaɗa,,,,,non,0
+g0090,message,B,9,Attention : vérifiez le nom du bénéficiaire.,Warning: check the beneficiary's name.,Hakkiilo : laarta innde jaɓɓoowo.,,,,,non,0
+g0091,message,B,9,Ce transfert est irréversible.,This transfer cannot be reversed.,Neldol ngol waylatako,,,,,non,0
+g0092,message,B,9,Champ obligatoire,Required field,Ɗum haani winndeede,,,,,non,0
+g0093,message,B,10,Une erreur est survenue. Veuillez réessayer.,An error occurred. Please try again.,Woodi ko billi. Fuɗɗutu fahin.,,,,,non,0
+g0094,message,B,10,Transfert impossible pour le moment. Veuillez réessayer plus tard.,Transfer not possible right now. Please try again later.,Neldol wadatake jonta. Fuɗɗutu fahin ɓaawo.,,,,,non,0
+g0095,message,B,10,Connexion perdue. Vérifiez votre connexion Internet.,Connection lost. Check your Internet connection.,Jokkol majji. Ƴeewa jokkol internet maaɗa.,,,,,non,0
+g0096,message,B,10,Session expirée. Veuillez vous reconnecter.,Session expired. Please log in again.,Sahaa maaɗa timmi. Jokka fahin.,,,,,non,0
+g0097,message,B,10,Transfert annulé.,Transfer cancelled.,Neldol haɗaama.,,,,,non,0
+g0098,message,B,10,Transfert en cours de traitement…,Transfer being processed…,Neldol ɗon waɗee…,,,,,non,0
+g0099,message,B,10,Transfert refusé.,Transfer declined.,Neldol salaama.,,,,,non,0
+g0100,message,B,10,Échec du transfert.,Transfer failed.,Neldol waɗaaka.,,,,,non,0
+g0101,message,B,10,En attente,Pending,ɗon reni,,,Do lawol,,non,0
+g0102,message,B,10,Échec,Failed,Waɗaaka,,,,,non,0
+g0103,message,B,10,Chargement…,Loading…,Ɗon waɗee…,,,,,non,0
