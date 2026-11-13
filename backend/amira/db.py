@@ -2,6 +2,7 @@
 Tous les textes stockés sont masqués et ont passé la garde."""
 import re
 import sqlite3
+from pathlib import Path
 import unicodedata
 from datetime import datetime, timedelta, timezone
 
@@ -47,6 +48,8 @@ def now() -> str:
 
 
 def connect(path: str) -> sqlite3.Connection:
+    if path != ":memory:":
+        Path(path).parent.mkdir(parents=True, exist_ok=True)  # clone neuf : data/ n'existe pas encore
     conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)

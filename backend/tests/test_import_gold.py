@@ -154,3 +154,10 @@ def test_compteur(conn):
     db.bump(conn, "unmasked_total")
     assert db.counter(conn, "unmasked_total") == 2
     assert db.counter(conn, "inconnu") == 0
+
+
+def test_la_base_cree_son_dossier(tmp_path):
+    """Dans un clone neuf, data/ n'existe pas : la première connexion le crée."""
+    path = tmp_path / "absent" / "sous" / "amira.sqlite3"
+    db.connect(str(path)).close()
+    assert path.exists()
