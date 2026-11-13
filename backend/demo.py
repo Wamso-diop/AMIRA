@@ -47,7 +47,13 @@ def main() -> None:
     env = {**os.environ, "AMIRA_ENV": "development", "AMIRA_LANGUAGE": args.language, "AMIRA_ENGINE": engine,
            "AMIRA_DB_PATH": "data/demo.sqlite3", "AMIRA_GOLD_VALIDATOR": "natif-1"}
     app = create_app(env)
-    db.connect(app.config["DB_PATH"]).close()
+    conn = db.connect(app.config["DB_PATH"])
+    audio = HERE / "languages" / args.language / "audio"
+    if (audio / "index.csv").exists():  # voix des natifs : le serveur ne sert que celles déclarées en base (import rejouable)
+        from tools.import_audio import import_audio
+        r = import_audio(conn, audio, Path(app.config["GOLD_PATH"]), Path(app.config["RECORDINGS_DIR"]), "natif-1", args.language)
+        print(f"Voix des locuteurs natifs chargées : {r['keys']} passages" + (f" ({len(r['incomplete'])} phrases incomplètes : ffmpeg absent ou morceau manquant)" if r["incomplete"] else ""))
+    conn.close()
     if app.extensions["amira"]["engine"] is not None:
         app.extensions["amira"]["engine"].ready()  # charge le modèle en tâche de fond
     print(f"\nAmira ({args.language}) prête sur http://127.0.0.1:{args.port} — moteur : "

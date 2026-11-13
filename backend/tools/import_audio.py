@@ -51,7 +51,8 @@ def import_audio(conn, audio_dir: Path, gold: Path, rec_dir: Path, validator: st
             continue
         whole = file_for(row["id"], "entier")
         p1, p2 = file_for(row["id"], "p1"), file_for(row["id"], "p2")
-        if not whole and not (p1 and p2):
+        # deux morceaux à recoller : ffmpeg est indispensable ; sans lui, la phrase est comptée incomplète
+        if not whole and not (p1 and p2 and shutil.which("ffmpeg")):
             if p1 or p2:
                 incomplete.append(row["id"])
             continue
