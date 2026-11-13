@@ -108,6 +108,7 @@
     "autoWarnings": "Read warnings automatically",
     "recorded": "Recorded voice",
     "synthetic": "Synthetic voice",
+    "noRecording": "No recording for this passage yet.",
     "noTts": "Read-aloud is not available yet. It will appear as soon as the service offers it.",
     "nothing": "Nothing to read on this page yet.",
     "dictation": "Dictation",

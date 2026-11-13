@@ -108,6 +108,7 @@
     "autoWarnings": "Lire automatiquement les avertissements",
     "recorded": "Voix enregistrée",
     "synthetic": "Voix de synthèse",
+    "noRecording": "Pas encore d’enregistrement pour ce passage.",
     "noTts": "La lecture à voix haute n’est pas encore disponible. Elle apparaîtra dès que le service la proposera.",
     "nothing": "Rien à lire pour l’instant sur cette page.",
     "dictation": "Dictée",

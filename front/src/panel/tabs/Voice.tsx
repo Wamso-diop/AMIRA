@@ -185,6 +185,11 @@ export function VoiceTab(props: TabProps) {
               <span className="aide">{t('voice.voiceHint')}</span>
             )}
           </div>
+          {player.missing && (
+            <p className="note rose" role="status">
+              {t('voice.noRecording')}
+            </p>
+          )}
 
           {current && player.status !== 'idle' && (
             <figure className="en-lecture" aria-live="polite">

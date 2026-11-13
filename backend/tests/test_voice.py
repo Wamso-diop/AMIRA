@@ -57,6 +57,19 @@ def test_enregistrement_natif(voice_app):
     assert "X-Amira-Voice" in r.headers["Access-Control-Expose-Headers"]
 
 
+def test_enregistrement_en_chemin_relatif(db_path, tmp_path, monkeypatch):
+    # AMIRA_RECORDINGS_DIR par défaut (media/recordings) : relatif au dossier où tourne le serveur, pas au code
+    monkeypatch.chdir(tmp_path)
+    app = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_RECORDINGS_DIR": "rec"}, engine=None)
+    Path("rec").mkdir()
+    Path("rec/k0838aeb6.ff.mp3").write_bytes(AUDIO)
+    conn = db.connect(db_path)
+    conn.execute("INSERT INTO recordings VALUES ('k0838aeb6', 'ff', 'rec/k0838aeb6.ff.mp3', 'audio/mpeg', 'natif-1', '2026-01-01')")
+    conn.commit()
+    r = tts(app, segmentKey="k0838aeb6")
+    assert r.status_code == 200 and r.data == AUDIO
+
+
 def test_enregistrement_d_une_autre_langue_ignore(voice_app):
     add_recording(voice_app, language="fr")
     assert tts(voice_app, segmentKey="k0838aeb6").status_code == 204

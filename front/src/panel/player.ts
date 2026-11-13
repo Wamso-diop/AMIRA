@@ -1,6 +1,6 @@
 /**
- * Lecteur partagé : audio du serveur (/v1/tts) ou, si le serveur ne renvoie pas d'audio,
- * synthèse vocale du navigateur, toujours étiquetée « Voix de synthèse ».
+ * Lecteur partagé : enregistrement d'un locuteur natif servi par /v1/tts. Sans enregistrement pour un
+ * passage, un message le dit (aucune voix de synthèse) et la lecture passe au suivant.
  * Les textes reçus sont déjà masqués : les marqueurs {N0}… sont retirés avant lecture.
  */
 import type { TtsResult } from '../services/api';
@@ -16,15 +16,20 @@ export type PlayerState = {
   total: number;
   /** Identifiant du segment de page en cours de lecture (pour l'entourer sur la page). */
   currentId: string | null;
+  /** Le dernier passage demandé n'a pas encore d'enregistrement. */
+  missing: boolean;
 };
 
 /** Un passage à lire : texte masqué, et si possible l'identifiant et la clé stable du segment. */
 export type Passage = string | { text: string; id?: string; key?: string };
 
-export const IDLE: PlayerState = { status: 'idle', voice: null, error: null, index: 0, total: 0, currentId: null };
+export const IDLE: PlayerState = { status: 'idle', voice: null, error: null, index: 0, total: 0, currentId: null, missing: false };
+/** Temps laissé pour lire le message « pas d'enregistrement » avant le passage suivant. */
+const MISSING_PAUSE_MS = 1500;
 let state: PlayerState = IDLE;
 const subs = new Set<(s: PlayerState) => void>();
 let audio: HTMLAudioElement | null = null;
+let wait: ReturnType<typeof setTimeout> | null = null;
 let queue: { text: string; id?: string; key?: string }[] = [];
 let total = 0;
 let token = 0;
@@ -55,7 +60,7 @@ export async function play(passages: Passage[], language: string, speed: number)
   rate = speed;
   lang = language;
   if (!queue.length) return;
-  set({ status: 'loading', error: null, index: 0, total, currentId: queue[0].id ?? null });
+  set({ status: 'loading', error: null, index: 0, total, currentId: queue[0].id ?? null, missing: false });
   await next(my);
 }
 
@@ -71,50 +76,42 @@ async function next(my: number) {
   if (my !== token) return;
   if (!res.ok) return set({ status: 'idle', error: res.code, currentId: null });
   const r = res.data;
-  set({ voice: r.voice, status: 'playing' });
   if (r.audioBase64 && r.mimeType) {
+    set({ voice: r.voice, status: 'playing', missing: false });
     audio = new Audio(`data:${r.mimeType};base64,${r.audioBase64}`);
     audio.playbackRate = rate;
     audio.onended = () => void next(my);
     audio.onerror = () => set({ status: 'idle', error: 'AUDIO', currentId: null });
     await audio.play().catch(() => set({ status: 'idle', error: 'AUDIO', currentId: null }));
-  } else if ('speechSynthesis' in window) {
-    const u = new SpeechSynthesisUtterance(text);
-    // aucune voix fulfulde dans les navigateurs : la démonstration lit le texte source en français
-    u.lang = lang === 'en' ? 'en-US' : 'fr-FR';
-    u.rate = rate;
-    u.onend = () => void next(my);
-    u.onerror = (e) => {
-      if (my === token && e.error !== 'interrupted' && e.error !== 'canceled') set({ status: 'idle', currentId: null });
-    };
-    speechSynthesis.speak(u);
   } else {
-    set({ status: 'idle', error: 'NO_SPEECH' });
+    audio = null;
+    set({ voice: null, status: 'playing', missing: true });
+    wait = setTimeout(() => void next(my), MISSING_PAUSE_MS);
   }
 }
 
 export function pause() {
   if (state.status !== 'playing') return;
-  if (audio) audio.pause();
-  else speechSynthesis?.pause();
+  audio?.pause();
+  if (wait) clearTimeout(wait);
   set({ status: 'paused' });
 }
 
 export function resume() {
   if (state.status !== 'paused') return;
   if (audio) void audio.play();
-  else speechSynthesis?.resume();
+  else if (state.missing) wait = setTimeout(() => void next(token), MISSING_PAUSE_MS);
   set({ status: 'playing' });
 }
 
 export function stop() {
   token++;
   queue = [];
+  if (wait) clearTimeout(wait);
   if (audio) {
     audio.pause();
     audio = null;
   }
-  if ('speechSynthesis' in window) speechSynthesis.cancel();
   set({ status: 'idle', currentId: null, index: 0, total: 0 });
 }
 

@@ -1,3 +1,4 @@
+import os
 import re
 import time
 
@@ -135,7 +136,8 @@ def tts():
     if key:
         rec = voice.find_recording(conn, key, language)
         if rec:
-            resp = send_file(rec["path"], mimetype=rec["mime"], conditional=False)
+            # chemin relatif = relatif au dossier du serveur ; send_file le prendrait relatif au code
+            resp = send_file(os.path.abspath(rec["path"]), mimetype=rec["mime"], conditional=False)
             resp.headers["X-Amira-Voice"] = "recorded"
             return resp
         # 2. passage demandé sans enregistrement : il entre dans la liste « à enregistrer »

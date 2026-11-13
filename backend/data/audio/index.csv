@@ -1,0 +1,212 @@
+fichier,ids,partie,rubrique,texte_audio,ff,fr,en,nom_origine
+a_verifier/hors-gold_a-don-yaha-neldugo-fcfa-ha-yobde-fcfa-jimila-fcf.m4a,,?,a_verifier,A don yaha neldugo FCFA ha Yoɓde  FCFA Jimila FCF,,,,A don yaha neldugo FCFA ha Yoɓde  FCFA Jimila FCF.m4a
+a_verifier/hors-gold_fcfa.m4a,,?,a_verifier,FCFA,,,,FCFA.m4a
+a_verifier/hors-gold_konte-hutidirde.m4a,,?,a_verifier,Konte hutiɗirɗe,,,,Konte hutiɗirɗe.m4a
+a_verifier/hors-gold_laarugo-ceede.m4a,,?,a_verifier,Laarugo ceede,,,,Laarugo ceede.m4a
+a_verifier/hors-gold_ujuneeje-temedere-go-o.m4a,,?,a_verifier,Ujuneeje temedere go'o,,,,Ujuneeje temedere go'o.m4a
+a_verifier/hors-gold_v-fcfa-lornitaama-e-sigga-maada.m4a,,?,a_verifier,{} FCFA lornitaama e sigga maaɗa.,,,,{} FCFA lornitaama e sigga maaɗa..m4a
+a_verifier/hors-gold_walla-yobde.m4a,,?,a_verifier,Walla Yoɓde,,,,Walla Yoɓde.m4a
+interface/g0005_yobde.m4a,g0005,entier,interface,Yoɓde,Yoɓde,Frais,Fees,Yoɓde.m4a
+interface/g0006_limgal-ceede.m4a,g0006,entier,interface,Limgal ceede,Limgal ceede,Montant,Amount,Limgal ceede.m4a
+interface/g0008_jabboowo.m4a,g0008,entier,interface,Jaɓɓoowo,Jaɓɓoowo,Bénéficiaire,Beneficiary,Jaɓɓoowo.m4a
+interface/g0012_tokkitingo.m4a,g0012,entier,interface,Tokkitingo,Tokkitingo,Continuer,Continue,Tokkitingo.m4a
+interface/g0013_lorra.m4a,g0013,entier,interface,Lorra,Lorta,Retour,Back,Lorra.m4a
+interface/g0013_lorta.m4a,g0013,entier,interface,Lorta,Lorta,Retour,Back,Lorta.m4a
+interface/g0014_sanjugo.m4a,g0014,entier,interface,Sanjugo,Sanjugo,Modifier,Edit,Sanjugo.m4a
+interface/g0017_jam.m4a,g0017,entier,interface,Jam,Jam,Sécurité,Security,Jam.m4a
+interface/g0024_p1_dum-yeewtirgo-tan.m4a,g0024,p1,interface,Ɗum ƴeewtirgo tan,"Ɗum ƴeewtirgo tan — habaruuji fenaande, wala neldol ceede goonga.","Environnement de test — données fictives, aucune transaction réelle.","Test environment — fictitious data, no real transaction.",Ɗum ƴeewtirgo tan.m4a
+interface/g0024_p2_habaruuji-fenaande-wala-neldol-ceede-goonga.m4a,g0024,p2,interface,"habaruuji fenaande, wala neldol ceede goonga.","Ɗum ƴeewtirgo tan — habaruuji fenaande, wala neldol ceede goonga.","Environnement de test — données fictives, aucune transaction réelle.","Test environment — fictitious data, no real transaction.","habaruuji fenaande, wala neldol ceede goonga..m4a"
+interface/g0025_laawol-yeewtirgo.m4a,g0025,entier,interface,Laawol ƴeewtirgo,Laawol ƴeewtirgo,Protocole de test,Test protocol,Laawol ƴeewtirgo.m4a
+interface/g0026_lorta-ha-hackathon.m4a,g0026,entier,interface,Lorta ha hackathon,Lorta ha hackathon,Retour au hackathon,Back to the hackathon,Lorta ha hackathon.m4a
+interface/g0027_siggorde-ceede-ha-internet.m4a,g0027,entier,interface,Siggorde ceede ha internet,Siggorde ceede ha internet,Banque en ligne,Online bank,Siggorde ceede ha internet.m4a
+interface/g0028_ceede-de-a-mari.m4a,g0028,entier,interface,Ceede ɗe a mari,Ceede ɗe a mari,Solde,Balance,Ceede ɗe a mari.m4a
+interface/g0030_tabitinol.m4a,g0030,entier,interface,Tabitinol,Tabitinol,Confirmation,Confirmation,Tabitinol.m4a
+interface/g0032_jam-waali-v.m4a,g0032,entier,interface,"Jam waali, {}",Jam waali ,Bonjour ,Hello ,"Jam waali, {}.m4a"
+interface/g0033_laara-ceede-de-a-mari-fuddu-neldol-ceede-der-jam.m4a,g0033,entier,interface,"Laara ceede ɗe a mari, fuddu neldol ceede ɗer jam.","Laara ceede ɗe a mari, fuddu neldol ceede ɗer jam.",Consultez votre solde et lancez un transfert en toute sécurité.,Check your balance and start a transfer securely.,"Laara ceede ɗe a mari, fuddu neldol ceede ɗer jam..m4a"
+interface/g0034_ceede-de-a-mari-jonta.m4a,g0034,entier,interface,Ceede ɗe a mari jonta,Ceede ɗe a mari jonta,Solde disponible,Available balance,Ceede ɗe a mari jonta.m4a
+interface/g0035_lamba-sigga-v.m4a,g0035,entier,interface,Lamba sigga {},Lamba sigga ,Numéro de compte ,Account number ,Lamba sigga {}.m4a
+interface/g0036_sigga-hutidirde.m4a,g0036,entier,interface,Sigga hutiɗirɗe,Sigga hutiɗirɗe,Compte courant,Current account,Sigga hutiɗirɗe.m4a
+interface/g0037_neldugo-ceede.m4a,g0037,entier,interface,Neldugo ceede,Neldugo ceede,Effectuer un transfert,Make a transfer,Neldugo ceede.m4a
+interface/g0038_laarugo-yobde.m4a,g0038,entier,interface,Laarugo yoɓde,Laarugo yoɓde,Consulter les frais,View fees,Laarugo yoɓde.m4a
+interface/g0039_kuude-ceede-kesse.m4a,g0039,entier,interface,Kuuɗe ceede kesse,Kuuɗe ceede kesse,Transactions récentes,Recent transactions,Kuuɗe ceede kesse.m4a
+interface/g0040_yobde-yeeboowo.m4a,g0040,entier,interface,Yoɓde yeeɓoowo,Yoɓde yeeɓoowo,Paiement marchand,Merchant payment,Yoɓde yeeɓoowo.m4a
+interface/g0041_njobdi-yottide.m4a,g0041,entier,interface,Njoɓdi yottiɗe,Njoɓdi yottiɗe,Salaire reçu,Salary received,Njoɓdi yottiɗe.m4a
+interface/g0042_neldol-yottide.m4a,g0042,entier,interface,Neldol yottiɗe,Neldol yottiɗe,Transfert reçu,Transfer received,Neldol yottiɗe.m4a
+interface/g0043_faktir-yitte.m4a,g0043,entier,interface,Faktir yitte,Faktir yitte,Facture électricité,Electricity bill,Faktir yitte.m4a
+interface/g0044_p1_laarta-tum-innde-e-lamba-jabboowo.m4a,g0044,p1,interface,Laarta tum innde e lamba jaɓɓoowo,Laarta tum innde e lamba jaɓɓoowo hideko tabitinugo neldol ceede.,Vérifiez toujours le nom et le numéro du bénéficiaire avant de confirmer un transfert.,Always verify the beneficiary name and number before confirming a transfer.,Laarta tum innde e lamba jaɓɓoowo.m4a
+interface/g0044_p2_hideko-tabitinugo-neldol-ceede.m4a,g0044,p2,interface,hideko tabitinugo neldol ceede.,Laarta tum innde e lamba jaɓɓoowo hideko tabitinugo neldol ceede.,Vérifiez toujours le nom et le numéro du bénéficiaire avant de confirmer un transfert.,Always verify the beneficiary name and number before confirming a transfer.,hideko tabitinugo neldol ceede..m4a
+interface/g0045_jokkol-jam.m4a,g0045,entier,interface,Jokkol jam,Jokkol jam,Connexion sécurisée,Secure connection,Jokkol jam.m4a
+interface/g0046_p1_safinum-pay-dum-yeewtirgo.m4a,g0046,p1,interface,Safinum Pay — ɗum ƴeewtirgo,Safinum Pay — ɗum ƴeewtirgo. Taa winndu habaruuji maaɗa ɗi goonga.,Safinum Pay — environnement de démonstration. Ne saisissez aucune donnée personnelle réelle.,Safinum Pay — demo environment. Do not enter any real personal data.,Safinum Pay — ɗum ƴeewtirgo.m4a
+interface/g0046_p2_taa-winndu-habaruuji-maada-di-goonga.m4a,g0046,p2,interface,Taa winndu habaruuji maaɗa ɗi goonga.,Safinum Pay — ɗum ƴeewtirgo. Taa winndu habaruuji maaɗa ɗi goonga.,Safinum Pay — environnement de démonstration. Ne saisissez aucune donnée personnelle réelle.,Safinum Pay — demo environment. Do not enter any real personal data.,Taa winndu habaruuji maaɗa ɗi goonga..m4a
+interface/g0047_yobde-neldol.m4a,g0047,entier,interface,Yoɓde neldol,Yoɓde neldol,Frais de transfert,Transfer fees,Yoɓde neldol.m4a
+interface/g0048_p1_suba-wakere-neldol-e-limgal-ceede.m4a,g0048,p1,interface,Suɓa wakere neldol e limgal ceede,Suɓa wakere neldol e limgal ceede. Yoɓde limtaama hoore mayre.,Choisissez le type de transfert et le montant. Les frais sont calculés automatiquement.,Choose the transfer type and amount. Fees are calculated automatically.,Suɓa wakere neldol e limgal ceede.m4a
+interface/g0048_p2_yobde-limtaama-hoore-mayre.m4a,g0048,p2,interface,Yoɓde limtaama hoore mayre.,Suɓa wakere neldol e limgal ceede. Yoɓde limtaama hoore mayre.,Choisissez le type de transfert et le montant. Les frais sont calculés automatiquement.,Choose the transfer type and amount. Fees are calculated automatically.,Yoɓde limtaama hoore mayre..m4a
+interface/g0050_konte-safinum.m4a,g0050,entier,interface,Konte Safinum,Konte Safinum,Compte Safinum,Safinum account,Konte Safinum.m4a
+interface/g0051_neldol-jonta-jonta-wala-yobde.m4a,g0051,entier,interface,"Neldol jonta-jonta, wala yoɓde","Neldol jonta-jonta, wala yoɓde",Transfert instantané et gratuit,"Instant, free transfer","Neldol jonta-jonta, wala yoɓde.m4a"
+interface/g0052_limgal-ceede-de-a-neldata.m4a,g0052,entier,interface,Limgal ceede ɗe a neldata,Limgal ceede ɗe a neldata,Montant à envoyer,Amount to send,Limgal ceede ɗe a neldata.m4a
+interface/g0054_jimilla-ceede-de-ittete.m4a,g0054,entier,interface,Jimilla ceede ɗe ittete,Jimilla ceede ɗe ittete,Total à débiter,Total to be debited,Jimilla ceede ɗe ittete.m4a
+interface/g0055_ceede-de-luttata-bawo-neldol.m4a,g0055,entier,interface,Ceede ɗe luttata bawo neldol,Ceede ɗe luttata bawo neldol,Solde après opération,Balance after transfer,Ceede ɗe luttata bawo neldol.m4a
+interface/g0056_p1_winndu-habaruuji-jabboowo.m4a,g0056,p1,interface,Winndu habaruuji jaɓɓoowo.,Winndu habaruuji jaɓɓoowo. Laarta tum lamba hideko tabitinugo.,Renseignez les informations du destinataire. Vérifiez toujours le numéro avant de valider.,Enter the recipient's details. Always check the number before validating.,Winndu habaruuji jaɓɓoowo..m4a
+interface/g0056_p2_laarta-tum-lamba-hideko-tabitinugo.m4a,g0056,p2,interface,Laarta tum lamba hideko tabitinugo.,Winndu habaruuji jaɓɓoowo. Laarta tum lamba hideko tabitinugo.,Renseignez les informations du destinataire. Vérifiez toujours le numéro avant de valider.,Enter the recipient's details. Always check the number before validating.,Laarta tum lamba hideko tabitinugo..m4a
+interface/g0057_p1_jabboowo-oo-o-huutinaaka-naa-fuu-e-konte-ndee.m4a,g0057,p1,interface,"Jaɓɓoowo oo, o huutinaaka naa fuu e konte ndee.","Jaɓɓoowo oo, o huutinaaka naa fuu e konte ndee. Laarta lamba hideko tokkitingo",Ce bénéficiaire n'a jamais été utilisé sur ce compte. Vérifiez le numéro avant de continuer.,This beneficiary has never been used on this account. Check the number before continuing.,"Jaɓɓoowo oo, o huutinaaka naa fuu e konte ndee..m4a"
+interface/g0058_innde-jabboowo.m4a,g0058,entier,interface,Innde jaɓɓoowo,Innde jaɓɓoowo,Nom du bénéficiaire,Beneficiary name,Innde jaɓɓoowo.m4a
+interface/g0059_lamba-telefon.m4a,g0059,entier,interface,Lamba telefon,Lamba telefon,Numéro de téléphone,Phone number,Lamba telefon.m4a
+interface/g0060_huja-neldol.m4a,g0060,entier,interface,Huja neldol,Huja neldol,Motif du transfert,Reason for transfer,Huja neldol.m4a
+interface/g0061_yobde-kuuje.m4a,g0061,entier,interface,Yoɓde kuuje,Yoɓde kuuje,Paiement de services,Payment for services,Yoɓde kuuje.m4a
+interface/g0062_binndol-to-a-yidi.m4a,g0062,entier,interface,Binndol (to a yidi),Binndol (to a yidi),Note (optionnel),Note (optional),Binndol (to a yidi).m4a
+interface/g0063_mi-laarti-innde-e-lamba-jabboowo.m4a,g0063,entier,interface,Mi laarti innde e lamba jaɓɓoowo.,Mi laarti innde e lamba jaɓɓoowo.,J'ai vérifié le nom et le numéro du bénéficiaire.,I have checked the beneficiary's name and number.,Mi laarti innde e lamba jaɓɓoowo..m4a
+interface/g0064_laarta-habaruuji-hideko-tabitinugo-neldol.m4a,g0064,entier,interface,Laarta habaruuji hideko tabitinugo neldol.,Laarta habaruuji hideko tabitinugo neldol.,Vérifiez les informations avant de confirmer le transfert.,Check the information before confirming the transfer.,Laarta habaruuji hideko tabitinugo neldol..m4a
+interface/g0065_jimilla-ceede-de-ittaama.m4a,g0065,entier,interface,Jimilla ceede ɗe ittaama,Jimilla ceede ɗe ittaama,Total débité,Total debited,Jimilla ceede ɗe ittaama.m4a
+interface/g0067_batakewol.m4a,g0067,entier,interface,Batakewol,Batakewol,Référence,Reference,Batakewol.m4a
+interface/g0068_kuugal.m4a,g0068,entier,interface,Kuugal,kuugal,Opération,Operation,Kuugal.m4a
+interface/g0069_mi-tabitini-habaruuji-dow-di-goonga.m4a,g0069,entier,interface,Mi tabitini habaruuji dow ɗi goonga.,Mi tabitini habaruuji dow ɗi goonga.,Je confirme que les informations ci-dessus sont correctes.,I confirm that the information above is correct.,Mi tabitini habaruuji dow ɗi goonga..m4a
+interface/g0070_tabitinugo-neldol.m4a,g0070,entier,interface,Tabitinugo neldol,Tabitinugo neldol,Confirmer le transfert,Confirm transfer,Tabitinugo neldol.m4a
+interface/g0071_neldol-timmi.m4a,g0071,entier,interface,Neldol timmi,Neldol timmi,Transfert effectué,Transfer completed,Neldol timmi.m4a
+interface/g0072_ceede-maada-neldaama-e-jam.m4a,g0072,entier,interface,Ceede maaɗa neldaama e jam.,Ceede maaɗa neldaama e jam.,Votre transfert a été envoyé avec succès.,Your transfer was sent successfully.,Ceede maaɗa neldaama e jam..m4a
+interface/g0073_wakkere.m4a,g0073,entier,interface,Wakkere,Wakkere,Statut,Status,Wakkere.m4a
+interface/g0075_neldol-kesse.m4a,g0075,entier,interface,Neldol kesse,Neldol kesse,Nouveau transfert,New transfer,Neldol kesse.m4a
+messages/commun_p2_a-tabitini-na.m4a,g0149|g0154,p2,messages,A tabitini na,A don yaha neldugo {V1} ha {V2} ({V3}). Yoɓde : {V4}. Jimilla : {V5}. A tabitini na ? || A don yaha ittugo {V1} ha agent {V2}. Yoɓde : {V3}. A tabitini na ?,Vous allez envoyer {V1} à {V2} ({V3}). Frais : {V4}. Total : {V5}. Confirmez-vous ? || Vous allez retirer {V1} auprès de l'agent {V2}. Frais : {V3}. Confirmez-vous ?, || ,A tabitini na.m4a
+messages/commun_p2_bawo-dum-ceede-de-a-mari-ko-v-fcfa.m4a,g0151|g0155|g0156,p2,messages,"Bawo ɗum, ceede ɗe a mari ko {} FCFA.","A jaɓi {V1} diga {V2}. Bawo ɗum, ceede ɗe a mari ko {V3}. || A itti {V1}. Bawo ɗum, ceede ɗe a mari ko {V2}. || A nastini {V1} ɗer konte maaɗa. Bawo ɗum, ceede ɗe a mari ko {V2}.",Vous avez reçu {V1} de {V2}. Nouveau solde : {V3}. || Vous avez retiré {V1}. Nouveau solde : {V2}. || Vous avez déposé {V1} sur votre compte. Nouveau solde : {V2}., ||  || ,"Bawo ɗum, ceede ɗe a mari ko {} FCFA..m4a"
+messages/commun_p2_bawo-dum-ceede-de-a-mari-ko-v-fcfa_prise2.m4a,g0151|g0155|g0156,p2,messages,"Bawo ɗum, ceede ɗe a mari ko {} FCFA.","A jaɓi {V1} diga {V2}. Bawo ɗum, ceede ɗe a mari ko {V3}. || A itti {V1}. Bawo ɗum, ceede ɗe a mari ko {V2}. || A nastini {V1} ɗer konte maaɗa. Bawo ɗum, ceede ɗe a mari ko {V2}.",Vous avez reçu {V1} de {V2}. Nouveau solde : {V3}. || Vous avez retiré {V1}. Nouveau solde : {V2}. || Vous avez déposé {V1} sur votre compte. Nouveau solde : {V2}., ||  || ,"Bawo ɗum, ceede ɗe a mari ko {} FCFA.-1.m4a"
+messages/commun_p2_konte-maada.m4a,g0089|g0165,p2,messages,Konte maaɗa,Jaɓɓoowo fotay wona konte maaɗa. || {V1} lornitaama e konte maaɗa.,Le bénéficiaire ne peut pas être votre propre compte. || {V1} ont été remboursés sur votre compte.,The beneficiary cannot be your own account. || ,Konte maaɗa.m4a
+messages/commun_p2_laarta-lamba-hideko-tokkitingo.m4a,g0057|g0084,p2,messages,Laarta lamba Hideko tokkitingo,"Jaɓɓoowo oo, o huutinaaka naa fuu e konte ndee. Laarta lamba hideko tokkitingo || Lamba telefon wonay goonga. Laarta lamba Hideko tokkitingo",Ce bénéficiaire n'a jamais été utilisé sur ce compte. Vérifiez le numéro avant de continuer. || Numéro de téléphone invalide. Vérifiez le numéro avant de continuer.,This beneficiary has never been used on this account. Check the number before continuing. || Invalid phone number. Check the number before continuing.,Laarta lamba Hideko tokkitingo.m4a
+messages/commun_p2_laarta-lamba-hideko-tokkitingo_prise2.m4a,g0057|g0084,p2,messages,Laarta lamba hideko tokkitingo,"Jaɓɓoowo oo, o huutinaaka naa fuu e konte ndee. Laarta lamba hideko tokkitingo || Lamba telefon wonay goonga. Laarta lamba Hideko tokkitingo",Ce bénéficiaire n'a jamais été utilisé sur ce compte. Vérifiez le numéro avant de continuer. || Numéro de téléphone invalide. Vérifiez le numéro avant de continuer.,This beneficiary has never been used on this account. Check the number before continuing. || Invalid phone number. Check the number before continuing.,Laarta lamba hideko tokkitingo-1.m4a
+messages/commun_p2_walaa-ceede-de-ittaama.m4a,g0152|g0164,p2,messages,Walaa ceede ɗe ittaama.,Neldol waɗaaka : ceede ɗe a mari he’ay. Walaa ceede ɗe ittaama. || Kuugal fasitaama. Walaa ceede ɗe ittaama.,Le transfert a échoué : votre solde est insuffisant. Aucun montant n'a été débité. || L'opération a été annulée. Aucun montant n'a été débité., || ,Walaa ceede ɗe ittaama..m4a
+messages/g0015_fasitugo.m4a,g0015,entier,messages,Fasitugo,Fasitugo,Annuler,Cancel,Fasitugo.m4a
+messages/g0076_winndu-limgal-ceede.m4a,g0076,entier,messages,Winndu limgal ceede.,Winndu limgal ceede.,Veuillez saisir un montant.,Please enter an amount.,Winndu limgal ceede..m4a
+messages/g0077_limgal-ceede-haani-bura-0-fcfa.m4a,g0077,entier,messages,Limgal ceede haani bura 0 FCFA.,Limgal ceede haani bura {V1}.,Le montant doit être supérieur à {V1}.,The amount must be greater than {V1}.,Limgal ceede haani bura 0 FCFA..m4a
+messages/g0078_limgal-ceede-ngal-winndaa-wonay-goonga.m4a,g0078,entier,messages,Limgal ceede ngal winndaa wonay goonga.,Limgal ceede ngal winndaa wonay goonga.,Le montant saisi est invalide.,The amount entered is invalid.,Limgal ceede ngal winndaa wonay goonga..m4a
+messages/g0079_ceede-de-a-mari-heay-ngam-neldol-ngol.m4a,g0079,entier,messages,Ceede ɗe a mari he’ay ngam neldol ngol.,Ceede ɗe a mari he’ay ngam neldol ngol.,Solde insuffisant pour effectuer ce transfert.,Insufficient balance to make this transfer.,Ceede ɗe a mari he’ay ngam neldol ngol..m4a
+messages/g0080_limgal-ceede-ngal-buri-ko-hani.m4a,g0080,entier,messages,Limgal ceede ngal buri ko hani.,Limgal ceede ngal buri ko hani.,Le montant dépasse la limite autorisée.,The amount exceeds the allowed limit.,Limgal ceede ngal buri ko hani..m4a
+messages/g0081_suba-wakere-kuugal.m4a,g0081,entier,messages,Suɓa wakere kuugal.,Suɓa wakere kuugal.,Veuillez sélectionner un type d'opération.,Please select an operation type.,Suɓa wakere kuugal..m4a
+messages/g0082_innde-jabboowo-haani-winndeede.m4a,g0082,entier,messages,Innde jaɓɓoowo haani winndeede.,Innde jaɓɓoowo haani winndeede.,Le nom du bénéficiaire est obligatoire.,The beneficiary name is required.,Innde jaɓɓoowo haani winndeede..m4a
+messages/g0083_winndu-lamba-telefon.m4a,g0083,entier,messages,Winndu lamba telefon.,Winndu lamba telefon.,Veuillez saisir un numéro de téléphone.,Please enter a phone number.,Winndu lamba telefon..m4a
+messages/g0084_p1_lamba-telefon-wonay-goonga.m4a,g0084,p1,messages,Lamba telefon wonay goonga,Lamba telefon wonay goonga. Laarta lamba Hideko tokkitingo,Numéro de téléphone invalide. Vérifiez le numéro avant de continuer.,Invalid phone number. Check the number before continuing.,Lamba telefon wonay goonga.m4a
+messages/g0085_lamba-haani-mara-limgal-v.m4a,g0085,entier,messages,Lamba haani mara limgal {}.,Lamba haani mara limgal {V1}.,Le numéro doit contenir {V1} chiffres.,The number must contain {V1} digits.,Lamba haani mara limgal {}..m4a
+messages/g0086_winndu-huja-neldol.m4a,g0086,entier,messages,Winndu huja neldol.,Winndu huja neldol.,Veuillez indiquer le motif du transfert.,Please state the reason for the transfer.,Winndu huja neldol..m4a
+messages/g0087_p1_maata-doftaare-ngam-tabitinugo.m4a,g0087,p1,messages,Maata ɗoftaare ngam tabitinugo,Maata ɗoftaare ngam tabitinugo ko a laarti innde e lamba jaɓɓoowo.,Veuillez cocher la case pour confirmer que vous avez vérifié le nom et le numéro du bénéficiaire.,Please tick the box to confirm you have checked the beneficiary's name and number.,Maata ɗoftaare ngam tabitinugo.m4a
+messages/g0087_p2_ko-a-laarti-innde-e-lamba-jabboowo.m4a,g0087,p2,messages,ko a laarti innde e lamba jaɓɓoowo.,Maata ɗoftaare ngam tabitinugo ko a laarti innde e lamba jaɓɓoowo.,Veuillez cocher la case pour confirmer que vous avez vérifié le nom et le numéro du bénéficiaire.,Please tick the box to confirm you have checked the beneficiary's name and number.,ko a laarti innde e lamba jaɓɓoowo..m4a
+messages/g0088_tabitina-habaruuji-din-di-goonga-hideko-tokkitingo.m4a,g0088,entier,messages,Tabitina habaruuji ɗin ɗi goonga hideko tokkitingo,Tabitina habaruuji ɗin ɗi goonga hideko tokkitingo.,Veuillez confirmer que les informations sont correctes avant de continuer.,Please confirm the information is correct before continuing.,Tabitina habaruuji ɗin ɗi goonga hideko tokkitingo.m4a
+messages/g0089_jabboowo-fotay-wona-konte-maada.m4a,g0089,entier,messages,Jaɓɓoowo fotay wona konte maaɗa.,Jaɓɓoowo fotay wona konte maaɗa.,Le bénéficiaire ne peut pas être votre propre compte.,The beneficiary cannot be your own account.,Jaɓɓoowo fotay wona konte maaɗa..m4a
+messages/g0090_hakkiilo-laarta-innde-jabboowo.m4a,g0090,entier,messages,"Hakkiilo, laarta innde jaɓɓoowo.",Hakkiilo : laarta innde jaɓɓoowo.,Attention : vérifiez le nom du bénéficiaire.,Warning: check the beneficiary's name.,"Hakkiilo, laarta innde jaɓɓoowo..m4a"
+messages/g0091_neldol-ngol-waylatake.m4a,g0091,entier,messages,Neldol ngol waylatake,Neldol ngol waylatake,Ce transfert est irréversible.,This transfer cannot be reversed.,Neldol ngol waylatake.m4a
+messages/g0092_dum-haani-winndeede.m4a,g0092,entier,messages,Ɗum haani winndeede,Ɗum haani winndeede,Champ obligatoire,Required field,Ɗum haani winndeede.m4a
+messages/g0093_juumre-wadaama-fuddutu-fahin.m4a,g0093,entier,messages,Juumre waɗaama. Fuɗɗutu fahin.,Juumre waɗaama. Fuɗɗutu fahin.,Une erreur est survenue. Veuillez réessayer.,An error occurred. Please try again.,Juumre waɗaama. Fuɗɗutu fahin..m4a
+messages/g0094_neldol-fotay-jonta-fuddutu-fahin-baawo.m4a,g0094,entier,messages,Neldol fotay jonta. Fuɗɗutu fahin ɓaawo.,Neldol fotay jonta. Fuɗɗutu fahin ɓaawo.,Transfert impossible pour le moment. Veuillez réessayer plus tard.,Transfer not possible right now. Please try again later.,Neldol fotay jonta. Fuɗɗutu fahin ɓaawo..m4a
+messages/g0095_jokkol-majji-laarta-jokkol-internet-maada.m4a,g0095,entier,messages,Jokkol majji. Laarta jokkol internet maaɗa.,Jokkol majji. Laarta jokkol internet maaɗa.,Connexion perdue. Vérifiez votre connexion Internet.,Connection lost. Check your Internet connection.,Jokkol majji. Laarta jokkol internet maaɗa..m4a
+messages/g0096_saa-maada-timmi-jokka-fahin.m4a,g0096,entier,messages,Sa’a maaɗa timmi. Jokka fahin.,Sa’a maaɗa timmi. Jokka fahin.,Session expirée. Veuillez vous reconnecter.,Session expired. Please log in again.,Sa’a maaɗa timmi. Jokka fahin..m4a
+messages/g0097_neldol-hadaama.m4a,g0097,entier,messages,Neldol haɗaama.,Neldol haɗaama.,Transfert annulé.,Transfer cancelled.,Neldol haɗaama..m4a
+messages/g0098_neldol-don-wadee.m4a,g0098,entier,messages,Neldol ɗon waɗee…,Neldol ɗon waɗee…,Transfert en cours de traitement…,Transfer being processed…,Neldol ɗon waɗee….m4a
+messages/g0099_neldol-salaama.m4a,g0099,entier,messages,Neldol salaama.,Neldol salaama.,Transfert refusé.,Transfer declined.,Neldol salaama..m4a
+messages/g0100_neldol-wadaaka.m4a,g0100,entier,messages,Neldol waɗaaka.,Neldol waɗaaka.,Échec du transfert.,Transfer failed.,Neldol waɗaaka..m4a
+messages/g0101_e-don-reni.m4a,g0101,entier,messages,E ɗon reni,E ɗon reni,En attente,Pending,E ɗon reni.m4a
+messages/g0148_ceede-de-a-mari-jonta-ko-v-fcfa.m4a,g0148,entier,messages,Ceede ɗe a mari jonta ko {} FCFA.,Ceede ɗe a mari jonta ko {V1}.,Votre solde est de {V1}.,,Ceede ɗe a mari jonta ko {} FCFA..m4a
+messages/g0150_p1_a-neldi-v-fcfa-ha-vyobde-v-fcfa.m4a,g0150,p1,messages,A neldi {} FCFA ha {}Yoɓde  {} FCFA.,"A neldi {V1} ha {V2}Yoɓde : {V3}. Bawo ɗum, ceede ɗe a mari ko {V4}. Batakewol : {V5}.",Vous avez envoyé {V1} à {V2}. Frais : {V3}. Nouveau solde : {V4}. Référence : {V5}.,,A neldi {} FCFA ha {}Yoɓde  {} FCFA..m4a
+messages/g0151_p1_a-jabi-v-fcfa-diga-v.m4a,g0151,p1,messages,A jaɓi {} FCFA diga {}.,"A jaɓi {V1} diga {V2}. Bawo ɗum, ceede ɗe a mari ko {V3}.",Vous avez reçu {V1} de {V2}. Nouveau solde : {V3}.,,A jaɓi {} FCFA diga {}..m4a
+messages/g0152_p1_neldol-wadaaka-ceede-de-a-mari-heay.m4a,g0152,p1,messages,Neldol waɗaaka  ceede ɗe a mari he’ay.,Neldol waɗaaka : ceede ɗe a mari he’ay. Walaa ceede ɗe ittaama.,Le transfert a échoué : votre solde est insuffisant. Aucun montant n'a été débité.,,Neldol waɗaaka  ceede ɗe a mari he’ay..m4a
+messages/g0153_p2_fudita-baawo.m4a,g0153,p2,messages,Fudita ɓaawo.,Neldol waɗaaka. Walaa ceede ɗe ittaama. Fudita ɓaawo.,Le transfert a échoué. Aucun montant n'a été débité. Veuillez réessayer plus tard.,,Fudita ɓaawo..m4a
+messages/g0154_p1_a-don-yaha-ittugo-v-fcfa.m4a,g0154,p1,messages,A don yaha ittugo {} FCFA,A don yaha ittugo {V1} ha agent {V2}. Yoɓde : {V3}. A tabitini na ?,Vous allez retirer {V1} auprès de l'agent {V2}. Frais : {V3}. Confirmez-vous ?,,A don yaha ittugo {} FCFA.m4a
+messages/g0155_a-itti-vfcfa-bawo-dum-ceede-de-a-mari-kov-fcfa.m4a,g0155,entier,messages,"A itti {}FCFA. Bawo ɗum, ceede ɗe a mari ko{} FCFA","A itti {V1}. Bawo ɗum, ceede ɗe a mari ko {V2}.",Vous avez retiré {V1}. Nouveau solde : {V2}.,,"A itti {}FCFA. Bawo ɗum, ceede ɗe a mari ko{} FCFA.m4a"
+messages/g0156_p1_a-nastini-v-fcfa-der-konte-maada.m4a,g0156,p1,messages,A nastini {} FCFA ɗer konte maaɗa,"A nastini {V1} ɗer konte maaɗa. Bawo ɗum, ceede ɗe a mari ko {V2}.",Vous avez déposé {V1} sur votre compte. Nouveau solde : {V2}.,,A nastini {} FCFA ɗer konte maaɗa.m4a
+messages/g0157_a-yobi-v-fcfa-ha-v-ngam-v.m4a,g0157,entier,messages,A yoɓi {} FCFA ha {} ngam {}.,A yoɓi {V1} ha {V2} ngam {V3}.,Vous avez payé {V1} à {V2} pour {V3}.,,A yoɓi {} FCFA ha {} ngam {}..m4a
+messages/g0158_a-soodi-kredi-v-fcfa-ngam-limgal-v.m4a,g0158,entier,messages,A sooɗi kredi {} FCFA ngam limgal {}.,A sooɗi kredi {V1} ngam limgal {V2}.,Vous avez acheté {V1} de crédit pour le {V2}.,,A sooɗi kredi {} FCFA ngam limgal {}..m4a
+messages/g0159_winndu-kode-suudaado-maada-ngam-tabitinugo.m4a,g0159,entier,messages,Winndu kode suuɗaaɗo maaɗa ngam tabitinugo.,Winndu kode suuɗaaɗo maaɗa ngam tabitinugo.,Saisissez votre code secret pour confirmer.,,Winndu kode suuɗaaɗo maaɗa ngam tabitinugo..m4a
+messages/g0160_p1_kode-suudaado-wonay-goonga.m4a,g0160,p1,messages,Kode suuɗaaɗo wonay goonga.,Kode suuɗaaɗo wonay goonga. Luttii {V1} sa’a ngam foɗugo.,Code secret incorrect. Il vous reste {V1} essai(s).,,Kode suuɗaaɗo wonay goonga..m4a
+messages/g0160_p2_luttii-v-saa-ngam-fodugo.m4a,g0160,p2,messages,Luttii {} sa’a ngam foɗugo.,Kode suuɗaaɗo wonay goonga. Luttii {V1} sa’a ngam foɗugo.,Code secret incorrect. Il vous reste {V1} essai(s).,,Luttii {} sa’a ngam foɗugo..m4a
+messages/g0161_p1_sigga-maada.m4a,g0161,p1,messages,Sigga maaɗa,Sigga maaɗa maɓaama ngam sahaa seɗɗa. Nodda {V1}.,Votre compte est temporairement bloqué. Appelez le {V1}.,,Sigga maaɗa.m4a
+messages/g0161_sigga-maada-mabaama-ngam-sahaa-sedda-nodda-v.m4a,g0161,entier,messages,Sigga maaɗa maɓaama ngam sahaa seɗɗa. Nodda {}.,Sigga maaɗa maɓaama ngam sahaa seɗɗa. Nodda {V1}.,Votre compte est temporairement bloqué. Appelez le {V1}.,,Sigga maaɗa maɓaama ngam sahaa seɗɗa. Nodda {}..m4a
+messages/g0162_p1_taa-hokka-kode-suudaado-maada-ha-moy-fuu.m4a,g0162,p1,messages,Taa hokka kode suuɗaaɗo maaɗa ha moy fuu,"Taa hokka kode suuɗaaɗo maaɗa ha moy fuu, kotto ha agent.","Ne donnez jamais votre code secret à personne, même à un agent.",,Taa hokka kode suuɗaaɗo maaɗa ha moy fuu.m4a
+messages/g0163_p1_ittugo-v-fcfa-dum-be-yami.m4a,g0163,p1,messages,Ittugo {} FCFA ɗum ɓe ƴami.,"Ittugo {V1} ɗum ɓe ƴami. To wonay an, nodda {V2} jonta-jonta.","Un retrait de {V1} a été demandé. Si ce n'est pas vous, appelez immédiatement le {V2}.",,Ittugo {} FCFA ɗum ɓe ƴami..m4a
+messages/g0163_p2_to-wonay-an-nodda-v-jonta-jonta.m4a,g0163,p2,messages,"To wonay an, nodda {} jonta-jonta.","Ittugo {V1} ɗum ɓe ƴami. To wonay an, nodda {V2} jonta-jonta.","Un retrait de {V1} a été demandé. Si ce n'est pas vous, appelez immédiatement le {V2}.",,"To wonay an, nodda {} jonta-jonta..m4a"
+messages/g0164_kuugal-fasitaama-walaa-ceede-de-ittaama.m4a,g0164,entier,messages,Kuugal fasitaama. Walaa ceede ɗe ittaama.,Kuugal fasitaama. Walaa ceede ɗe ittaama.,L'opération a été annulée. Aucun montant n'a été débité.,,Kuugal fasitaama. Walaa ceede ɗe ittaama..m4a
+messages/g0165_v-fcfa-lornitaama-e-konte-maada.m4a,g0165,entier,messages,{} FCFA lornitaama e konte maaɗa.,{V1} lornitaama e konte maaɗa.,{V1} ont été remboursés sur votre compte.,,{} FCFA lornitaama e konte maaɗa..m4a
+messages/g0166_p1_kuugal-maada-don-wadee.m4a,g0166,p1,messages,Kuugal maaɗa ɗon waɗee.,Kuugal maaɗa ɗon waɗee. A tami heɓugo habaru tabitinol.,Votre opération est en cours. Vous recevrez un message de confirmation.,,Kuugal maaɗa ɗon waɗee..m4a
+messages/g0166_p2_a-tami-hebugo-habaru-tabitinol.m4a,g0166,p2,messages,A tami heɓugo habaru tabitinol.,Kuugal maaɗa ɗon waɗee. A tami heɓugo habaru tabitinol.,Votre opération est en cours. Vous recevrez un message de confirmation.,,A tami heɓugo habaru tabitinol..m4a
+messages/g0167_jabaama-ko-a-yidi-wadugo.m4a,g0167,entier,messages,Jaɓaama. Ko a yiɗi waɗugo,Jaɓaama. Ko a yiɗi waɗugo ?,Bienvenue. Que souhaitez-vous faire ?,,Jaɓaama. Ko a yiɗi waɗugo.m4a
+mots/commun_ceede.m4a,g0002|g0028,entier,mots,Ceede,ceede || Ceede ɗe a mari,argent || Solde,money || Balance,Ceede.m4a
+mots/commun_don-wadee.m4a,g0103|g0137,entier,mots,Ɗon waɗee,Ɗon waɗee… || Ɗon waɗee,Chargement… || En cours,Loading… || ,Ɗon waɗee.m4a
+mots/commun_don-wadee_prise2.m4a,g0103|g0137,entier,mots,Ɗon waɗee…,Ɗon waɗee… || Ɗon waɗee,Chargement… || En cours,Loading… || ,Ɗon waɗee….m4a
+mots/commun_jimilla.m4a,g0029|g0106,entier,mots,Jimilla,Jimilla || Jimilla,Récapitulatif || Total,Summary || ,Jimilla.m4a
+mots/commun_timmi.m4a,g0019|g0135,entier,mots,Timmi,timmi || Timmi,terminé || Réussi,completed || ,Timmi.m4a
+mots/commun_wadaaka.m4a,g0102|g0136,entier,mots,Waɗaaka,Waɗaaka || Waɗaaka,Échec || Échoué,Failed || ,Waɗaaka.m4a
+mots/g0001_konte.m4a,g0001,entier,mots,Konte,Sigga,compte,account,Konte.m4a
+mots/g0001_sigga.m4a,g0001,entier,mots,Sigga,Sigga,compte,account,Sigga.m4a
+mots/g0003_banke.m4a,g0003,entier,mots,Banke,Siggorde ceede,banque,bank,Banke.m4a
+mots/g0003_saare-ceede.m4a,g0003,entier,mots,Saare ceede,Siggorde ceede,banque,bank,Saare ceede.m4a
+mots/g0003_siggorde-ceede.m4a,g0003,entier,mots,Siggorde ceede,Siggorde ceede,banque,bank,Siggorde ceede.m4a
+mots/g0004_neldol-ceede.m4a,g0004,entier,mots,Neldol ceede,Neldol ceede,transfert,transfer,Neldol ceede.m4a
+mots/g0007_lamba.m4a,g0007,entier,mots,Lamba,lamba,numéro,number,Lamba.m4a
+mots/g0009_innde.m4a,g0009,entier,mots,Innde,innde,nom,name,Innde.m4a
+mots/g0010_huja.m4a,g0010,entier,mots,Huja,huja,motif,reason,Huja.m4a
+mots/g0011_tabitinugo.m4a,g0011,entier,mots,Tabitinugo,tabitinugo,confirmer,confirm,Tabitinugo.m4a
+mots/g0016_laartugo.m4a,g0016,entier,mots,Laartugo,laartugo,vérifier,check,Laartugo.m4a
+mots/g0018_wala.m4a,g0018,entier,mots,Wala,wala,aucun,none,Wala.m4a
+mots/g0020_buri.m4a,g0020,entier,mots,Buri,buri,plus que,more than,Buri.m4a
+mots/g0021_yotti.m4a,g0021,entier,mots,Yotti,yotti,reçu,received,Yotti.m4a
+mots/g0022_kesse.m4a,g0022,entier,mots,Kesse,kesse,nouveau,new,Kesse.m4a
+mots/g0023_fahin.m4a,g0023,entier,mots,Fahin,fahin,encore,again,Fahin.m4a
+mots/g0105_neldal.m4a,g0105,entier,mots,Neldal,Neldal,Commission,,Neldal.m4a
+mots/g0106_fuu.m4a,g0106,entier,mots,Fuu,Jimilla,Total,,Fuu.m4a
+mots/g0107_ujunere.m4a,g0107,entier,mots,Ujunere,Ujunere,Mille,,Ujunere.m4a
+mots/g0108_miliyong.m4a,g0108,entier,mots,Miliyoŋ,Miliyoŋ,Million,,Miliyoŋ.m4a
+mots/g0109_neldugo.m4a,g0109,entier,mots,Neldugo,Neldugo,Envoyer,,Neldugo.m4a
+mots/g0110_jabugo.m4a,g0110,entier,mots,Jaɓugo,Jaɓugo,Recevoir,,Jaɓugo.m4a
+mots/g0112_jo-ingo.m4a,g0112,entier,mots,Jo'ingo,Jo’ingo,Déposer,,Jo'ingo.m4a
+mots/g0113_yobugo.m4a,g0113,entier,mots,Yoɓugo,Yoɓugo,Payer,,Yoɓugo.m4a
+mots/g0114_soodugo.m4a,g0114,entier,mots,Soodugo,Soodugo,Acheter,,Soodugo.m4a
+mots/g0115_lornugo.m4a,g0115,entier,mots,Lornugo,Lornugo,Rembourser,,Lornugo.m4a
+mots/g0116_fudutugo.m4a,g0116,entier,mots,Fudutugo,Fudutugo,Réessayer,,Fudutugo.m4a
+mots/g0117_winndugo.m4a,g0117,entier,mots,Winndugo,Winndugo,Saisir,,Winndugo.m4a
+mots/g0118_noddugo.m4a,g0118,entier,mots,Noddugo,Noddugo,Appeler,,Noddugo.m4a
+mots/g0119_ittol-ceede.m4a,g0119,entier,mots,Ittol ceede,Ittol ceede,Retrait,,Ittol ceede.m4a
+mots/g0120_jo-inol-ceede.m4a,g0120,entier,mots,Jo'inol ceede,Jo’inol ceede,Dépôt,,Jo'inol ceede.m4a
+mots/g0121_yobol.m4a,g0121,entier,mots,Yoɓol,Yoɓol,Paiement,,Yoɓol.m4a
+mots/g0122_faktir.m4a,g0122,entier,mots,Faktir,Faktir,Facture,,Faktir.m4a
+mots/g0123_yitte.m4a,g0123,entier,mots,Yitte,Yitte,Electricité,,Yitte.m4a
+mots/g0124_kredi-telefon.m4a,g0124,entier,mots,Kredi telefon,Kredi telefon,Crédit téléphonique,,Kredi telefon.m4a
+mots/g0125_azan.m4a,g0125,entier,mots,Azan,azan,Agent,,Azan.m4a
+mots/g0126_yeeboowo.m4a,g0126,entier,mots,Yeeɓoowo,Yeeɓoowo,Marchand,,Yeeɓoowo.m4a
+mots/g0127_neldoowo.m4a,g0127,entier,mots,Neldoowo,Neldoowo,Expéditeur,,Neldoowo.m4a
+mots/g0128_suklanoowo-kuugal.m4a,g0128,entier,mots,Suklanoowo kuugal,Suklanoowo kuugal,Opérateur,,Suklanoowo kuugal.m4a
+mots/g0129_servis-kliyang.m4a,g0129,entier,mots,Servis kliyaŋ,Servis kliyaŋ,Service client,,Servis kliyaŋ.m4a
+mots/g0130_kode-suudaado.m4a,g0130,entier,mots,Kode suuɗaaɗo,Kode suuɗaaɗo,Code secret,,Kode suuɗaaɗo.m4a
+mots/g0131_fenaande.m4a,g0131,entier,mots,Fenaande,Fenaande,Fraude,,Fenaande.m4a
+mots/g0132_fennugo-ceede.m4a,g0132,entier,mots,Fennugo ceede,Fennugo ceede,Arnaque,,Fennugo ceede.m4a
+mots/g0133_sigga-maabama.m4a,g0133,entier,mots,Sigga maaɓama,Sigga maaɓama,Compte bloqué,,Sigga maaɓama.m4a
+mots/g0134_fudditol.m4a,g0134,entier,mots,Fudditol,Fudditol,Essai,,Fudditol.m4a
+mots/g0138_hadaama.m4a,g0138,entier,mots,Haɗaama,Haɗaama,Annulé,,Haɗaama.m4a
+mots/g0139_he-ay.m4a,g0139,entier,mots,He'ay,He’ay,Insuffisant,,He'ay.m4a
+mots/g0140_besdaama.m4a,g0140,entier,mots,ɓesdaama,ɓesdaama,Débité,,ɓesdaama.m4a
+mots/g0141_ittaama.m4a,g0141,entier,mots,Ittaama,Ittaama,Crédité,,Ittaama.m4a
+mots/g0142_nyaldere.m4a,g0142,entier,mots,Nyaldere,Nyaldere,Data,,Nyaldere.m4a
+mots/g0143_nyalawma.m4a,g0143,entier,mots,Nyalawma,Nyalawma,Lumière,,Nyalawma.m4a
+mots/g0144_hannde.m4a,g0144,entier,mots,Hannde,Hannde,Aujourd'hui,,Hannde.m4a
+mots/g0145_jonta-jonta.m4a,g0145,entier,mots,Jonta-jonta,Jonta-jonta,Immédiatement,,Jonta-jonta.m4a
+mots/g0146_ngam-sahaa-sedda.m4a,g0146,entier,mots,Ngam sahaa seɗɗa,Ngam sahaa seɗɗa,Temporairement,,Ngam sahaa seɗɗa.m4a
+mots/g0147_feere.m4a,g0147,entier,mots,Feere,Feere,Autre,other,Feere.m4a
+mots/g0168_go-o.m4a,g0168,entier,mots,Go'o,go'o,Un,,Go'o.m4a
+mots/g0169_didi.m4a,g0169,entier,mots,ɗiɗi,ɗiɗi,Deux,,ɗiɗi.m4a
+mots/g0170_tati.m4a,g0170,entier,mots,Tati,tati,Trois,,Tati.m4a
+mots/g0171_nay.m4a,g0171,entier,mots,Nay,nay,Quatre,,Nay.m4a
+mots/g0172_jowi.m4a,g0172,entier,mots,Jowi,jowi,Cinq,,Jowi.m4a
+mots/g0173_jeego.m4a,g0173,entier,mots,Jeego,jeego,Six,,Jeego.m4a
+mots/g0174_jeedidi.m4a,g0174,entier,mots,Jeeɗiɗi,jeeɗiɗi,Sept,,Jeeɗiɗi.m4a
+mots/g0175_jeetati.m4a,g0175,entier,mots,Jeetati,jeetati,Huit,,Jeetati.m4a
+mots/g0176_jeenay.m4a,g0176,entier,mots,Jeenay,jeenay,Neuf,,Jeenay.m4a
+mots/g0177_sappo.m4a,g0177,entier,mots,Sappo,Sappo,Dix,,Sappo.m4a
+mots/g0178_sappo-e-go-o.m4a,g0178,entier,mots,Sappo e go'o,Sappo e go'o,Onze,,Sappo e go'o.m4a
+mots/g0179_sappo-e-didi.m4a,g0179,entier,mots,Sappo e ɗiɗi,Sappo e ɗiɗi,Douze,,Sappo e ɗiɗi.m4a
+mots/g0180_sappo-e-tati.m4a,g0180,entier,mots,Sappo e tati,Sappo e tati,Treize,,Sappo e tati.m4a
+mots/g0181_sappo-e-nay.m4a,g0181,entier,mots,Sappo e nay,Sappo e nay,Quatorze,,Sappo e nay.m4a
+mots/g0182_noogas.m4a,g0182,entier,mots,noogas,noogas,Vingt,,noogas.m4a
+mots/g0183_temedde.m4a,g0183,entier,mots,temedde,temedde,Cent,,temedde.m4a
+nombres/hors-gold_capande-jowi.m4a,,?,nombres,Capanɗe jowi,,,,Capanɗe jowi.m4a
+nombres/hors-gold_miliyong-go-o-ujuneeje-temedde-didi-e-capande-jowi.m4a,,?,nombres,"Miliyoŋ go'o, ujuneeje temedde ɗiɗi e capanɗe jowi",,,,"Miliyoŋ go'o, ujuneeje temedde ɗiɗi e capanɗe jowi.m4a"
+nombres/hors-gold_noogas-e-go-o.m4a,,?,nombres,noogas e go'o,,,,noogas e go'o.m4a
+nombres/hors-gold_temedde-go-o.m4a,,?,nombres,Temedde go'o,,,,Temedde go'o.m4a
+nombres/hors-gold_temedde-jowi.m4a,,?,nombres,Temedde jowi,,,,Temedde jowi.m4a
+nombres/hors-gold_ujuneeje-jowi.m4a,,?,nombres,Ujuneeje jowi,,,,Ujuneeje jowi.m4a
+nombres/hors-gold_ujuneeje-noogas-e-jowi.m4a,,?,nombres,Ujuneeje noogas e jowi,,,,Ujuneeje noogas e jowi.m4a
+nombres/hors-gold_ujuneeje-sappo-e-didi-temedde-tati-e-capande-jowi.m4a,,?,nombres,"Ujuneeje sappo e ɗiɗi, temedde tati e Capanɗe jowi",,,,"Ujuneeje sappo e ɗiɗi, temedde tati e Capanɗe jowi.m4a"
+nombres/hors-gold_ujunere-go-o-e-temedde-jowi.m4a,,?,nombres,Ujunere go'o e temedde jowi,,,,Ujunere go'o e temedde jowi.m4a
+nombres/hors-gold_ujunere-go-o.m4a,,?,nombres,Ujunere go'o,,,,Ujunere go'o.m4a
