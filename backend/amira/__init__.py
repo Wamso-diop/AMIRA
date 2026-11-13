@@ -7,7 +7,7 @@ import time
 from collections.abc import Mapping
 
 import click
-from flask import Flask, abort, current_app, g, request
+from flask import Flask, abort, current_app, g, request, Response
 from flask.cli import with_appcontext
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -104,9 +104,26 @@ def create_app(env: Mapping[str, str] | None = None, engine=_FROM_CONFIG) -> Fla
     register_errors(app)
     app.register_blueprint(public, url_prefix="/v1")
     app.register_blueprint(admin, url_prefix="/v1/admin")
+
+    @app.get("/")
+    def home():
+        """Page fixe, sans donnée : un humain qui ouvre le serveur dans un navigateur comprend ce qu'il voit."""
+        return Response(HOME, mimetype="text/html")
+
     app.cli.add_command(export_admin)
     app.cli.add_command(purge)
     return app
+
+
+HOME = """<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amira, serveur</title>
+<body style="font:18px/1.5 system-ui,sans-serif;max-width:34rem;margin:12vh auto;padding:0 1rem">
+<h1>Amira : le serveur est actif.</h1>
+<p>Ce serveur n'a pas de page à afficher. Il répond à l'extension Chrome Amira.</p>
+<p>Dans Chrome : <b>chrome://extensions</b>, mode développeur, <b>Charger l'extension non empaquetée</b>,
+dossier <b>extension/</b>. Ouvrez ensuite la page à traduire et cliquez sur l'icône Amira.</p>
+<p><a href="/v1/health">/v1/health</a> · <a href="/v1/ready">/v1/ready</a></p>
+"""
 
 
 @click.command("purge")

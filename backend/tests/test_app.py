@@ -110,3 +110,8 @@ def test_debug_coupe_hors_developpement(monkeypatch):
     monkeypatch.setenv("FLASK_DEBUG", "1")  # lu par Flask dans l'environnement du processus
     assert create_app(DEV, engine=FakeEngine()).debug is True
     assert create_app({"AMIRA_ENV": "production", "AMIRA_ALLOWED_ORIGINS": EXT}, engine=FakeEngine()).debug is False
+
+
+def test_accueil_lisible_par_un_humain(client):
+    r = client.get("/")
+    assert r.status_code == 200 and r.mimetype == "text/html" and "extension" in r.get_data(as_text=True)
