@@ -6,6 +6,21 @@ const sensitive = (text: string, opts = {}) => {
   return { ...r, leaked: [...r.values.values()].filter((v) => r.text.includes(v)) };
 };
 
+describe('mot en minuscules après « à », « pour », « to »', () => {
+  // un nom commence par une majuscule : ces mots sont du texte à traduire, pas des noms
+  it.each([
+    'Total à débiter',
+    'Solde insuffisant pour effectuer ce transfert.',
+    'Back to hackathon',
+    'Total to debit',
+    'Merci pour votre confiance',
+  ])('%s reste intact', (text) => {
+    const r = mask(text, {});
+    expect(r.text).toBe(text);
+    expect(r.values.size).toBe(0);
+  });
+});
+
 describe('masquage local', () => {
   it.each([
     ['Votre solde est de 125 000 FCFA.', ['125 000 FCFA']],

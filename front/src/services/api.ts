@@ -3,9 +3,11 @@
  * Le front ne connaît que ces interfaces : brancher le vrai serveur = renseigner VITE_AMIRA_API_URL dans .env, puis reconstruire.
  */
 
-export type SourceLang = 'fr' | 'en' | 'auto' | 'ff';
-export type TargetLang = 'ff' | 'fr' | 'en';
-export type Variety = 'ngaoundere' | 'garoua' | 'maroua';
+/** 'fr', 'en' ou le code de la langue cible (languages.ts). */
+export type SourceLang = string;
+export type TargetLang = string;
+/** Variété de la langue cible (liste dans backend/languages/<code>/language.json). */
+export type Variety = string;
 export type CategoryHint = 'label' | 'instruction' | 'fees' | 'security_warning' | 'error';
 export type SegmentStatus = 'validated' | 'machine' | 'uncertain';
 export type SegmentOrigin = 'memory' | 'template' | 'llm';

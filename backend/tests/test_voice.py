@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from amira import create_app, db
-from amira.services.voice import segment_key
+from amira.services.voice import audio_key, segment_key
 from conftest import DEV
 from openapi_check import assert_conforms
 
@@ -17,6 +17,21 @@ EXT = "chrome-extension://abcdefghijklmnop"
 @pytest.mark.parametrize("pair", PAIRS, ids=[p["key"] for p in PAIRS])
 def test_segment_key_identique_au_front(pair):
     assert segment_key(pair["text"]) == pair["key"]
+
+
+# mêmes valeurs que front/tests/unit/audiokey.test.ts : le front et le serveur doivent calculer la même clé
+@pytest.mark.parametrize("masked, key", [
+    ("Bonjour, {N0}", "k53142120"),  # fin = nom masqué : l'enregistrement est celui du début
+    ("Numéro de compte : CM {N0}", "k04c754e4"),
+    ("Le montant doit être supérieur à {N0}.", "k52f33b18"),
+    ("Bonjour", "k53142120"),
+])
+def test_cle_de_l_enregistrement_sans_la_fin_masquee(masked, key):
+    assert audio_key(masked) == key
+
+
+def test_cle_inchangee_sans_marqueur_en_fin():
+    assert audio_key("Votre {N0} compte") == segment_key("Votre {N0} compte")
 
 
 def test_fixture_couvre_les_cas_demandes():

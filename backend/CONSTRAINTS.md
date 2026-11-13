@@ -39,7 +39,7 @@ ou changé. `/v1` ne fait qu'ajouter.
 | P3 | `categoryHint` = `security_warning` ou `fees` : mémoire validée UNIQUEMENT, le moteur n'est jamais appelé. | `tests/test_status.py` (moteur espion), `tests/test_cache.py` (jamais servi par le cache) |
 | P4 | Chaque marqueur revient intact, le même nombre de fois, `{B}` bien imbriqués. Le moteur n'ajoute aucun chiffre. | `tests/test_markers.py`, `tests/test_engine.py` |
 | P5 | Dans le doute : `uncertain` + texte source masqué. | `tests/test_engine.py`, `tests/test_truncation.py` |
-| P6 | Fonctionne sans Internet. Aucun appel sortant pendant translate, tts, feedback. | `tests/test_offline.py` (socket bloqué), docker-compose `internal: true` |
+| P6 | Fonctionne sans Internet. Aucun appel sortant pendant translate, tts, feedback. | `tests/test_offline.py` (socket bloqué), réseau interne de la passerelle |
 | P7 | Aucun fulfulde écrit à la main dans le code ou les tests : les exemples viennent du CSV gold ou de fixtures de données. | `tests/test_no_fulfulde.py` |
 
 ## Sécurité (section 5)

@@ -56,7 +56,7 @@ pytest -q                                                # tout sauf le vrai mod
 pytest -q -m model                                       # vrai modèle (chargement, lot de 40)
 pip-audit -r requirements.txt -r requirements-dev.txt
 gunicorn -w 1 --threads 4 -b 0.0.0.0:8000 --timeout 30 wsgi:app
-docker compose up                                        # réseau internal: true
+python demo.py                                          # démonstration locale, sans configuration
 ```
 
 ## 6. Arborescence
@@ -66,8 +66,8 @@ L'arborescence de `README.md` §4.1, plus `guard.py` et `engine.py`, et rien d'a
 ```
 backend/
 ├── BRIEF.md CONSTRAINTS.md SPEC.md README.md LICENSES.md
-├── requirements.txt .env.example wsgi.py Dockerfile docker-compose.yml
-├── data/gold_fulfulde.csv          mémoire validée (source)
+├── requirements.txt .env.example wsgi.py demo.py
+├── languages/<code>/               une langue : language.json, gold.csv (mémoire validée), audio/, check_model.json
 ├── models/nllb_ff/                 AMIRA_MODEL_DIR (ignoré par git, monté en lecture seule)
 ├── docs/openapi.yaml PERF.md MASQUAGE.md EXPLOITATION.md
 ├── tools/check_model.py import_gold.py
@@ -199,6 +199,6 @@ Les tests utilisent pytest, sont écrits **avant** le code et vivent dans `backe
 
 ## 12. Questions ouvertes
 
-1. ~~Validation contre `openapi.yaml`~~ **Tranché** : PyYAML et jsonschema dans `requirements-dev.txt` seulement (versions figées, `pip-audit`, hors image Docker). `openapi.yaml` est écrit en vrai YAML. L'exception est notée dans `docs/EXPLOITATION.md`.
+1. ~~Validation contre `openapi.yaml`~~ **Tranché** : PyYAML et jsonschema dans `requirements-dev.txt` seulement (versions figées, `pip-audit`, hors production). `openapi.yaml` est écrit en vrai YAML. L'exception est notée dans `docs/EXPLOITATION.md`.
 2. ~~Licences~~ **Tranché** : la liste est donnée par l'humain (voir `LICENSES.md`, S11).
 3. **Paires `segmentKey`** (S8) : il me faudra 5 paires (texte masqué, clé) produites par le front.

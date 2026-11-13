@@ -3,7 +3,7 @@ import csv
 import re
 from pathlib import Path
 
-GOLD = Path(__file__).parents[1] / "data" / "gold_fulfulde.csv"
+GOLD = Path(__file__).parents[1] / "languages" / "ff" / "gold.csv"
 
 
 def rows() -> list[dict]:

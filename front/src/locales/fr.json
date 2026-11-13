@@ -34,8 +34,8 @@
   "translate": {
     "fr": "Français",
     "en": "English",
-    "ff": "Fulfulde (Adamaoua)",
-    "variety": "Variété du fulfulde",
+    "target": "Fulfulde (Adamaoua)",
+    "variety": "Variété : {lang}",
     "varieties": {
       "ngaoundere": "Ngaoundéré",
       "garoua": "Garoua",
@@ -84,7 +84,7 @@
     "detected": "Langue détectée :",
     "frWord": "français",
     "soonList": "Ghomálá’, ewondo, duala, bassa, bulu, pidgin : bientôt.",
-    "ffTarget": "Traduire le fulfulde vers",
+    "returnLang": "Quand la page est en {lang}, traduire vers",
     "options": "Options de traduction",
     "translate": "Traduire",
     "translating": "Traduction…",
@@ -108,6 +108,8 @@
     "autoWarnings": "Lire automatiquement les avertissements",
     "recorded": "Voix enregistrée",
     "synthetic": "Voix de synthèse",
+    "prev": "Passage précédent",
+    "next": "Passage suivant",
     "noRecording": "Pas encore d’enregistrement pour ce passage.",
     "noTts": "La lecture à voix haute n’est pas encore disponible. Elle apparaîtra dès que le service la proposera.",
     "nothing": "Rien à lire pour l’instant sur cette page.",
@@ -187,7 +189,7 @@
     "sentTitle": "Envoyé au service de traduction",
     "sent": [
       "Le texte de l’interface du site, après masquage",
-      "La variété de fulfulde choisie",
+      "La variété de {lang} choisie",
       "Vos signalements de traduction, masqués"
     ],
     "neverTitle": "Jamais envoyé",
@@ -240,7 +242,7 @@
     "next": "Suivant",
     "start": "Commencer",
     "s1title": "Votre banque, dans votre langue",
-    "s1body": "Amira traduit l’écran de votre service financier en fulfulde, sans rien changer au site.",
+    "s1body": "Amira traduit l’écran de votre service financier en {lang}, sans rien changer au site.",
     "s2title": "Vos données restent chez vous",
     "s2body": "Montants, numéros et noms sont masqués avant tout envoi. Amira ne clique et ne remplit jamais rien.",
     "s3title": "En cas de doute, l’original",

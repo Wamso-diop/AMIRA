@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from amira import db
-from amira.services.voice import find_recording, segment_key
+from amira.services.voice import audio_key, find_recording
 from tools.import_audio import import_audio
 from tools.import_gold import to_front
 from tools.organize_audio import organize
@@ -54,7 +54,7 @@ def setup(tmp_path):
 
 
 def key(text):
-    return segment_key(to_front(text))
+    return audio_key(to_front(text))
 
 
 def test_phrase_entiere_pour_chaque_source(setup):

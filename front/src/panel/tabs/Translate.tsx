@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { newRequestId, type SegmentStatus } from '../../services/api';
+import { isTarget, TARGET } from '../../languages';
 import type { DisplayMode, Settings } from '../../services/settings';
 import type { PageStats, StatusResult, TranslateResult } from '../../shared/messages';
 import { mask, unmask } from '../../content/mask';
@@ -23,11 +24,11 @@ export interface TabProps {
   showToast: (m: string) => void;
 }
 
-type Lang = 'fr' | 'en' | 'ff';
+type Lang = string;
 
-/** Sens de traduction : français/anglais → fulfulde ; fulfulde → français ou anglais. Jamais français ↔ anglais. */
+/** Sens de traduction : français/anglais → langue cible ; langue cible → français ou anglais. Jamais français ↔ anglais. */
 export function direction(from: Lang, settings: Settings): { source: Lang; target: Lang } {
-  return from === 'ff' ? { source: 'ff', target: settings.ffTarget } : { source: from, target: 'ff' };
+  return isTarget(from) ? { source: from, target: settings.returnLang } : { source: from, target: TARGET.code };
 }
 
 export function ServerBanner({ status, refresh }: TabProps) {
@@ -55,7 +56,7 @@ const Arrow = () => (
 
 export function TranslateTab(props: TabProps & { toggle: (on: boolean) => Promise<boolean> }) {
   const { settings, update, page, showToast, status } = props;
-  const { t } = useT();
+  const { t, lang: uiLang } = useT();
   const s = page.stats;
   const pageLang: Lang = s.lang ?? 'fr';
   const dir = direction(pageLang, settings);
@@ -69,7 +70,7 @@ export function TranslateTab(props: TabProps & { toggle: (on: boolean) => Promis
     }
   };
 
-  const targetWord = dir.target === 'ff' ? 'fulfulde' : dir.target === 'en' ? 'English' : t('translate.frWord');
+  const targetWord = isTarget(dir.target) ? TARGET.name[uiLang] : dir.target === 'en' ? 'English' : t('translate.frWord');
 
   return (
     <>
@@ -85,7 +86,7 @@ export function TranslateTab(props: TabProps & { toggle: (on: boolean) => Promis
           </span>
         </h1>
         <div className="petales-ligne">
-          <Petals active={0} label={t('translate.ff')} />
+          <Petals active={0} label={t('translate.target')} />
           <p>{t('translate.soonList')}</p>
         </div>
       </section>
@@ -111,11 +112,11 @@ export function TranslateTab(props: TabProps & { toggle: (on: boolean) => Promis
       )}
       <section className="section options" aria-labelledby="opt">
         <h2 id="opt">{t('translate.options')}</h2>
-        {pageLang === 'ff' && (
+        {isTarget(pageLang) && (
           <Segmented<'fr' | 'en'>
-            legend={t('translate.ffTarget')}
-            value={settings.ffTarget}
-            onChange={(v) => void update({ ffTarget: v })}
+            legend={t('translate.returnLang')}
+            value={settings.returnLang}
+            onChange={(v) => void update({ returnLang: v })}
             options={[{ value: 'fr', label: t('translate.fr') }, { value: 'en', label: t('translate.en') }]}
           />
         )}

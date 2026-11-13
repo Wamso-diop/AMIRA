@@ -87,7 +87,7 @@ export function installFakeChrome(): void {
     return handle(msg as BgRequest);
   };
   const toEngine = (n: ReturnType<typeof normalizeSettings>) => ({
-    ffTarget: n.ffTarget, variety: n.variety, display: n.display,
+    returnLang: n.returnLang, variety: n.variety, display: n.display,
     prudence: n.prudence, confidenceThreshold: n.confidenceThreshold, extraNames: n.extraNames,
   });
   let engine: Engine | null = null;

@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useT } from '../i18n';
 import { errorText } from '../App';
-import { IDLE, pause, play, resume, setRate, stop, subscribe, type PlayerState } from '../player';
+import { IDLE, pause, play, resume, setRate, skip, stop, subscribe, type PlayerState } from '../player';
 import { Switch } from '../ui/controls';
-import { IconAlert, IconMic, IconPage, IconPlay, IconStop, IconTarget } from '../ui/icons';
+import { IconAlert, IconMic, IconNext, IconPage, IconPlay, IconPrev, IconStop, IconTarget } from '../ui/icons';
 import { Petals } from '../ui/Petals';
 import { HandArrow } from '../ui/Scribbles';
 import { ServerBanner, type TabProps } from './Translate';
 import type { BgResult, ContentEvent, PickItem, PickState } from '../../shared/messages';
+import { isTarget, TARGET } from '../../languages';
 import { bg, toTab } from '../bridge';
 
 type What = 'page' | 'selection' | 'messages';
@@ -25,10 +26,10 @@ async function pick(cmd: Parameters<typeof toTab>[0]): Promise<PickState | null>
 
 export function VoiceTab(props: TabProps) {
   const { settings, update, status, showToast, page } = props;
-  const { t } = useT();
-  // langue lue : celle de la traduction affichée (fulfulde, ou français/anglais si la page est en fulfulde)
-  const readLang = page.stats.lang === 'ff' ? settings.ffTarget : 'ff';
-  const langWord = readLang === 'ff' ? 'fulfulde' : readLang === 'en' ? 'English' : t('translate.frWord');
+  const { t, lang: uiLang } = useT();
+  // langue lue : celle de la traduction affichée (langue cible, ou français/anglais si la page est dans la langue cible)
+  const readLang = isTarget(page.stats.lang) ? settings.returnLang : TARGET.code;
+  const langWord = isTarget(readLang) ? TARGET.name[uiLang] : readLang === 'en' ? 'English' : t('translate.frWord');
   const [what, setWhat] = useState<What>('page');
   const [player, setPlayer] = useState<PlayerState>(IDLE);
   const [items, setItems] = useState<PickItem[]>([]);
@@ -139,7 +140,7 @@ export function VoiceTab(props: TabProps) {
           </span>
         </h1>
         <div className="petales-ligne">
-          <Petals active={0} label={t('translate.ff')} />
+          <Petals active={0} label={t('translate.target')} />
           <p>{t('voice.intro')}</p>
         </div>
       </section>
@@ -174,8 +175,14 @@ export function VoiceTab(props: TabProps) {
           />
 
           <div className="lecture-barre">
+            <button className="pastille" onClick={() => void skip(-1)} disabled={player.status === 'idle' || player.index === 0} aria-label={t('voice.prev')} title={t('voice.prev')}>
+              <IconPrev />
+            </button>
             <button className="pastille" onClick={stop} disabled={player.status === 'idle'} aria-label={t('voice.stop')} title={t('voice.stop')}>
               <IconStop />
+            </button>
+            <button className="pastille" onClick={() => void skip(1)} disabled={player.status === 'idle' || player.index >= player.total - 1} aria-label={t('voice.next')} title={t('voice.next')}>
+              <IconNext />
             </button>
             {player.voice ? (
               <span className={`badge ${player.voice === 'recorded' ? 'validated' : 'machine'}`}>
@@ -218,7 +225,7 @@ export function VoiceTab(props: TabProps) {
 
       <section className="section" style={{ borderTop: '2px solid var(--trait-doux)', paddingTop: 20 }}>
         <h2>{t('voice.dictation')}</h2>
-        {stt ? <Dictation language="ff" /> : <p className="aide">{t('voice.dictationOff')}</p>}
+        {stt ? <Dictation language={TARGET.code} /> : <p className="aide">{t('voice.dictationOff')}</p>}
         {!stt && (
           <button className="btn secondaire" disabled>
             <IconMic /> {t('voice.dictationStart')}

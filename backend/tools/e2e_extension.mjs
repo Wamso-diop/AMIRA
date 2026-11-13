@@ -38,7 +38,7 @@ function parseCsv(text) {
   return body.map((r) => Object.fromEntries(head.map((h, i) => [h.replace(/^﻿/, ''), r[i] ?? ''])));
 }
 
-const gold = parseCsv(readFileSync(resolve(here, '../data/gold_fulfulde.csv'), 'utf8'));
+const gold = parseCsv(readFileSync(resolve(here, '../languages/ff/gold.csv'), 'utf8'));
 const goldMessages = gold.filter((r) => r.kind === 'message').slice(0, 8).map((r) => r.fr.replace('{V1}', '5 000 FCFA'));
 const unknown = ['Votre demande est en cours de traitement.', 'Le paiement sera disponible demain.',
   'Votre carte nécessite une vérification.', 'Consultez votre historique de transactions.'];

@@ -108,7 +108,6 @@ p { margin: 0; }
   border-bottom: 2px solid var(--trait);
 }
 .entete-l1 { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.logo { height: 30px; width: auto; }
 .entete-l2 { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
 .accroche { font-family: var(--f-titre); font-weight: 800; font-size: 0.95rem; letter-spacing: -0.01em; }
 

@@ -1,6 +1,4 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
-import logo from '../assets/amira-logo.png';
-import logoClair from '../assets/amira-logo-clair.png';
 import type { Settings } from '../services/settings';
 import type { ServerState } from '../shared/messages';
 import { toTab, NoContentError } from './bridge';
@@ -110,14 +108,10 @@ export function App() {
       <div className="app">
         <header className="entete">
           <div className="entete-l1">
-            <picture>
-              <source srcSet={logoClair} media={settings.theme === 'system' ? '(prefers-color-scheme: dark)' : settings.theme === 'dark' ? 'all' : 'not all'} />
-              <img className="logo" src={logo} alt="Amira" />
-            </picture>
+            <p className="accroche">{t('app.tagline')}</p>
             <StatusPill state={state} demo={status?.demo} />
           </div>
           <div className="entete-l2">
-            <p className="accroche">{t('app.tagline')}</p>
             <Switch className="entete-switch" label={t('app.toggle')} checked={page.stats.enabled} onChange={(v) => void toggle(v)} />
           </div>
           <div className="onglets" role="tablist" aria-label="Amira" onKeyDown={onTabKey}>

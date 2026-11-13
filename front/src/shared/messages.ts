@@ -80,7 +80,7 @@ export interface PageStats {
   total: number;
   hote?: string;
   /** Langue de la page détectée automatiquement. */
-  lang?: 'fr' | 'en' | 'ff';
+  lang?: string;
 }
 
 /** Texte lisible renvoyé au panneau pour la voix : déjà MASQUÉ. */

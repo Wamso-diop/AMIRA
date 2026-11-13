@@ -92,7 +92,7 @@ class MachineCache:
 def run_engine(engine, todo: list[dict], source: str, target: str, cfg: dict, t0: float) -> tuple[dict, set]:
     """todo : un représentant par texte, dans l'ordre de priorité. Renvoie ({clé: (sortie canonique, confiance)},
     {clés refusées au moins une fois et jamais acceptées})."""
-    threshold = cfg["MIN_CONFIDENCE_FROM_FF"] if source == "ff" else cfg["MIN_CONFIDENCE"]
+    threshold = cfg["MIN_CONFIDENCE_FROM_FF"] if source == cfg["TARGET"] else cfg["MIN_CONFIDENCE"]
     deadline = t0 + cfg["ENGINE_BUDGET_S"]
     accepted, refused = {}, set()
     for strict in (False, True):  # une seconde tentative, stricte, pour les sorties refusées seulement

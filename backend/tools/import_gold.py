@@ -1,7 +1,7 @@
 """Import idempotent de la mémoire validée (CSV gold) dans SQLite. Ne modifie jamais le CSV.
 
-Usage (depuis backend/) : python -m tools.import_gold data/gold_fulfulde.csv --validator natif-1 [--db data/amira.sqlite3]
-Chaque ligne donne fr>ff, en>ff, ff>fr et ff>en (variantes comprises). {V1}→{N0}, {V2}→{N1}…
+Usage (depuis backend/) : python -m tools.import_gold languages/ff/gold.csv --validator natif-1 [--language ff] [--db data/amira.sqlite3]
+Chaque ligne donne fr>xx, en>xx, xx>fr et xx>en (variantes comprises), xx étant la langue (colonne du CSV du même nom). {V1}→{N0}, {V2}→{N1}…
 Rejouer l'import met la base à jour : entrées changées réécrites, entrées disparues du CSV supprimées.
 """
 import argparse
@@ -10,12 +10,13 @@ import os
 import re
 
 from amira import db
+from amira.config import load_language
 from amira.guard import check
 from amira.markers import MARKER_RE, canonicalize, markers_ok, restore
 
-FF_VARIETY = "ngaoundere"  # le CSV n'a pas de colonne variété : fulfulde de l'Adamaoua
+DEFAULT_VARIETY = "ngaoundere"  # le CSV n'a pas de colonne variété : celle de language.json (fulfulde de l'Adamaoua par défaut)
 PRIORITY = {"ui": 0, "message": 0, "glossaire": 1}  # en cas de conflit, ui et message passent devant le glossaire
-DIRECTIONS = [("fr", "ff"), ("en", "ff"), ("ff", "fr"), ("ff", "en")]
+PIVOTS = ("fr", "en")  # langues de l'interface bancaire : jamais fr↔en
 # Un nombre ne se traduit jamais (chiffres masqués par le front, garde côté serveur) : pas même écrit en lettres.
 NUMBER_WORDS = set("""un une deux trois quatre cinq six sept huit neuf dix onze douze treize quatorze quinze seize vingt
 trente quarante cinquante soixante cent cents mille million millions milliard milliards et
@@ -36,21 +37,21 @@ def is_number(text: str) -> bool:
     return bool(set(words) - {"et", "and"}) and all(w in NUMBER_WORDS for w in words)
 
 
-def refusal(row: dict) -> str | None:
+def refusal(row: dict, lang: str = "ff") -> str | None:
     if any(is_number(row[c]) for c in ("fr", "en")):
         return "nombre"
     # une ligne exportée de l'admin n'a que deux colonnes remplies : on compare celles qui existent
-    texts = [to_front(row[c]) for c in ("ff", "fr", "en") if row[c].strip()]
+    texts = [to_front(row[c]) for c in (lang, "fr", "en") if row[c].strip()]
     if not all(markers_ok(texts[0], t) for t in texts[1:]):
         return "marqueurs"
     if row.get("n_markers", "").strip() and int(row["n_markers"]) != len(MARKER_RE.findall(texts[0] if texts else "")):
         return "n_markers"
-    if not all(check(to_front(t)) for c in ("fr", "en", "ff", "fr_variants", "en_variants", "ff_variants") for t in [row[c]]):
+    if not all(check(to_front(t)) for c in ("fr", "en", lang, "fr_variants", "en_variants", f"{lang}_variants") for t in [row[c]]):
         return "garde"
     return None
 
 
-def import_gold(conn, path, validator: str) -> dict:
+def import_gold(conn, path, validator: str, lang: str = "ff", variety: str = DEFAULT_VARIETY) -> dict:
     if not validator.strip():
         raise ValueError("nom du natif obligatoire (--validator)")
     with open(path, encoding="utf-8-sig", newline="") as f:
@@ -58,11 +59,11 @@ def import_gold(conn, path, validator: str) -> dict:
 
     refused, conflicts, chosen = [], [], {}
     for row in data:
-        reason = refusal(row)
+        reason = refusal(row, lang)
         if reason:
             refused.append({"id": row["id"], "reason": reason})
             continue
-        for src, tgt in DIRECTIONS:
+        for src, tgt in [(p, lang) for p in PIVOTS] + [(lang, p) for p in PIVOTS]:
             target = to_front(row[tgt])
             if not target:
                 continue
@@ -72,8 +73,8 @@ def import_gold(conn, path, validator: str) -> dict:
                 canon, table = canonicalize(source)
                 # la traduction suit la numérotation canonique de la source
                 text = restore(target, {o: c for c, o in table.items()})
-                variety = FF_VARIETY if tgt == "ff" else ""
-                k = (src, tgt, variety, db.memory_key(source))
+                vty = variety if tgt == lang else ""
+                k = (src, tgt, vty, db.memory_key(source))
                 entry = {"source_masked": canon, "text": text, "kind": row["kind"], "ref": "gold:" + row["id"]}
                 old = chosen.get(k)
                 if old and old["text"] != text:
@@ -110,7 +111,9 @@ def import_gold(conn, path, validator: str) -> dict:
             )
         # entrées gold disparues du CSV (source corrigée, ligne retirée)
         current = set(chosen)
-        for r in conn.execute("SELECT source, target, variety, key FROM translations WHERE ref LIKE 'gold:%'").fetchall():
+        # seulement les sens de cette langue : le gold d'une autre langue de la même base n'est pas touché
+        for r in conn.execute("SELECT source, target, variety, key FROM translations WHERE ref LIKE 'gold:%' "
+                              "AND (source = ? OR target = ?)", (lang, lang)).fetchall():
             if tuple(r) not in current:
                 conn.execute("DELETE FROM translations WHERE source = ? AND target = ? AND variety = ? AND key = ?", tuple(r))
         db.audit(conn, validator, "import_gold", f"{len(chosen)} entrées")
@@ -122,8 +125,10 @@ def main():
     ap.add_argument("csv")
     ap.add_argument("--validator", required=True, help="nom du locuteur natif qui a relu le fichier")
     ap.add_argument("--db", default=os.environ.get("AMIRA_DB_PATH", "data/amira.sqlite3"))
+    ap.add_argument("--language", default=os.environ.get("AMIRA_LANGUAGE", "ff"), help="code de la langue (dossier languages/<code>)")
     args = ap.parse_args()
-    report = import_gold(db.connect(args.db), args.csv, args.validator)
+    variety = load_language(args.language)["varieties"][0]
+    report = import_gold(db.connect(args.db), args.csv, args.validator, args.language, variety)
     print(f"lignes lues : {report['rows']}, entrées en mémoire : {report['entries']}")
     print(f"lignes refusées : {len(report['refused'])}")
     for r in report["refused"]:

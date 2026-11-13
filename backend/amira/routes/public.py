@@ -91,7 +91,7 @@ def translate():
 
     # la variété ne compte que vers le fulfulde (l'extension envoie toujours « ngaoundere »)
     variety = ""
-    if target == "ff":
+    if target == cfg["TARGET"]:
         variety = req.get("variety") or cfg["VARIETIES"][0]
         if variety not in cfg["VARIETIES"]:
             raise ApiError("BAD_REQUEST", "Variété inconnue")

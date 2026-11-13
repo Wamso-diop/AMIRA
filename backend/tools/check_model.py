@@ -1,6 +1,6 @@
 """S0 : le modèle se charge-t-il depuis le disque et répond-il ? Mesure RAM et latence CPU.
 
-Usage : python tools/check_model.py [--model models/nllb_ff] [--data data/check_model.json]
+Usage : python tools/check_model.py [--model models/nllb_ff] [--data languages/ff/check_model.json]
 Aucun accès réseau : HF_HUB_OFFLINE est forcé. Une différence avec Colab se signale, elle ne se corrige pas.
 """
 import argparse
@@ -50,7 +50,7 @@ def timed(tok, model, texts, runs=3):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default=os.environ.get("AMIRA_MODEL_DIR", "models/nllb_ff"))
-    ap.add_argument("--data", default="data/check_model.json")
+    ap.add_argument("--data", default=f"languages/{os.environ.get('AMIRA_LANGUAGE', 'ff')}/check_model.json")
     args = ap.parse_args()
     data = json.load(open(args.data, encoding="utf-8"))
 

@@ -1,4 +1,4 @@
-# Production seulement (image Docker). Versions figées ; toutes les dépendances indirectes sont dans constraints.txt.
+# Production seulement. Versions figées ; toutes les dépendances indirectes sont dans constraints.txt.
 # torch CPU : pip install --index-url https://download.pytorch.org/whl/cpu torch==2.15.0
 Flask==3.1.3
 python-dotenv==1.2.4

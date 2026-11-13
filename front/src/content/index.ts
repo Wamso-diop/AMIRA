@@ -19,7 +19,7 @@ const ACTIVE_HOSTS_KEY = 'amira.activeHosts';
 
 function toEngineSettings(s: Settings): EngineSettings {
   return {
-    ffTarget: s.ffTarget,
+    returnLang: s.returnLang,
     variety: s.variety,
     display: s.display,
     prudence: s.prudence,

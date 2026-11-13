@@ -175,7 +175,7 @@ def test_ready_attend_le_moteur(db_path):
 def test_vrai_modele_controle_colab():
     from amira.engine import NllbEngine
 
-    data = json.loads((Path(__file__).parents[1] / "data" / "check_model.json").read_text(encoding="utf-8"))
+    data = json.loads((Path(__file__).parents[1] / "languages" / "ff" / "check_model.json").read_text(encoding="utf-8"))
     engine = NllbEngine(str(Path(__file__).parents[1] / "models" / "nllb_ff"), {"fr": "fra_Latn", "en": "eng_Latn", "ff": "fuv_Latn"})
     assert not engine.ready()
     engine.load()

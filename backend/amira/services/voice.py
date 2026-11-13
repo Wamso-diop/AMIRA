@@ -3,6 +3,7 @@ import re
 from pathlib import Path
 
 from .. import db
+from .translator import TAIL_RE
 
 # \s de JavaScript, exactement (celui de Python n'a pas \ufeff et a \x1c-\x1f en plus)
 JS_SPACE = "\t\n\v\f\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff"
@@ -20,6 +21,15 @@ def segment_key(masked_source: str) -> str:
         h ^= data[i] | (data[i + 1] << 8)
         h = (h * 0x01000193) & 0xFFFFFFFF
     return f"k{h:08x}"
+
+
+def audio_key(masked_source: str) -> str:
+    """Clé de l'enregistrement : celle du début quand la fin n'est que numéros masqués, codes et ponctuation
+    (« Numéro de compte : CM {N0} » est lu comme « Numéro de compte »). Identique à audioKey() du front."""
+    tail = TAIL_RE.search(masked_source)
+    if tail and tail.start() > 0 and "{N" in tail.group():
+        masked_source = masked_source[:tail.start()]
+    return segment_key(masked_source)
 
 
 def find_recording(conn, key: str, language: str):

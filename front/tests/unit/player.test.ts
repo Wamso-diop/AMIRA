@@ -3,7 +3,7 @@ import { afterEach, describe, expect, test, vi } from 'vitest';
 
 const bg = vi.fn();
 vi.mock('../../src/panel/bridge', () => ({ bg: (m: unknown) => bg(m) }));
-const { play, stop, subscribe, IDLE } = await import('../../src/panel/player');
+const { play, stop, skip, subscribe, IDLE } = await import('../../src/panel/player');
 
 const speak = vi.fn();
 (globalThis as any).speechSynthesis = { speak, cancel: vi.fn(), pause: vi.fn(), resume: vi.fn() };
@@ -60,5 +60,29 @@ describe('lecteur', () => {
     expect(s.missing).toBe(true);
     expect(speak).not.toHaveBeenCalled();
     off();
+  });
+
+  test('suivant et précédent pendant la lecture', async () => {
+    bg.mockImplementation(async (m: any) => ({ ok: true, data: { audioBase64: m.req.text, mimeType: 'audio/mp4', voice: 'recorded' } }));
+    let s = IDLE;
+    const off = subscribe((x) => (s = x));
+    await play(['a', 'b', 'c'], 'ff', 1);
+    await skip(1);
+    expect([s.index, audios.at(-1)!.src]).toEqual([1, 'data:audio/mp4;base64,b']);
+    await skip(1);
+    await skip(1); // déjà au dernier : reste sur « c »
+    expect([s.index, audios.at(-1)!.src]).toEqual([2, 'data:audio/mp4;base64,c']);
+    await skip(-1);
+    await skip(-1);
+    await skip(-1); // déjà au premier : reste sur « a »
+    expect([s.index, s.total, audios.at(-1)!.src]).toEqual([0, 3, 'data:audio/mp4;base64,a']);
+    audios.at(-1)!.onended!(); // la lecture continue normalement après un saut
+    await vi.waitFor(() => expect(s.index).toBe(1));
+    off();
+  });
+
+  test('sans lecture en cours, suivant ne fait rien', async () => {
+    await skip(1);
+    expect(bg).not.toHaveBeenCalled();
   });
 });

@@ -1,31 +1,50 @@
 """Configuration : variables d'environnement uniquement (voir .env.example)."""
 import ipaddress
+import json
 from collections.abc import Mapping
+from pathlib import Path
+
+LANGUAGES_DIR = Path(__file__).parents[1] / "languages"
 
 
 def _list(value: str) -> list[str]:
     return [v.strip() for v in value.split(",") if v.strip()]
 
 
+def load_language(code: str) -> dict:
+    """Fiche de la langue cible : languages/<code>/language.json (voir languages/README.md pour en ajouter une)."""
+    path = LANGUAGES_DIR / code / "language.json"
+    try:
+        info = json.loads(path.read_text(encoding="utf-8"))
+        return {k: info[k] for k in ("code", "name", "nllb", "varieties", "model_dir", "engine_version")}
+    except (OSError, ValueError, KeyError):
+        raise RuntimeError(f"AMIRA_LANGUAGE={code} : fiche languages/{code}/language.json absente ou incomplète") from None
+
+
 def load(env: Mapping[str, str]) -> dict:
     def get(name: str, default: str = "") -> str:
         return env.get(name, default)
 
+    # une installation sert une langue cible ; tout ce qui en dépend (modèle, mémoire, sens) en est déduit, sauf surcharge par AMIRA_*
+    lang = load_language(get("AMIRA_LANGUAGE", "ff"))
+    c = lang["code"]
+
     cfg = {
         "ENV": get("AMIRA_ENV", "production"),
         "ALLOWED_ORIGINS": _list(get("AMIRA_ALLOWED_ORIGINS")),
-        "ENGINE_VERSION": get("AMIRA_ENGINE_VERSION", "amira-nllb-ff-stage2"),
+        "ENGINE_VERSION": get("AMIRA_ENGINE_VERSION", lang["engine_version"]),
         "TTS_ENABLED": get("AMIRA_TTS_ENABLED", "true").lower() == "true",
         "STT_ENABLED": get("AMIRA_STT_ENABLED", "false").lower() == "true",
-        "LANGUAGES": _list(get("AMIRA_LANGUAGES", "fr,en,ff")),
-        "VARIETIES": _list(get("AMIRA_VARIETIES", "ngaoundere,garoua,maroua")),
-        # sens autorisés : jamais fr↔en ; ajouter une langue = un modèle, une mémoire et cette liste
-        "DIRECTIONS": _list(get("AMIRA_DIRECTIONS", "fr>ff,en>ff,ff>fr,ff>en")),
+        "TARGET": c,
+        "LANGUAGES": _list(get("AMIRA_LANGUAGES", f"fr,en,{c}")),
+        "VARIETIES": _list(get("AMIRA_VARIETIES", ",".join(lang["varieties"]))),
+        # sens autorisés : jamais fr↔en
+        "DIRECTIONS": _list(get("AMIRA_DIRECTIONS", f"fr>{c},en>{c},{c}>fr,{c}>en")),
         "DB_PATH": get("AMIRA_DB_PATH", "data/amira.sqlite3"),
         # moteur : nllb (modèle local) ou memory (mémoire validée seule)
         "ENGINE": get("AMIRA_ENGINE", "nllb"),
-        "MODEL_DIR": get("AMIRA_MODEL_DIR", "models/nllb_ff"),
-        "LANG_CODES": dict(p.split("=", 1) for p in _list(get("AMIRA_LANG_CODES", "fr=fra_Latn,en=eng_Latn,ff=fuv_Latn"))),
+        "MODEL_DIR": get("AMIRA_MODEL_DIR", lang["model_dir"]),
+        "LANG_CODES": dict(p.split("=", 1) for p in _list(get("AMIRA_LANG_CODES", f"fr=fra_Latn,en=eng_Latn,{c}={lang['nllb']}"))),
         "MIN_CONFIDENCE": float(get("AMIRA_MIN_CONFIDENCE", "0.5")),
         "MIN_CONFIDENCE_FROM_FF": float(get("AMIRA_MIN_CONFIDENCE_FROM_FF", "0.7")),
         "ENGINE_BUDGET_S": float(get("AMIRA_ENGINE_BUDGET_S", "6")),
@@ -44,7 +63,7 @@ def load(env: Mapping[str, str]) -> dict:
         "API_KEYS": _list(get("AMIRA_API_KEYS")),
         "RATE_LIMIT_PER_MIN": int(get("AMIRA_RATE_LIMIT_PER_MIN", "600")),
         # CSV gold rechargé dès qu'il change (vide : import à la main seulement, par tools.import_gold)
-        "GOLD_PATH": get("AMIRA_GOLD_PATH", "data/gold_fulfulde.csv"),
+        "GOLD_PATH": get("AMIRA_GOLD_PATH", f"languages/{c}/gold.csv"),
         "GOLD_VALIDATOR": get("AMIRA_GOLD_VALIDATOR"),
         "RETENTION_DAYS": int(get("AMIRA_RETENTION_DAYS", "90")),
         "MAX_CONTENT_LENGTH": 5 * 1024 * 1024,

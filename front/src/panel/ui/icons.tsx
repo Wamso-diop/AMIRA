@@ -11,6 +11,8 @@ export const IconListen = (p: P) => <S {...p}><path d="M4 9v6h4l5 4V5L8 9H4z" />
 export const IconSwap = (p: P) => <S {...p}><path d="M7 4v16" /><path d="M3 8l4-4 4 4" /><path d="M17 20V4" /><path d="M13 16l4 4 4-4" /></S>;
 export const IconPlay = (p: P) => <S {...p}><path d="M7 4.5v15l12-7.5z" fill="currentColor" /></S>;
 export const IconPause = (p: P) => <S {...p}><path d="M8 5v14M16 5v14" /></S>;
+export const IconPrev = (p: P) => <S {...p}><path d="M18 5v14L8 12z" fill="currentColor" /><path d="M6 5v14" /></S>;
+export const IconNext = (p: P) => <S {...p}><path d="M6 5v14l10-7z" fill="currentColor" /><path d="M18 5v14" /></S>;
 export const IconStop = (p: P) => <S {...p}><rect x="6" y="6" width="12" height="12" fill="currentColor" /></S>;
 export const IconMic = (p: P) => <S {...p}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></S>;
 export const IconLock = (p: P) => <S {...p}><rect x="5" y="11" width="14" height="10" rx="1" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></S>;

@@ -1,3 +1,4 @@
+import { TARGET } from '../languages';
 import type { Variety } from './api';
 import type { MockScenario } from './mock';
 
@@ -7,8 +8,8 @@ export type Theme = 'light' | 'dark' | 'system';
 export interface Settings {
   version: 1;
   onboarded: boolean;
-  /** Langue d'arrivée quand la page est en fulfulde (sinon on traduit toujours vers le fulfulde). */
-  ffTarget: 'fr' | 'en';
+  /** Langue d'arrivée quand la page est dans la langue cible (sinon on traduit toujours vers la langue cible). */
+  returnLang: 'fr' | 'en';
   variety: Variety;
   display: DisplayMode;
   // Sécurité
@@ -38,8 +39,8 @@ export interface Settings {
 export const DEFAULT_SETTINGS: Settings = {
   version: 1,
   onboarded: false,
-  ffTarget: 'fr',
-  variety: 'ngaoundere',
+  returnLang: 'fr',
+  variety: TARGET.defaultVariety,
   display: 'replace',
   prudence: true,
   confidenceThreshold: 0.7,

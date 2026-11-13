@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 import fr from '../locales/fr.json';
 import en from '../locales/en.json';
+import { TARGET } from '../languages';
 
 export type UiLang = 'fr' | 'en';
 const dicts: Record<UiLang, unknown> = { fr, en };
@@ -16,7 +17,8 @@ export function makeT(lang: UiLang): T {
     let v = lookup(dicts[lang], key) ?? lookup(dicts.fr, key);
     if (typeof v !== 'string') return key;
     if (vars) for (const [k, val] of Object.entries(vars)) v = (v as string).replace(`{${k}}`, String(val));
-    return v as string;
+    // {lang} : nom de la langue cible dans la langue du panneau (languages.ts)
+    return (v as string).replaceAll('{lang}', TARGET.name[lang]);
   };
 }
 

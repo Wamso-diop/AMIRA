@@ -34,8 +34,8 @@
   "translate": {
     "fr": "Français",
     "en": "English",
-    "ff": "Fulfulde (Adamawa)",
-    "variety": "Fulfulde variety",
+    "target": "Fulfulde (Adamawa)",
+    "variety": "Variety: {lang}",
     "varieties": {
       "ngaoundere": "Ngaoundéré",
       "garoua": "Garoua",
@@ -84,7 +84,7 @@
     "detected": "Detected language:",
     "frWord": "French",
     "soonList": "Ghomálá’, Ewondo, Duala, Bassa, Bulu, Pidgin: soon.",
-    "ffTarget": "Translate Fulfulde into",
+    "returnLang": "When the page is in {lang}, translate into",
     "options": "Translation options",
     "translate": "Translate",
     "translating": "Translating…",
@@ -108,6 +108,8 @@
     "autoWarnings": "Read warnings automatically",
     "recorded": "Recorded voice",
     "synthetic": "Synthetic voice",
+    "prev": "Previous passage",
+    "next": "Next passage",
     "noRecording": "No recording for this passage yet.",
     "noTts": "Read-aloud is not available yet. It will appear as soon as the service offers it.",
     "nothing": "Nothing to read on this page yet.",
@@ -187,7 +189,7 @@
     "sentTitle": "Sent to the translation service",
     "sent": [
       "The site’s interface text, after masking",
-      "The chosen Fulfulde variety",
+      "The chosen {lang} variety",
       "Your translation reports, masked"
     ],
     "neverTitle": "Never sent",
@@ -240,7 +242,7 @@
     "next": "Next",
     "start": "Start",
     "s1title": "Your bank, in your language",
-    "s1body": "Amira translates your financial service’s screen into Fulfulde, without changing the site.",
+    "s1body": "Amira translates your financial service’s screen into {lang}, without changing the site.",
     "s2title": "Your data stays with you",
     "s2body": "Amounts, numbers and names are masked before anything is sent. Amira never clicks or fills in anything.",
     "s3title": "When in doubt, the original",

@@ -2,6 +2,7 @@
  * Banc d'essai (tests Playwright uniquement) : le moteur branché directement sur le mock,
  * sans chrome.*. N'est jamais inclus dans l'extension.
  */
+import { TARGET } from '../languages';
 import { Engine } from './engine';
 import { MockApi, type MockScenario } from '../services/mock';
 import type { LogEntry } from '../services/log';
@@ -15,7 +16,7 @@ let lastStats: PageStats | null = null;
 
 const engine = new Engine({
   doc: document,
-  settings: { ffTarget: 'fr', variety: 'ngaoundere', display: 'replace', prudence: false, confidenceThreshold: 0, extraNames: [] },
+  settings: { returnLang: 'fr', variety: TARGET.defaultVariety, display: 'replace', prudence: false, confidenceThreshold: 0, extraNames: [] },
   translate: async (req) => {
     req.segments.forEach((s) => sentTexts.push(s.text));
     requests.push({ source: req.source, target: req.target });

@@ -100,7 +100,8 @@ const contextualNameRule: Rule = (text) => {
   let m: RegExpExecArray | null;
   while ((m = re.exec(text))) {
     const word = m[1];
-    if (STOP_WORDS.has(word.toLowerCase())) continue;
+    // le drapeau « i » (pour « À ») fait aussi accepter une minuscule : « à débiter » n'est pas un nom
+    if (word[0] === word[0].toLowerCase() || STOP_WORDS.has(word.toLowerCase())) continue;
     const start = m.index + m[0].length - word.length;
     out.push({ start, end: start + word.length });
   }

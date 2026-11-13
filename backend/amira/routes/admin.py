@@ -21,8 +21,8 @@ admin = Blueprint("admin", __name__)
 
 AUDIO_TYPES = {"audio/mpeg": "mp3", "audio/ogg": "ogg", "audio/webm": "webm", "audio/wav": "wav",
                "audio/x-wav": "wav", "audio/mp4": "m4a"}
-GOLD_COLUMNS = ["id", "kind", "section", "page", "fr", "en", "ff", "fr_variants", "en_variants", "ff_variants",
-                "notes", "observed", "n_markers"]
+def gold_columns(lang: str) -> list[str]:
+    return ["id", "kind", "section", "page", "fr", "en", lang, "fr_variants", "en_variants", f"{lang}_variants", "notes", "observed", "n_markers"]
 
 
 def refused():
@@ -69,7 +69,7 @@ def put_translation():
     if f"{source}>{target}" not in cfg["DIRECTIONS"]:
         raise ApiError("BAD_REQUEST", "Sens non pris en charge")
     variety = ""
-    if target == "ff":
+    if target == cfg["TARGET"]:
         variety = req.get("variety") or cfg["VARIETIES"][0]
         if variety not in cfg["VARIETIES"]:
             raise ApiError("BAD_REQUEST", "Variété inconnue")
@@ -202,15 +202,16 @@ def to_gold(text: str) -> str:
 @click.argument("path")
 @with_appcontext
 def export_admin(path: str):
-    """Écrit les traductions validées depuis l'admin au format de data/gold_fulfulde.csv (à relire puis fusionner)."""
+    """Écrit les traductions validées depuis l'admin au format du CSV gold de la langue (languages/<code>/gold.csv) (à relire puis fusionner)."""
     conn = db.connect(current_app.config["DB_PATH"])
+    columns = gold_columns(current_app.config["TARGET"])
     rows = conn.execute("SELECT source, target, variety, source_masked, text, kind, validated_by, updated_at "
                         "FROM translations WHERE ref = 'admin' ORDER BY updated_at, source, target").fetchall()
     with open(path, "w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=GOLD_COLUMNS)
+        w = csv.DictWriter(f, fieldnames=columns)
         w.writeheader()
         for i, r in enumerate(rows, 1):
-            line = dict.fromkeys(GOLD_COLUMNS, "")
+            line = dict.fromkeys(columns, "")
             line.update({"id": f"admin-{i:04d}", "kind": r["kind"] or "", r["source"]: to_gold(r["source_masked"]),
                          r["target"]: to_gold(r["text"]), "n_markers": str(len(MARKER_RE.findall(r["source_masked"]))),
                          "notes": f"{r['source']}>{r['target']} {r['variety'] or '-'} {r['validated_by']} {r['updated_at']}"})

@@ -3,6 +3,7 @@
  * Capture → masquage local → envoi → vérification → affichage, et retour instantané à l'original.
  */
 import { newRequestId, type CategoryHint, type TranslateRequest, type Variety } from '../services/api';
+import { isTarget, TARGET } from '../languages';
 import { detectLanguage, detectPageLanguage, type PageLang } from './lang';
 import type { LogEntry } from '../services/log';
 import type { DisplayMode } from '../services/settings';
@@ -14,8 +15,8 @@ import { applyTranslation, isInlineFlow, scan, serializeGroup, TRANSLATABLE_ATTR
 import { decide, type Decision } from './verify';
 
 export interface EngineSettings {
-  /** Langue d'arrivée quand la page est en fulfulde ; sinon on traduit vers le fulfulde. */
-  ffTarget: 'fr' | 'en';
+  /** Langue d'arrivée quand la page est dans la langue cible ; sinon on traduit vers la langue cible. */
+  returnLang: 'fr' | 'en';
   variety: Variety | null;
   display: DisplayMode;
   prudence: boolean;
@@ -81,6 +82,18 @@ export function segmentKey(maskedSource: string): string {
     h = Math.imul(h, 0x01000193);
   }
   return 'k' + (h >>> 0).toString(16).padStart(8, '0');
+}
+
+/** Fin « sans mot à traduire » : numéros masqués, codes en capitales, ponctuation. Identique à TAIL_RE du serveur. */
+const TAIL_RE = /(?:[\s:,;!?/()#+.\-\u2013\u2014]|\{N\d+\}|\b[A-Z]{1,4}\b)+$/;
+
+/**
+ * Clé de l'enregistrement du natif : celle du début quand la fin n'est que numéros masqués
+ * (« Numéro de compte : CM {N0} » est lu comme « Numéro de compte »). Identique à audio_key() du serveur.
+ */
+export function audioKey(maskedSource: string): string {
+  const tail = TAIL_RE.exec(maskedSource);
+  return segmentKey(tail && tail.index > 0 && tail[0].includes('{N') ? maskedSource.slice(0, tail.index) : maskedSource);
 }
 
 function groupRange(group: Group): Range | null {
@@ -184,7 +197,7 @@ export class Engine {
   updateSettings(next: EngineSettings): void {
     const prev = this.settings;
     this.settings = next;
-    const langChanged = prev.ffTarget !== next.ffTarget || prev.variety !== next.variety;
+    const langChanged = prev.returnLang !== next.returnLang || prev.variety !== next.variety;
     const ruleChanged = prev.prudence !== next.prudence || prev.confidenceThreshold !== next.confidenceThreshold || prev.extraNames.join() !== next.extraNames.join();
     if (!this.enabled) return;
     if (langChanged || ruleChanged) {
@@ -396,7 +409,7 @@ export class Engine {
       .map((s) => s.original.replace(MARKER_RE, ' '))
       .join(' ');
     const attr = (this.deps.doc.documentElement.getAttribute('lang') || '').toLowerCase();
-    const fromAttr: PageLang | null = attr.startsWith('ff') ? 'ff' : attr.startsWith('en') ? 'en' : attr.startsWith('fr') ? 'fr' : null;
+    const fromAttr: PageLang | null = TARGET.htmlLang.some((p) => attr.startsWith(p)) ? TARGET.code : attr.startsWith('en') ? 'en' : attr.startsWith('fr') ? 'fr' : null;
     const lang = detectLanguage(sample) ?? fromAttr ?? this.pageLang;
     if (lang === this.pageLang) return;
     this.pageLang = lang;
@@ -453,12 +466,12 @@ export class Engine {
 
   private async send(batch: Seg[]) {
     const s = this.settings;
-    // sens automatique : français/anglais → fulfulde, ou fulfulde → français/anglais
-    const fromFf = this.pageLang === 'ff';
+    // sens automatique : français/anglais → langue cible, ou langue cible → français/anglais
+    const fromTarget = isTarget(this.pageLang);
     const req: TranslateRequest = {
       requestId: newRequestId(),
       source: this.pageLang,
-      target: fromFf ? s.ffTarget : 'ff',
+      target: fromTarget ? s.returnLang : TARGET.code,
       variety: s.variety,
       segments: batch.map((seg) => ({ id: seg.id, text: seg.masked, categoryHint: seg.category, placeholders: seg.placeholders })),
     };
@@ -722,7 +735,7 @@ export class Engine {
         .filter((s) => s.kind === 'text' && s.state !== 'skipped' && s.group)
         .map((s) => ({
           id: s.id,
-          key: segmentKey(s.masked),
+          key: audioKey(s.masked),
           text: strip(s.state === 'translated' && s.maskedTranslation && !this.showingOriginal ? s.maskedTranslation : s.masked),
           preview: preview(s.group!, s.original),
           category: s.category,
@@ -742,7 +755,7 @@ export class Engine {
       if (!id) this.dryIds.set(g.nodes[0], (id = `p${++segCounter}`));
       out.push({
         id,
-        key: segmentKey(m.text),
+        key: audioKey(m.text),
         text: strip(m.text),
         preview: preview(g, ser.text),
         category: categorize(g.parent, ser.text.replace(MARKER_RE, ' ')),
@@ -773,7 +786,7 @@ export class Engine {
         id: s.id,
         text: (s.state === 'translated' && s.maskedTranslation ? s.maskedTranslation : s.masked).replace(/\{\/?[BE]\d+\}/g, ''),
         category: s.category,
-        key: segmentKey(s.masked),
+        key: audioKey(s.masked),
       })),
     };
   }

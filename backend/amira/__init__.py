@@ -37,7 +37,7 @@ def create_app(env: Mapping[str, str] | None = None, engine=_FROM_CONFIG) -> Fla
     app.extensions["amira"] = {
         "engine": engines.from_config(app.config) if engine is _FROM_CONFIG else engine,
         "cache": MachineCache(app.config["CACHE_SIZE"], app.config["NEGATIVE_TTL_S"]),
-        "gold": GoldSync(app.config["GOLD_PATH"], app.config["GOLD_VALIDATOR"]),
+        "gold": GoldSync(app.config["GOLD_PATH"], app.config["GOLD_VALIDATOR"], app.config["TARGET"]),
     }
     if not log.handlers:
         handler = logging.StreamHandler()

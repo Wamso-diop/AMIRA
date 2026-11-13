@@ -5,6 +5,7 @@
  */
 import type { TtsResult } from '../services/api';
 import type { TtsResultMsg } from '../shared/messages';
+import { TARGET } from '../languages';
 import { bg } from './bridge';
 
 export type PlayerState = {
@@ -30,11 +31,11 @@ let state: PlayerState = IDLE;
 const subs = new Set<(s: PlayerState) => void>();
 let audio: HTMLAudioElement | null = null;
 let wait: ReturnType<typeof setTimeout> | null = null;
-let queue: { text: string; id?: string; key?: string }[] = [];
-let total = 0;
+let items: { text: string; id?: string; key?: string }[] = [];
+let pos = 0;
 let token = 0;
 let rate = 1;
-let lang = 'ff';
+let lang: string = TARGET.code;
 
 function set(p: Partial<PlayerState>) {
   state = { ...state, ...p };
@@ -52,25 +53,33 @@ const speakable = (s: string) => s.replace(/\{\/?[NBE]\d+\}/g, ' ').replace(/⟦
 export async function play(passages: Passage[], language: string, speed: number): Promise<void> {
   stop();
   const my = ++token;
-  queue = passages
+  items = passages
     .map((p) => (typeof p === 'string' ? { text: p } : p))
     .map((p) => ({ ...p, text: speakable(p.text) }))
     .filter((p) => p.text);
-  total = queue.length;
   rate = speed;
   lang = language;
-  if (!queue.length) return;
-  set({ status: 'loading', error: null, index: 0, total, currentId: queue[0].id ?? null, missing: false });
-  await next(my);
+  if (!items.length) return;
+  set({ status: 'loading', error: null, index: 0, total: items.length, currentId: items[0].id ?? null, missing: false });
+  await playAt(my, 0);
 }
 
-async function next(my: number) {
+/** Passage précédent (-1) ou suivant (+1) pendant une lecture ; sans effet au bout de la liste. */
+export async function skip(delta: -1 | 1): Promise<void> {
+  const to = pos + delta;
+  if (state.status === 'idle' || to < 0 || to >= items.length) return;
+  halt();
+  await playAt(token, to);
+}
+
+async function playAt(my: number, i: number) {
   if (my !== token) return;
-  const item = queue.shift();
+  const item = items[i];
   if (!item) return set({ status: 'idle', currentId: null, index: 0, total: 0 });
+  pos = i;
   const { text } = item;
-  set({ index: total - queue.length - 1, currentId: item.id ?? null });
-  const res = await bg<TtsResultMsg>({ type: 'amira:tts', req: { text, language: lang as 'ff', speed: rate, segmentKey: item.key } }).catch(
+  set({ index: i, currentId: item.id ?? null });
+  const res = await bg<TtsResultMsg>({ type: 'amira:tts', req: { text, language: lang, speed: rate, segmentKey: item.key } }).catch(
     () => ({ ok: false, code: 'CLIENT_ERROR', message: '' }) as TtsResultMsg,
   );
   if (my !== token) return;
@@ -80,13 +89,13 @@ async function next(my: number) {
     set({ voice: r.voice, status: 'playing', missing: false });
     audio = new Audio(`data:${r.mimeType};base64,${r.audioBase64}`);
     audio.playbackRate = rate;
-    audio.onended = () => void next(my);
+    audio.onended = () => void playAt(my, pos + 1);
     audio.onerror = () => set({ status: 'idle', error: 'AUDIO', currentId: null });
     await audio.play().catch(() => set({ status: 'idle', error: 'AUDIO', currentId: null }));
   } else {
     audio = null;
     set({ voice: null, status: 'playing', missing: true });
-    wait = setTimeout(() => void next(my), MISSING_PAUSE_MS);
+    wait = setTimeout(() => void playAt(my, pos + 1), MISSING_PAUSE_MS);
   }
 }
 
@@ -100,18 +109,24 @@ export function pause() {
 export function resume() {
   if (state.status !== 'paused') return;
   if (audio) void audio.play();
-  else if (state.missing) wait = setTimeout(() => void next(token), MISSING_PAUSE_MS);
+  else if (state.missing) wait = setTimeout(() => void playAt(token, pos + 1), MISSING_PAUSE_MS);
   set({ status: 'playing' });
 }
 
-export function stop() {
+/** Coupe le passage en cours (audio ou attente du message) ; les rappels en vol sont ignorés. */
+function halt() {
   token++;
-  queue = [];
   if (wait) clearTimeout(wait);
   if (audio) {
     audio.pause();
     audio = null;
   }
+}
+
+export function stop() {
+  halt();
+  items = [];
+  pos = 0;
   set({ status: 'idle', currentId: null, index: 0, total: 0 });
 }
 

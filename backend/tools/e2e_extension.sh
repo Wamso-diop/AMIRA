@@ -8,7 +8,7 @@ export PATH="$HOME/.local/node/bin:$PATH"
 PORT=5000 API="http://localhost:5000" WORK="$(mktemp -d)"
 export AMIRA_ENV=development AMIRA_ENGINE=nllb AMIRA_DB_PATH="$WORK/amira.sqlite3" AMIRA_RECORDINGS_DIR="$WORK/rec"
 
-.venv/bin/python -m tools.import_gold data/gold_fulfulde.csv --validator natif-1 --db "$AMIRA_DB_PATH" | head -1
+.venv/bin/python -m tools.import_gold languages/ff/gold.csv --validator natif-1 --db "$AMIRA_DB_PATH" | head -1
 .venv/bin/gunicorn -w 1 --threads 4 -b "127.0.0.1:$PORT" --timeout 30 wsgi:app >"$WORK/server.log" 2>&1 &
 SERVER=$!
 restore() {

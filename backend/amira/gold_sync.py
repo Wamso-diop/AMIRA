@@ -9,8 +9,8 @@ log = logging.getLogger("amira")
 class GoldSync:
     """path : le CSV ; validator : le natif qui le relit (vide = pas de rechargement, import à la main seulement)."""
 
-    def __init__(self, path: str, validator: str):
-        self.path, self.validator = path, validator.strip()
+    def __init__(self, path: str, validator: str, lang: str = "ff"):
+        self.path, self.validator, self.lang = path, validator.strip(), lang
         self.mtime = None
         self._lock = threading.Lock()
 
@@ -29,7 +29,7 @@ class GoldSync:
             self.mtime = mtime  # un fichier en erreur n'est retenté qu'à sa prochaine modification
             from tools.import_gold import import_gold  # l'outil de la ligne de commande, rejoué tel quel
             try:
-                report = import_gold(conn, self.path, self.validator)
+                report = import_gold(conn, self.path, self.validator, self.lang)
             except Exception as e:  # CSV en cours d'écriture ou mal formé : l'ancienne mémoire reste en place
                 log.error("gold non rechargé (%s) : la mémoire précédente est gardée", type(e).__name__)
                 return

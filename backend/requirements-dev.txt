@@ -1,4 +1,4 @@
-# Outils de test et d'audit seulement : jamais dans l'image Docker (voir docs/EXPLOITATION.md).
+# Outils de test et d'audit seulement : jamais en production (voir docs/EXPLOITATION.md).
 -r requirements.txt
 pytest==9.2.0
 PyYAML==6.0.3

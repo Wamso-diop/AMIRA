@@ -3,6 +3,7 @@
  * RÈGLE : il ne fabrique JAMAIS de faux fulfulde. Il renvoie le texte source préfixé de « ⟦FF⟧ »
  * pour montrer la chaîne de bout en bout, avec des statuts et des pannes simulés.
  */
+import { TARGET } from '../languages';
 import {
   AmiraApi,
   ApiError,
@@ -72,7 +73,7 @@ export class MockApi implements AmiraApi {
 
   async capabilities(): Promise<Capabilities> {
     await this.fail();
-    return { translate: true, tts: true, stt: false, languages: ['fr', 'en', 'ff'], varietes: ['ngaoundere', 'garoua', 'maroua'] };
+    return { translate: true, tts: true, stt: false, languages: ['fr', 'en', TARGET.code], varietes: [TARGET.defaultVariety] };
   }
 
   async translate(req: TranslateRequest): Promise<TranslateResponse> {
