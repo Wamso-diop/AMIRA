@@ -7,6 +7,7 @@
     "dev": "node scripts/dev.mjs",
     "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc --noEmit && vite build && vite build --config vite.content.config.ts && node scripts/build-manifest.mjs",
     "build:harness": "vite build --config vite.harness.config.ts",
+    "jury": "node scripts/build-jury.mjs",
     "icons": "node scripts/make-icons.mjs",
     "test": "vitest run",
     "test:e2e": "npm run build:harness && playwright test",

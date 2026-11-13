@@ -3,6 +3,7 @@
   "private": true,
   "description": "Raccourcis : chaque commande est lancée dans front/ (l'extension). Le back-end Flask est dans backend/.",
   "scripts": {
+    "extension": "npm --prefix front run jury",
     "install:front": "npm --prefix front install",
     "dev": "npm --prefix front run dev",
     "build": "npm --prefix front run build",

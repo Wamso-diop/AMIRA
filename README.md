@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="preview.png" alt="Panneau Amira ouvert à côté d'une page : « Cette page en fulfulde », langue détectée Français → Fulfulde (Adamaoua), gros bouton Traduire" width="420" />
+<img src="preview.png" alt="Panneau Amira ouvert à côté d'une page : « Cette page en fulfulde », gros bouton Traduire" width="420" />
 
 # Amira
 
@@ -17,29 +17,57 @@ et ne laisse jamais une traduction modifier un montant, un frais, un bénéficia
 
 ---
 
-## Le problème
+## Tester en 3 minutes
 
-Au Cameroun, les applications bancaires, les plateformes de paiement et la microfinance parlent français ou anglais.
-Pour des millions de personnes qui vivent en fulfulde, en ewondo ou en duala, « Frais de transfert : 1 500 FCFA »
-ou « Ne communiquez jamais votre code secret » restent des phrases qu'on devine, ou qu'on fait lire par quelqu'un d'autre.
-Ce quelqu'un d'autre voit alors le solde, le code, le bénéficiaire.
+**Il vous faut** : Chrome 116 ou plus récent, et Python 3.10 ou plus récent. Rien d'autre : pas de compte, pas de clé, pas de Node.js, pas d'Internet pour le serveur.
 
-**Amira rend la page compréhensible là où l'utilisateur se trouve, sans intermédiaire et sans que la banque ait quoi que ce soit à changer.**
+**1. Lancer le serveur** (un terminal, depuis le dossier du projet)
 
-## Ce que fait Amira, en trois gestes
+```bash
+cd backend
+python demo.py          # Windows : py demo.py
+```
 
-| | Geste | Ce qui se passe |
-|---|---|---|
-| 🌍 | **Traduire** | Un clic sur le gros bouton : toute la page passe en fulfulde, sur place. Les montants, numéros, dates et noms restent exactement ceux de la banque. **Voir l'original** revient à la page d'origine instantanément. |
-| 🔊 | **Écouter** | Toute la page, les seuls messages importants (erreurs, avertissements de sécurité) ou les **passages que l'on choisit en les touchant sur la page**. Le passage lu est entouré en direct. Les voix enregistrées par des locuteurs natifs sont prioritaires. |
-| 🛡️ | **Vérifier** | Chaque passage porte un badge : **validé** par un locuteur natif, **automatique**, ou **⚠ gardé en original** quand la traduction n'est pas assez sûre. Amira ne montre jamais une traduction douteuse. |
+La première fois, le script crée son environnement et installe Flask tout seul (quelques secondes à une minute, avec Internet). Il affiche ensuite `Amira (ff) prête sur http://127.0.0.1:5000`. Laissez ce terminal ouvert.
 
-La langue de la page est détectée seule : français ou anglais → fulfulde, et fulfulde → français ou anglais.
-Aucun réglage n'est demandé à l'utilisateur.
+**2. Installer l'extension** (Chrome)
 
-## Pourquoi on peut lui confier une page bancaire
+1. Ouvrir `chrome://extensions` et activer **Mode développeur** (en haut à droite).
+2. Cliquer sur **Charger l'extension non empaquetée** et choisir le dossier **`extension/`** de ce dépôt.
+3. Épingler Amira (icône puzzle, puis punaise).
 
-> **Un montant ne passe jamais par la traduction.**
+**3. Essayer**
+
+1. Ouvrir <https://safinum.cm/hackathon-test>, puis cliquer sur l'icône Amira : le panneau s'ouvre à côté de la page, la pastille indique **Prêt**.
+2. Cliquer sur le gros bouton **Traduire** : la page passe en fulfulde, sur place. Les montants, numéros et dates n'ont pas bougé. **Voir l'original** revient à la page d'origine en un clic.
+3. Onglet **Voix** : écouter la page, ou **La sélection**, puis toucher un passage sur la page pour l'entendre.
+4. Onglet **Journal** : constater que seuls des codes techniques sont conservés, jamais le texte de la page.
+
+> **Sans le modèle de traduction**, Amira sert la mémoire validée par les locuteurs natifs : tout ce qui est connu est traduit et marqué *validé*, et tout le reste **reste en original** au lieu d'être mal traduit. C'est voulu. Avec le modèle NLLB affiné (dossier `backend/models/nllb_ff/`, non livré dans le dépôt à cause de sa taille), `demo.py` le détecte et le charge.
+>
+> **Si le serveur n'est pas lancé**, la pastille l'indique et la page reste dans sa langue d'origine : l'extension ne casse jamais le site.
+
+<details>
+<summary><b>Autres façons de tester</b></summary>
+
+| Je veux… | Commande |
+|---|---|
+| Voir le panneau à côté d'une fausse page bancaire, sans serveur ni Chrome | `cd front && npm install && npm run apercu` |
+| Reconstruire l'extension moi-même (Node.js 20+) | `npm run extension` (à la racine) |
+| Lancer les tests du serveur (401) | installation complète décrite dans [backend/README.md](backend/README.md), puis `pytest` |
+| Lancer les tests de l'extension (59, puis le bout en bout dans un vrai navigateur) | `cd front && npm install && npm test && npm run test:e2e` |
+| Tout le parcours (serveur réel, vraie extension, Chromium) | `bash backend/tools/e2e_extension.sh` |
+
+</details>
+
+---
+
+## Ce qu'Amira apporte
+
+### 1. Elle fonctionne sur le service tel qu'il est
+Aucun script à intégrer, aucun accord de la banque, aucune modification du site. Amira est une **extension Chrome (Manifest V3)** : elle lit la page déjà affichée et la rend compréhensible. Elle a été conçue et testée sur des pages de structures très différentes : HTML simple, application d'une seule page, fenêtre modale, notification éphémère, iframe et shadow DOM, site qui change de langue. Les phrases coupées en balises (`<b>`, `<a>`…) sont traduites d'un seul tenant, **sans casser la mise en page**. Trois affichages au choix : remplacer, bilingue, ou original au survol.
+
+### 2. Un montant ne passe jamais par la traduction
 
 ```
 Sur la page            Votre solde est de 250 000 FCFA au 11/11/2026.
@@ -51,49 +79,46 @@ Vérifié sur l'ordinateur les marqueurs {N0} {N1} sont-ils tous là, une seule 
 ```
 
 - **Masquage local, non désactivable** : montants, devises, nombres, téléphones, e-mails, dates, références, IBAN et noms propres sont remplacés par des marqueurs **avant** tout envoi.
-- **Vérification stricte au retour** : un marqueur manquant, ajouté ou dupliqué, un statut incertain ou une erreur réseau ? Le texte d'origine reste affiché. Amira préfère ne pas traduire plutôt que mal traduire.
-- **Avertissements de sécurité** : ils ne sont affichés traduits que dans leur version validée par un locuteur natif.
-- **Rien n'est touché** : Amira ne lit ni les cookies, ni les jetons de la page, ni ce que l'utilisateur saisit dans les champs. Elle ne clique, ne remplit et ne soumet rien.
-- **Journal sans données** : il ne garde que le nom du site et des codes techniques, jamais le texte de la page.
+- **Double garde** : le serveur refuse lui aussi tout texte qui contiendrait une valeur sensible, et ne la cherche, ne la stocke et ne la journalise jamais.
+- **Amira préfère ne pas traduire que mal traduire** : un marqueur perdu, ajouté ou dupliqué, un statut incertain, une erreur réseau : l'original reste affiché.
+- **Avertissements de sécurité** et **frais** : affichés traduits seulement dans leur version validée par un locuteur natif.
+- **Rien n'est touché** : Amira ne lit ni les cookies, ni les jetons de la page, ni ce que l'utilisateur saisit. Elle ne clique, ne remplit et ne soumet rien.
+- **Aucune fuite, vérifiée** : journaux sans texte, serveur qui n'appelle rien vers l'extérieur (test avec connexions sortantes interdites), limites de débit, clés d'API, jeton et réseau interne pour les outils des natifs. Les tests de bout en bout exigent **100 % de marqueurs intacts et 0 fuite de valeur sensible**.
 
-## Réponse aux exigences de l'épreuve
+### 3. Elle s'adapte à ce qu'elle n'a jamais vu
+- Un **observateur de page** repère tout texte qui apparaît après le chargement (message d'erreur, alerte, nouvelle étape d'un virement) et ne retraduit que ce passage.
+- Pour un texte inconnu de la mémoire, le **modèle de traduction** prend le relais, sous seuil de confiance et avec les mêmes contrôles de sortie.
+- Le **choix est mémorisé par site** : la traduction suit l'utilisateur de l'écran du solde jusqu'à la confirmation.
+- La **langue de la page est détectée seule** (français ou anglais vers fulfulde, et fulfulde vers français ou anglais), sans réglage.
+- Les avertissements qui s'affichent peuvent être **lus à voix haute automatiquement**.
 
-| Fonctionnalité minimale attendue | Dans Amira |
-|---|---|
-| **1. Adaptation linguistique de l'interface** | Textes, boutons, libellés, infobulles et textes d'aide des champs. Les phrases découpées en balises (`<b>`, `<a>`…) sont traduites d'un seul tenant, sans casser la mise en page. Trois affichages : remplacer, bilingue (traduction sous l'original), original au survol. |
-| **2. Prise en charge d'un parcours financier** | Le choix est mémorisé par site, la traduction suit donc l'utilisateur d'étape en étape : solde → frais → bénéficiaire → récapitulatif → confirmation. Les applications d'une seule page, les fenêtres modales, les notifications éphémères, les iframes et le shadow DOM sont pris en charge. |
-| **3. Préservation des informations financières** | Masquage local + vérification des marqueurs + original gardé en cas de doute (voir ci-dessus). Les tests de bout en bout exigent **100 % de marqueurs intacts** et **0 fuite** de valeur sensible. |
-| **4. Fonctionnement indépendant** | Extension Chrome Manifest V3 : aucune ligne du site n'est modifiée, aucun script n'est à intégrer côté banque. Démontré sur l'environnement officiel `safinum.cm/hackathon-test` et sur des pages qu'Amira n'a jamais vues. |
-| **5. Adaptation à un contenu inédit** | Un `MutationObserver` repère tout texte qui apparaît après le chargement (message d'erreur, alerte, nouvelle étape) et ne retraduit que ce passage, sans recharger la page. Les avertissements nouvellement affichés peuvent être lus à voix haute automatiquement. |
+### 4. Accessible avant d'être beau (et beau quand même)
+- **On peut tout faire sans lire** : un gros bouton rond pour traduire, un autre pour écouter, des icônes qui gardent toujours le même sens.
+- **Écouter** toute la page, les seuls messages importants, ou **les passages qu'on touche** sur la page, entourés en direct. Les **voix enregistrées par des locuteurs natifs** sont prioritaires sur la voix de synthèse, et clairement étiquetées.
+- **Badges de fiabilité lisibles sans les couleurs** : cercle (validé), losange (automatique), triangle (à vérifier).
+- **Réglages** : taille du texte, contraste élevé, thème sombre, animations réduites ; panneau en français ou en anglais.
+- **Clavier** : **Alt + Maj + A** traduit ou rétablit la page, **Alt + clic** bascule un seul passage, **Échap** ferme l'outil de sélection. Panneau adapté de 320 à 480 px.
 
-| Critère du jury | Points | Où le voir |
-|---|---|---|
-| Fonctionnement du prototype | 25 | `npm run dev`, puis ouvrir Amira sur `safinum.cm/hackathon-test` |
-| Intégration et indépendance | 20 | Extension seule, sans modification du site ; testée sur des pages de structures très différentes |
-| Sécurité et préservation des informations | 20 | Masquage local, vérification des marqueurs, mesures dans `tests/e2e/results/metrics.json` |
-| Accessibilité et expérience | 15 | Voix, gros boutons, textes agrandissables, contraste élevé, thème sombre, clavier, mouvements réduits, 320 à 480 px |
-| Contenu inédit | 10 | Observation en direct des changements de la page, retraduction ciblée du passage modifié |
-| Faisabilité et documentation | 10 | Contrat d'API, note de design, composants tiers déclarés, tests automatisés |
+### 5. Une langue de plus, c'est un dossier de plus
+Le fulfulde de l'Adamaoua est la première langue, pas la dernière (ghomálá', ewondo, duala, bassa, bulu, pidgin sont prévus). **Ajouter une langue ne change ni le moteur, ni la sécurité, ni l'API** :
 
-## Accessible avant d'être beau (et beau quand même)
+```bash
+cd backend && python -m tools.new_language bbj --nllb bbj_Latn   # crée languages/bbj/ : fiche, mémoire vide, audio
+```
 
-- **On peut tout faire sans lire** : un gros bouton rond pour traduire, un autre pour écouter, des icônes et des couleurs qui ont toujours le même sens.
-- **Choisir ce qu'on écoute en le touchant** : la page est déjà découpée en passages. On touche ceux qu'on veut entendre, ils s'entourent et se numérotent. Ce sont les mêmes passages que les locuteurs natifs enregistrent, donc la voix humaine est retrouvée quand elle existe.
-- **Les badges de fiabilité se lisent aussi sans les couleurs** : un cercle (validé), un losange (automatique), un triangle (à vérifier).
-- **Réglages d'affichage** : taille du texte, contraste élevé, thème sombre, animations réduites, panneau en français ou en anglais.
-- **Clavier** : **Alt + Maj + A** traduit ou rétablit la page, **Alt + clic** bascule un seul passage, **Échap** ferme l'outil de sélection.
+Un locuteur natif remplit `languages/bbj/gold.csv`, on ajoute une ligne dans `front/src/languages.ts`, et c'est tout. Pas à pas : [backend/languages/README.md](backend/languages/README.md). Un test vérifie qu'une langue ajoutée est servie de bout en bout.
 
-## Langue et validation linguistique
+### 6. La qualité linguistique repose sur des personnes, pas sur du texte inventé
+**Aucun mot de fulfulde n'est écrit, généré ni deviné par notre code.** Tout vient d'un fichier relu par un locuteur natif.
+Chaque traduction porte un statut : `validated` (mémoire native), `machine` (modèle), `uncertain` (l'original reste). Depuis l'onglet Journal, l'utilisateur peut signaler une traduction et proposer une correction, elle aussi masquée avant envoi ; un natif la valide et elle devient `validated` pour tous. Un locuteur enregistre un passage une fois, et sa voix est lue partout où ce passage apparaît.
 
-**Langue prise en charge : le fulfulde de l'Adamaoua**, depuis et vers le français et l'anglais.
-Le ghomálá', l'ewondo, le duala, le bassa, le bulu et le pidgin sont prévus : ajouter une langue ne change pas l'architecture.
+### 7. Construit pour être repris
+- **Contrat d'API figé et documenté** : [front/docs/API.md](front/docs/API.md) et [backend/docs/openapi.yaml](backend/docs/openapi.yaml). L'extension ne connaît que l'adresse du serveur, fixée à la construction.
+- **Serveur indépendant** : Flask, SQLite, aucune dépendance cloud ; le moteur de traduction se remplace sans toucher au reste.
+- **460 tests automatisés** (401 serveur, 59 extension) plus des tests de bout en bout dans un vrai navigateur.
+- **Documentation** : [conception](backend/SPEC.md), [règles de qualité](backend/CONSTRAINTS.md), [masquage](backend/docs/MASQUAGE.md), [exploitation](backend/docs/EXPLOITATION.md), [mesures de performance](backend/docs/PERF.md), [design](front/docs/DESIGN.md), [licences](backend/LICENSES.md), [composants tiers](front/docs/COMPOSANTS-TIERS.md). **Aucun service externe**, polices et icônes embarquées.
 
-Notre règle : **aucun mot de fulfulde n'est inventé ni généré par le front.** La qualité linguistique repose sur des personnes :
-
-1. **Statut de chaque traduction** renvoyé par le serveur : `validated` (relue par un locuteur natif), `machine` (automatique), `uncertain`.
-2. **Seuil de confiance réglable** et **mode prudence** : en dessous du seuil, l'original est gardé.
-3. **Boucle de correction** : depuis le panneau (onglet Journal), l'utilisateur signale une traduction et propose une correction, elle aussi masquée avant envoi. Un locuteur natif la valide, et elle devient `validated` pour tous.
-4. **Voix humaines** : chaque passage a une clé stable (`segmentKey`). Un locuteur natif enregistre un passage une fois, et cet enregistrement est lu à la place de la voix de synthèse, avec l'étiquette « Voix enregistrée ».
+---
 
 ## Architecture
 
@@ -113,69 +138,42 @@ Notre règle : **aucun mot de fulfulde n'est inventé ni généré par le front.
 │  │                         │ journal sans données           │
 │  └───────────┬─────────────┘                                │
 └──────────────┼─────────────────────────────────────────────┘
-               │ HTTPS : /v1/translate · /v1/tts · /v1/feedback
-       ┌───────▼────────┐
-       │ API Amira      │  traduction, voix, validation par des natifs
-       │ (Flask)        │
-       └────────────────┘
+               │ /v1/translate · /v1/tts · /v1/feedback
+       ┌───────▼────────────────────────────┐
+       │ API Amira (Flask)                  │
+       │ garde → mémoire validée → modèle   │  une langue = backend/languages/<code>/
+       └────────────────────────────────────┘
 ```
 
-- **Front** : TypeScript, React 18, Vite, Manifest V3. Polices embarquées, icônes dessinées à la main, **aucune ressource distante**.
-- **Back-end** : API Flask séparée. L'extension ne connaît que son adresse, fixée à la construction. Sans back-end, une simulation intégrée fait tourner tout le parcours (le texte est préfixé `⟦FF⟧`, la pastille affiche « démo »).
-- **Contrat d'API complet** : [front/docs/API.md](front/docs/API.md). **Construire l'API Flask** : [backend/README.md](backend/README.md).
+## Dépôt
 
-## Essayer en deux minutes
-
-Prérequis : Node.js 20+ et Chrome 116+.
-
-```bash
-cd front && npm install && cd ..
-npm run dev          # construit l'extension et ouvre un guide d'installation animé
 ```
-
-1. `chrome://extensions` → **Mode développeur** → **Charger l'extension non empaquetée** → dossier `front/dist`.
-2. Épingler Amira, ouvrir <https://safinum.cm/hackathon-test>, cliquer sur l'icône Amira.
-3. Appuyer sur **Traduire**, puis passer à l'onglet **Voix** → **La sélection** et toucher un passage.
-
-Sans rien installer : `npm run apercu` ouvre le panneau à côté d'une page bancaire fictive.
-
-## Qualité vérifiée
-
-```bash
-npm test             # 43 tests unitaires : masquage, vérification des marqueurs, découpage en passages
-npm run test:e2e     # bout en bout : HTML simple, application d'une seule page, fenêtre modale,
-                     # notification éphémère, iframe + shadow DOM, changement de langue du site
-npm run safinum      # lance l'extension sur l'environnement officiel du concours
+AMIRA/
+├── extension/             l'extension construite : à charger telle quelle dans Chrome
+├── front/                 code source de l'extension (TypeScript, React, Vite)
+│   ├── src/languages.ts   la langue cible (le seul fichier à toucher pour en ajouter une)
+│   ├── src/content/       découpage, masquage, vérification, observation de la page
+│   ├── src/panel/         panneau latéral
+│   └── docs/              API.md · DESIGN.md · COMPOSANTS-TIERS.md · captures/
+└── backend/               API Flask
+    ├── demo.py            lancement en une commande
+    ├── languages/<code>/  une langue : fiche, mémoire validée, voix, phrases de contrôle
+    ├── amira/             garde, masquage, moteur, routes
+    ├── tools/             import de la mémoire et des voix, création d'une langue
+    └── docs/              openapi.yaml · MASQUAGE.md · EXPLOITATION.md · PERF.md
 ```
-
-Les tests de bout en bout mesurent la part du texte couverte et traduite, les marqueurs intacts (100 % exigé), les fuites de valeurs sensibles (0 exigé) et le temps de traitement.
 
 ## Limites connues
 
 Nous préférons les écrire nous-mêmes :
 
 - **Testé sur Chrome et Chromium uniquement.** Les pages internes de Chrome ne sont pas accessibles aux extensions.
-- **La qualité du fulfulde dépend du back-end et des locuteurs natifs.** Tant qu'un texte n'est pas validé, il est marqué comme tel ; en cas de doute, l'original reste affiché.
-- **Les navigateurs n'ont pas de voix fulfulde.** Sans enregistrement natif, la voix de synthèse est clairement étiquetée comme telle.
-- **Le panneau lui-même n'est pas encore traduit en fulfulde** : `ff.json` attend un locuteur natif, car nous refusons de générer cette traduction.
+- **La qualité du fulfulde dépend des locuteurs natifs.** La mémoire validée couvre l'environnement de test du concours ; le reste est traduit par le modèle, marqué comme tel, et gardé en original en cas de doute.
+- **Les navigateurs n'ont pas de voix fulfulde.** Sans enregistrement natif pour un passage, la voix de synthèse est clairement étiquetée comme telle.
+- **Le panneau n'est pas encore traduit en fulfulde** (il est en français et en anglais) : nous refusons de générer cette traduction sans locuteur natif.
+- **Le modèle NLLB est sous licence non commerciale (CC-BY-NC)** : acceptable pour ce prototype, à remplacer pour un usage commercial (le moteur est interchangeable, voir [LICENSES.md](backend/LICENSES.md)).
 - Le texte dessiné dans des images ou des `<canvas>` n'est pas traduit.
-
-## Dépôt
-
-```
-AMIRA/
-├── front/                 extension Chrome (ce qui est présenté au jury)
-│   ├── src/content/       découpage, masquage, vérification, moteur, sélecteur de passages
-│   ├── src/panel/         panneau latéral React
-│   ├── src/background/    service worker
-│   ├── src/services/      client d'API, simulation, réglages, journal
-│   ├── tests/             tests unitaires et de bout en bout
-│   └── docs/              API.md · DESIGN.md · COMPOSANTS-TIERS.md · captures/
-├── backend/               API Flask (traduction, voix, validation) : voir backend/README.md
-└── preview.png
-```
-
-**Composants tiers déclarés** : [front/docs/COMPOSANTS-TIERS.md](front/docs/COMPOSANTS-TIERS.md). Ce sont React, deux polices libres (Inter Tight, Noto Sans, qui affichent ɓ ɗ ƴ ŋ ɲ) et des outils de développement. **Aucun service externe.**
+- Le serveur de démonstration (`demo.py`) est fait pour une machine locale ; la production passe par gunicorn derrière la passerelle de la banque ([EXPLOITATION.md](backend/docs/EXPLOITATION.md)).
 
 ---
 

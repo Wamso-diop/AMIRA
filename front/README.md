@@ -50,6 +50,7 @@ Après une modification : bouton ↻ d'Amira dans `chrome://extensions`, puis re
 ## Brancher le back-end (développeur du back-end)
 
 Il n'y a rien à régler dans l'extension : l'adresse du back-end est fixée à la construction.
+**Pour une démonstration locale**, `npm run jury` (ou `npm run extension` à la racine) construit l'extension branchée sur `http://localhost:5000` dans `../extension/`, prête à charger ; le serveur se lance avec `python demo.py` dans `backend/`.
 
 ```bash
 cp .env.example .env
@@ -81,7 +82,7 @@ Le contrat (requêtes, réponses, erreurs) est dans [docs/API.md](docs/API.md). 
 ## Tests
 
 ```bash
-npm test             # Vitest : masquage, vérification des marqueurs, segmentation par blocs (42 tests)
+npm test             # Vitest : masquage, vérification des marqueurs, segmentation par blocs (59 tests)
 npx playwright install chromium   # une fois
 npm run test:e2e     # Playwright : 5 pages locales + scénarios d'erreur (7 tests)
 npm run safinum      # construit dist/ et lance l'extension sur https://safinum.cm/hackathon-test (mode démonstration)
@@ -100,7 +101,8 @@ src/background/             service worker : routeur, cache, journal, sites ajou
 src/content/                script de contenu : segmentation, masquage, vérification, moteur, styles injectés
 src/services/               api.ts (contrat + client HTTP), mock.ts, settings.ts, log.ts
 src/panel/                  panneau React : en-tête, 4 onglets, accueil
-src/locales/                fr.json, en.json ; ff.json vide (à rédiger par un locuteur natif)
+src/languages.ts            la langue cible (seul fichier à modifier pour en ajouter une : backend/languages/README.md)
+src/locales/                fr.json, en.json ; ff.json vide (à rédiger par un locuteur natif) ; {lang} = nom de la langue cible
 scripts/                    icônes, captures, lancement sur safinum.cm
 docs/                       API.md, DESIGN.md, COMPOSANTS-TIERS.md, captures/
 ```
