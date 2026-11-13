@@ -1,0 +1,7 @@
+languages/*/audio
+models
+media
+data
+.venv
+__pycache__
+tests

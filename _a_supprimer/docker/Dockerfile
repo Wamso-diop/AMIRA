@@ -16,7 +16,7 @@ RUN pip install --upgrade pip setuptools \
 COPY amira ./amira
 COPY tools/__init__.py tools/import_gold.py ./tools/
 COPY wsgi.py ./
-COPY data/gold_fulfulde.csv ./seed/gold_fulfulde.csv
+COPY languages ./languages
 
 # utilisateur sans droits ; seul /data (volume) est inscriptible
 RUN useradd --uid 10001 --no-create-home --shell /usr/sbin/nologin amira && mkdir /data && chown amira /data
@@ -27,4 +27,4 @@ HEALTHCHECK --interval=15s --timeout=3s --start-period=60s \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/v1/ready', timeout=2)"
 
 # l'import du gold est idempotent : il remet la mémoire à jour à chaque démarrage, sans toucher aux entrées admin
-CMD ["sh", "-c", "python -m tools.import_gold seed/gold_fulfulde.csv --validator \"${AMIRA_GOLD_VALIDATOR:-natif-1}\" && exec gunicorn -w 1 --threads 4 -b 0.0.0.0:8000 --timeout 30 wsgi:app"]
+CMD ["sh", "-c", "python -m tools.import_gold languages/${AMIRA_LANGUAGE:-ff}/gold.csv --validator \"${AMIRA_GOLD_VALIDATOR:-natif-1}\" && exec gunicorn -w 1 --threads 4 -b 0.0.0.0:8000 --timeout 30 wsgi:app"]
