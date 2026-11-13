@@ -1,6 +1,6 @@
 # Contraintes du back-end Amira
 
-Dernière relecture : 2026-11-12. Source : `BRIEF.md` (version 2), sections 2, 5 et 6.
+Dernière relecture : 2026-11-12. Source : le brief initial (version 2, non conservé dans le dépôt), sections 2, 5 et 6.
 Ce fichier ne s'affaiblit jamais pour faire passer un changement. Le resserrer est libre ; l'assouplir
 se discute en revue, dans un commit séparé.
 

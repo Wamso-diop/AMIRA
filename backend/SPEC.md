@@ -1,7 +1,7 @@
 # Spec : back-end Amira (API Flask)
 
 Statut : **à relire par un humain avant toute ligne de code.**
-Sources : `BRIEF.md` (version 2), `README.md` §4, `front/docs/API.md`, `front/src/services/api.ts`.
+Sources : le brief initial (version 2, non conservé dans le dépôt), `README.md` §4, `front/docs/API.md`, `front/src/services/api.ts`.
 Règles : [CONSTRAINTS.md](CONSTRAINTS.md). En cas de conflit : le contrat du front, puis CONSTRAINTS.md, puis ce document.
 
 ## 1. Objectif
@@ -65,7 +65,7 @@ L'arborescence de `README.md` §4.1, plus `guard.py` et `engine.py`, et rien d'a
 
 ```
 backend/
-├── BRIEF.md CONSTRAINTS.md SPEC.md README.md LICENSES.md
+├── CONSTRAINTS.md SPEC.md README.md LICENSES.md
 ├── requirements.txt .env.example wsgi.py demo.py
 ├── languages/<code>/               une langue : language.json, gold.csv (mémoire validée), audio/, check_model.json
 ├── models/nllb_ff/                 AMIRA_MODEL_DIR (ignoré par git, monté en lecture seule)
