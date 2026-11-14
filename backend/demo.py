@@ -1,7 +1,8 @@
-"""Lance Amira en démonstration : une commande, aucune configuration.   python demo.py [--language ff] [--port 5000]
+"""Lance Amira en démonstration : une commande, aucune configuration.   python demo.py [--language ff] [--port 5000] [--no-browser]
 
 - crée .venv et installe Flask au besoin (Python 3.10+ ; seul Flask est requis sans le modèle) ;
 - sert la mémoire validée (languages/<code>/gold.csv) ; si le modèle M2M100 est dans models/m2m_<code>/, il complète la mémoire ;
+- ouvre le guide d'installation dans le navigateur (--no-browser pour l'éviter) ;
 - écoute sur 127.0.0.1 seulement. Pour la production : gunicorn (voir docs/EXPLOITATION.md).
 """
 import argparse
@@ -9,8 +10,11 @@ import importlib.util
 import os
 import subprocess
 import sys
+import threading
 import venv
+import webbrowser
 from pathlib import Path
+from urllib.parse import quote
 
 HERE = Path(__file__).parent
 VENV = Path(os.environ.get("AMIRA_DEMO_VENV", HERE / ".venv"))
@@ -34,6 +38,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--language", default="ff")
     ap.add_argument("--port", type=int, default=5000)
+    ap.add_argument("--no-browser", action="store_true", help="n'ouvre pas le guide d'installation dans le navigateur")
     args = ap.parse_args()
     ensure_env()
     os.chdir(HERE)
@@ -59,6 +64,11 @@ def main() -> None:
     print(f"\nAmira ({args.language}) prête sur http://127.0.0.1:{args.port} — moteur : "
           f"{'modèle M2M100 + mémoire validée' if engine == 'm2m100' else 'mémoire validée seule (modèle, torch, transformers ou sentencepiece absent)'}\n"
           "Dans Chrome : ↻ sur Amira (chrome://extensions) ; la pastille passe à « Prêt ». Ctrl+C pour arrêter.\n")
+    if not args.no_browser and (HERE / "guide" / "guide.html").exists():
+        # le guide reçoit le chemin complet du dossier extension/ (il l'affiche et le fait copier) ; rien ne sort de la machine
+        url = f"http://127.0.0.1:{args.port}/guide/?dossier={quote(str(HERE.parent / 'extension'))}"
+        threading.Timer(1.0, webbrowser.open, args=(url,)).start()  # après le démarrage du serveur
+        print(f"Le guide d'installation s'ouvre dans votre navigateur : {url.split('?')[0]}\n")
     app.run(host="127.0.0.1", port=args.port, threaded=True, use_reloader=False)
 
 

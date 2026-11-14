@@ -115,3 +115,18 @@ def test_debug_coupe_hors_developpement(monkeypatch):
 def test_accueil_lisible_par_un_humain(client):
     r = client.get("/")
     assert r.status_code == 200 and r.mimetype == "text/html" and "extension" in r.get_data(as_text=True)
+
+
+def test_guide_d_installation_servi_sans_reseau(client):
+    r = client.get("/guide/")
+    assert r.status_code == 200 and r.mimetype == "text/html" and "Installer Amira" in r.get_data(as_text=True)
+    assert client.get("/guide").status_code == 301
+    html = r.get_data(as_text=True)
+    assert "http://" not in html.replace("http://127.0.0.1", "").replace("http://localhost", "").replace("http://www.w3.org", "")  # aucune ressource externe
+    css = next(p for p in __import__("re").findall(r'href="\./(assets/[^"]+\.css)"', html))
+    assert client.get(f"/guide/{css}").status_code == 200
+
+
+def test_guide_refuse_de_sortir_de_son_dossier(client):
+    for path in ("/guide/../amira/config.py", "/guide/%2e%2e/amira/config.py", "/guide/..%2f..%2f.env"):
+        assert client.get(path).status_code in (301, 308, 404)

@@ -4,10 +4,14 @@
 
 | Élément | Licence | Conséquence |
 |---|---|---|
-| Modèle livré : M2M100 (`facebook/m2m100_418M`, 483 905 536 paramètres), affiné pour le fulfulde | **MIT** ([fiche du modèle](https://huggingface.co/facebook/m2m100_418M)) | Usage commercial permis. Licence relevée sur la fiche le 2026-11-14 ; **non revérifiée en ligne ce jour-là** (aucun accès réseau pendant ce travail) : à recontrôler sur la fiche avant toute diffusion. Le modèle affiné reste hors de git (`docs/MODEL.md`). |
+| Modèle livré : **M2M100, version 418M** (`facebook/m2m100_418M`, 483 905 536 paramètres), affiné pour le fulfulde | **MIT, vérifiée** ([fiche du modèle](https://huggingface.co/facebook/m2m100_418M)) | **Usage commercial permis, à condition de conserver la mention de la licence** (voir ci-dessous). Le modèle affiné reste hors de git (`docs/MODEL.md`). |
 | NLLB-200 (`facebook/nllb-200-distilled-600M`) | CC-BY-NC 4.0 (non commercial) | **Évalué, non livré** : retiré du code et du disque le 2026-11-14 à cause de sa licence non commerciale. |
 
 Le moteur reste interchangeable : un autre dossier dans `AMIRA_MODEL_DIR`, ou un autre `engine.py` qui respecte `translate(textes, src, tgt) -> [(texte, confiance)]`.
+
+### Mention de licence à conserver
+
+Ce produit utilise le modèle **M2M100 (version 418M)**, publié par Meta et distribué sous **licence MIT** : <https://huggingface.co/facebook/m2m100_418M>. La licence MIT autorise l'usage, y compris commercial, la modification et la distribution, **à la condition que l'avis de droit d'auteur et le texte de la licence MIT accompagnent toute copie ou version substantielle** du modèle. Toute redistribution du modèle affiné doit donc joindre cette mention.
 
 ## Données d'entraînement
 

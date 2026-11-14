@@ -1,6 +1,6 @@
 // Bout en bout (brief §6k) : la vraie extension (front/dist, construite avec VITE_AMIRA_API_URL) dans Chromium,
 // branchée sur le vrai serveur. Vérifie : pastille « Prêt » sans « démo », traduction d'une page de test,
-// lecture d'un message important. La page est servie par Playwright à l'adresse du site officiel
+// lecture d'un message important, lecture automatique d'une erreur. La page est servie par Playwright à l'adresse du site officiel
 // (aucun accès réseau) ; ses textes français viennent du CSV gold (+ quelques phrases inconnues).
 //
 // Usage (voir tools/e2e_extension.sh) : node tools/e2e_extension.mjs http://localhost:5000
@@ -67,6 +67,17 @@ const pass = (name, detail) => { report.checks[name] = { ok: true, detail }; };
 
 // 1. pastille : état du service worker et texte visible du panneau
 const panel = await ctx.newPage();
+// espion : chaque lecture audio lancée par le panneau (la lecture automatique des erreurs y vit)
+await panel.addInitScript(() => {
+  window.__plays = [];
+  window.__ended = 0;
+  const play = HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play = function () {
+    window.__plays.push(String(this.src).slice(0, 24) + '…' + String(this.src).length);
+    for (const e of ['ended', 'error']) this.addEventListener(e, () => window.__ended++, { once: true });
+    return play.apply(this, arguments);
+  };
+});
 await panel.goto(`chrome-extension://${extId}/sidepanel.html`);
 const status = await panel.evaluate(() => chrome.runtime.sendMessage({ type: 'amira:status' }));
 await panel.waitForTimeout(1500);
@@ -103,6 +114,58 @@ if (stats.translated > 0 && stats.pending === 0 && goldShown > 0 && amountsKept 
 const inedit = unknown.filter((t) => before.includes(t) && !after.includes(t));
 if (inedit.length > 0) pass('inedit', { traduits: inedit.length, sur: unknown.length });
 else fail('inedit', { sur: unknown.length, note: 'aucune phrase inédite traduite' });
+
+// 2c. lecture automatique d'un message d'erreur (réglage actif par défaut, panneau ouvert sur l'onglet Traduire)
+const plays = () => panel.evaluate(() => window.__plays.slice());
+const waitFor = async (cond, ms) => {
+  for (let t0 = Date.now(); Date.now() - t0 < ms; await panel.waitForTimeout(150)) if (await cond()) return true;
+  return false;
+};
+// toutes les lectures lancées sont terminées, et plus rien ne démarre depuis 2 s (la page de test affiche déjà des erreurs :
+// elles sont lues à la suite quand on traduit la page)
+const fileVide = async () => {
+  for (let calme = 0, n = -1; calme < 2000; await panel.waitForTimeout(250)) {
+    const [p, e] = await panel.evaluate(() => [window.__plays.length, window.__ended]);
+    calme = p === n && e === p ? calme + 250 : 0;
+    n = p;
+  }
+};
+const showAlert = (text) => page.evaluate((t) => {
+  const p = document.createElement('p');
+  p.setAttribute('role', 'alert');
+  p.textContent = t;
+  document.body.append(p);
+}, text);
+await fileVide();
+const initial = await plays(); // les erreurs déjà affichées par la page, lues à la traduction
+// deux erreurs du gold (enregistrées en entier) qui ne sont pas déjà sur la page : g0094, g0099, g0100, g0093 (dans cet ordre)
+const dejaLa = new Set(gold.filter((r) => r.kind === 'message').slice(0, 8).map((r) => r.id));
+const [erreur1, erreur2] = ['g0094', 'g0099', 'g0100', 'g0093'].filter((id) => !dejaLa.has(id)).map((id) => gold.find((r) => r.id === id).fr);
+await showAlert(erreur1);
+const lu = await waitFor(async () => (await plays()).length > initial.length, 10000);
+const apres = await plays();
+if (lu && apres.slice(initial.length).every((s) => s.startsWith('data:audio/mp4'))) {
+  pass('lecture_auto_erreur', { deja_affichees_lues_a_la_traduction: initial.length, nouvelle_erreur_lue: apres.length - initial.length });
+} else fail('lecture_auto_erreur', { lu, initial, apres });
+await fileVide();
+// une alerte de SÉCURITÉ n'est pas lue toute seule : seulement les erreurs
+await showAlert('Alerte de sécurité : vérifiez le numéro du bénéficiaire avant de continuer.');
+await panel.waitForTimeout(3500);
+const secu = await plays();
+if (secu.length === apres.length) pass('alerte_securite_non_lue', { lectures: secu.length });
+else fail('alerte_securite_non_lue', { avant: apres.length, apres: secu.length });
+// réglage éteint : une nouvelle erreur n'est plus lue
+await sw.evaluate(async () => {
+  const { 'amira.settings': s } = await chrome.storage.local.get('amira.settings');
+  await chrome.storage.local.set({ 'amira.settings': { ...s, version: 2, autoReadWarnings: false } });
+});
+await panel.waitForTimeout(800);
+await showAlert(erreur2);
+await panel.waitForTimeout(4500);
+const eteint = await plays();
+const reglage = await sw.evaluate(async () => (await chrome.storage.local.get('amira.settings'))['amira.settings']?.autoReadWarnings);
+if (eteint.length === secu.length) pass('lecture_auto_eteinte', { lectures: eteint.length });
+else fail('lecture_auto_eteinte', { avant: secu.length, apres: eteint.length, reglage, lectures: eteint });
 
 // 3. lecture des messages importants (comme l'onglet Voix) : une requête /v1/tts par passage.
 // On lit le premier message ET l'avertissement (role=alert, « code secret »).

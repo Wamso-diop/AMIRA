@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Installer Amira</title>
+<meta name="description" content="Guide en 9 étapes pour installer Amira dans Chrome et traduire une page en fulfulde." />
+<link rel="icon" href="./assets/icon-32-DQZPrwBi.png" />
+  <script type="module" crossorigin src="./assets/guide-BbfBdBM3.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/guide-DtjZPx2e.css">
+</head>
+<body>
+<div class="guide">
+  <header class="g-haut">
+    <img class="g-logo" src="./assets/amira-logo-clair-DMJ1ZvNP.png" alt="Amira" />
+    <p class="g-statut" id="statut" role="status"><i></i><span>Vérification du serveur Amira…</span></p>
+  </header>
+
+  <main class="g-scene" aria-live="polite">
+    <!-- 0 : ouverture, avec la démonstration : traduire, puis écouter -->
+    <section class="g-slide g-intro" data-titre="Bienvenue">
+      <div class="g-texte intro-texte">
+        <div class="intro-logo" aria-hidden="true">
+          <svg class="logo-anim" viewBox="0 0 420 130" role="img" aria-label="Amira">
+            <g transform="translate(62 65)">
+              <g transform="rotate(12) scale(1.45)"><path class="lp lp1" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#E01D5B" /></g>
+              <g transform="rotate(-48) scale(1.45)"><path class="lp lp2" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#2DCF42" /></g>
+              <g transform="rotate(-132) scale(1.45)"><path class="lp lp3" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#EFD109" /></g>
+              <g transform="rotate(168) scale(1.45)"><path class="lp lp4" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#2BB1EB" /></g>
+            </g>
+            <path class="la la-barre" d="M14 65 H40" />
+            <path class="la la-fleche" d="M112 30 L 78 65 L 112 100 M 80 65 H 150" />
+            <text class="lt" x="150" y="92">Amira<tspan class="lt-point">.</tspan></text>
+          </svg>
+        </div>
+        <h1>Lire. Comprendre. Agir.</h1>
+        <p>Amira rend les services financiers compréhensibles en fulfulde, directement dans votre navigateur, sans rien changer au site.</p>
+        <ol class="demo-etapes">
+          <li class="e1"><span class="e-n">1</span><span>Un clic sur <b>Traduire</b> : la page change de langue, les montants ne bougent pas.</span></li>
+          <li class="e2"><span class="e-n">2</span><span>Un clic sur <b>l’écouteur</b> : la voix d’un locuteur natif lit le passage.</span></li>
+        </ol>
+        <p class="intro-suite">Ce guide vous montre ensuite comment l’installer dans Chrome, en 3 minutes.</p>
+      </div>
+
+      <div class="g-maquette navigateur demo" role="img" aria-label="Démonstration : dans une page bancaire, un clic sur Traduire fait passer les textes du français au fulfulde, puis un clic sur l’écouteur lit une phrase avec la voix d’un locuteur natif.">
+        <div class="n-barre" aria-hidden="true"><span class="n-adresse">safinum.cm/hackathon-test</span><span class="n-icones"><img src="data:image/png;base64,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" alt="" /></span></div>
+        <div class="d-page" aria-hidden="true">
+          <div class="d-site">
+            <div class="d-entete"><span class="d-logo"></span><b class="d-t d-titre"><span class="fr">Votre compte</span><span class="ff">Siggorɗe maaɗa</span></b></div>
+            <div class="d-solde">
+              <small class="d-t"><span class="fr">Solde disponible</span><span class="ff">Ceede ɗe a mari jonta</span></small>
+              <strong>250 000 FCFA</strong>
+              <span class="d-intact"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3.2L13 4.8" /></svg>montant inchangé</span>
+            </div>
+            <div class="d-alerte">
+              <span class="d-ecoute"><svg viewBox="0 0 24 24"><path d="M4 9.5v5h3.6l4.9 4V5.5l-4.9 4H4z" /><path class="o1" d="M15.6 9.2a4 4 0 010 5.6" /><path class="o2" d="M18 6.8a7.4 7.4 0 010 10.4" /></svg></span>
+              <div class="d-alerte-corps">
+                <p class="d-lisible"><span class="d-t"><span class="fr">Attention : vérifiez le nom du bénéficiaire.</span><span class="ff">Hakkiilo : laarta innde jaɓɓoowo.</span></span></p>
+                <div class="d-ligne-voix">
+                  <span class="d-onde"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <span class="d-badge">Voix d’un locuteur natif</span>
+                </div>
+              </div>
+            </div>
+            <span class="d-bouton d-t"><span class="fr">Effectuer un transfert</span><span class="ff">Neldugo ceede</span></span>
+          </div>
+          <aside class="d-panneau">
+            <img class="d-p-logo" src="./assets/amira-logo-DA5bnsOf.png" alt="" />
+            <span class="d-pret"><i></i>Prêt</span>
+            <b class="d-p-titre">Cette page en <u>fulfulde</u></b>
+            <span class="d-sens">Français → Fulfulde</span>
+            <span class="d-traduire"><span class="b1">Traduire</span><span class="b2">Traduction…</span><span class="b3">Voir l’original</span></span>
+            <span class="d-compte">4 passages traduits</span>
+          </aside>
+          <span class="d-curseur"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 -->
+    <section class="g-slide" data-titre="Le dossier extension">
+      <div class="g-texte">
+        <p class="g-num">2 / 9</p>
+        <h1>L’extension est prête</h1>
+        <p><code>python demo.py</code> a lancé le serveur Amira et ouvert ce guide. Le dossier <code>extension</code> du projet contient l’extension déjà construite : rien à installer ni à compiler. C’est lui que Chrome va charger.</p>
+        <p class="g-chemin"><code class="chemin" data-dossier>AMIRA › extension</code> <button class="g-copier" data-copier-dossier>Copier le chemin</button></p>
+      </div>
+      <div class="g-maquette terminal" aria-hidden="true">
+        <div class="t-barre"><i></i><i></i><i></i></div>
+        <pre><span class="t-l l1">$ python demo.py</span>
+<span class="t-l l2 doux">mémoire validée et voix des locuteurs natifs chargées</span>
+<span class="t-l l3 doux">le modèle de traduction se charge en arrière-plan</span>
+<span class="t-l l4 ok">✓ serveur prêt sur http://127.0.0.1:5000</span>
+<span class="t-l l5 doux">ce guide s’ouvre dans votre navigateur…</span><span class="t-curseur"></span></pre>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="g-slide" data-titre="Ouvrir">
+      <div class="g-texte">
+        <p class="g-num">3 / 9</p>
+        <h1>Ouvrez la page des extensions</h1>
+        <p>Dans Chrome, tapez cette adresse dans la barre d’adresse, puis Entrée.</p>
+        <p class="g-chemin"><code>chrome://extensions</code> <button class="g-copier" data-copier="chrome://extensions">Copier</button></p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse"><span class="tape">chrome://extensions</span><span class="caret"></span></span></div>
+        <div class="n-page vide"><span class="n-titre apparait">Extensions</span></div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="g-slide" data-titre="Mode développeur">
+      <div class="g-texte">
+        <p class="g-num">4 / 9</p>
+        <h1>Activez le mode développeur</h1>
+        <p>En haut à droite de la page Extensions, activez l’interrupteur <b>Mode développeur</b>. De nouveaux boutons apparaissent.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse">chrome://extensions</span></div>
+        <div class="n-page">
+          <div class="x-entete"><span class="n-titre">Extensions</span><span class="x-dev">Mode développeur <span class="x-switch"><i></i></span></span></div>
+          <div class="x-boutons apparait-tard"><span>Charger l’extension non empaquetée</span><span>Empaqueter l’extension</span><span>Mettre à jour</span></div>
+          <span class="curseur c-dev"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="g-slide" data-titre="Charger le dossier extension">
+      <div class="g-texte">
+        <p class="g-num">5 / 9</p>
+        <h1>Chargez le dossier extension</h1>
+        <p>Cliquez sur <b>Charger l’extension non empaquetée</b>. Dans la fenêtre qui s’ouvre, choisissez le dossier <b>extension</b> du projet <b>AMIRA</b> et cliquez sur <b>Sélectionner</b>. Amira apparaît avec son logo.</p>
+        <p class="g-chemin"><code class="chemin" data-dossier>AMIRA › extension</code> <button class="g-copier" data-copier-dossier>Copier le chemin</button></p>
+        <p class="g-astuce">Astuce : collez le chemin copié dans la barre d’adresse de la fenêtre, ou tapez <code>Ctrl+L</code> sous Linux.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse">chrome://extensions</span></div>
+        <div class="n-page">
+          <div class="x-boutons"><span class="x-cible">Charger l’extension non empaquetée</span><span>Empaqueter l’extension</span></div>
+          <div class="x-dialogue">
+            <p class="x-d-titre">Sélectionner le dossier de l’extension</p>
+            <p class="x-d-ligne">📁 AMIRA</p>
+            <p class="x-d-ligne retrait">📁 backend</p>
+            <p class="x-d-ligne retrait choisi">📁 extension</p>
+            <p class="x-d-ligne retrait">📁 front</p>
+            <span class="x-d-ok">Sélectionner</span>
+          </div>
+          <div class="x-carte"><img src="data:image/png;base64,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" alt="" /><span><b>Amira</b> 0.1.0<br /><small>Rend un service financier compréhensible en fulfulde.</small></span></div>
+          <span class="curseur c-charger"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="g-slide" data-titre="Épingler">
+      <div class="g-texte">
+        <p class="g-num">6 / 9</p>
+        <h1>Épinglez Amira</h1>
+        <p>Cliquez sur l’icône <b>puzzle</b> de la barre d’outils, puis sur l’<b>épingle</b> à côté d’Amira. Son logo reste visible en permanence.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse">exemple.cm</span><span class="n-icones"><img class="epinglee" src="data:image/png;base64,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" alt="" /><span class="puzzle">🧩</span></span></div>
+        <div class="n-page">
+          <div class="p-menu"><p>Extensions</p><p class="p-ligne"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAC2ElEQVQ4jWVTz08TQRSeBcF2CRC4lHZnWxEShbJtZEGQSwVbdnZnCjGmF9sEwoGb8S/QPendmxovQrz0VqPEHwcOovEAtFQOWCVFpZQfChgsoKBjZrZESV+y2Xlv5r2Z933vA+DIKBAAAIJpmmXMzTmJuASjySyMTuecoyKLxUGknJ0pfsdNpWqFOk1ECijf3ITDyhc5dvjVM1RYg7Fm6w4qqE4iqmC0oqSAd7Z3vC3Zt6C+Dpxl/uLpq8qGZ5h+htF7R2d0We9A0MggaDw8lgzj3Xb/+1Ba/UaoPxW6xWIfzsR6slL0wZ1mdJL5/RCf1yFeGfRcoVgeSAc8AZuVHed9AeVtr+pLX9r3LQTvMn8CRWtSjljVv2SSH3BfpgiSPPNZPGJhAgRAAQeu9WNvX9ts3022DpiBE+yPIOnUYThP3IMUQeNTv4T9LG4CDrYAUD2q0eSwFzWGfaSOuAGNlBc3QbBB79AhWTXkAapJeF9zGcP9rkEZudA5JCEfakY1AEFjBkFMNcko6O4wRU7jGkvW3JpTh/iTIYepBo3fSMIHCOIfGjQOkYT3dBhmOa+ABnFSlwm/AbtZEF/nt8tBly6R5WIBlnSgScYugviPBo1fuhymSMJTIFgXrGV9kSat3V87dIpSs8wEFiYhR6jLgGTtqAUE8UjIEW5EDaiTt8FaAAAItAjiQbb84nbadoOtJ4sgWgxYIGoSXtKhrlj0FUGMxwGnIvdGbN+Zt+/9zIicxpGpqWrfWIrTGJRQNwOT0ahDssIG6n8aQXYS2PYztjm6JdLv76pvs9iFZ8s93sTG/VYzXsnp5EXwaukgFW0zZX+0NWfPrMzUt3BtPF1VlOe7tCWxzl/EMZGMLk3CixrE4yVamJ8HlTQHREAtMSkvdxTvk63DtheFgndiu8lSLBVCjlBVBET4q44ZpUCgTM7UGiL1cU5sTaynvYmNpG8sz7GIROIlcv4L+HoTDtMkmzsAAAAASUVORK5CYII=" alt="" /> Amira <span class="p-pin">📌</span></p></div>
+          <span class="curseur c-pin"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="g-slide" data-titre="Ouvrir le panneau">
+      <div class="g-texte">
+        <p class="g-num">7 / 9</p>
+        <h1>Ouvrez-la sur n’importe quel site</h1>
+        <p>Sur la page à traduire, cliquez sur le logo Amira. Le panneau s’ouvre à droite et la page se resserre à côté : rien n’est caché. Tirez son bord pour l’élargir ; Chrome retient la largeur.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse">banque.exemple.cm</span><span class="n-icones"><img class="clic-icone" src="data:image/png;base64,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" alt="" /></span></div>
+        <div class="n-page partage">
+          <div class="s-site"><b>Votre compte</b><i></i><i class="court"></i><i></i><span class="s-bouton"></span></div>
+          <div class="s-panneau"><img src="./assets/amira-logo-DA5bnsOf.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-switch"><i></i></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="g-slide" data-titre="Traduire">
+      <div class="g-texte">
+        <p class="g-num">8 / 9</p>
+        <h1>Activez « Traduire cette page »</h1>
+        <p>Amira détecte la langue du site : français ou anglais vers le fulfulde, fulfulde vers le français ou l’anglais. La première fois sur un nouveau site, Chrome demande votre accord une seule fois.</p>
+        <p class="g-astuce">Si la pastille n’indique pas « Prêt », vérifiez que la fenêtre où tourne <code>python demo.py</code> est toujours ouverte.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre"><span class="n-adresse">banque.exemple.cm</span><span class="n-icones"><img src="data:image/png;base64,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" alt="" /></span></div>
+        <div class="n-page partage">
+          <div class="s-site traduit"><b><span class="avant">Votre compte</span><span class="apres">⟦FF⟧ Votre compte</span></b><i></i><i class="court"></i><i></i><span class="s-bouton"></span></div>
+          <div class="s-panneau ouvert"><img src="./assets/amira-logo-DA5bnsOf.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-switch active"><i></i></span><span class="s-sens">Français → Fulfulde</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 : essai sur l'environnement de test -->
+    <section class="g-slide" data-titre="Essayer">
+      <div class="g-texte">
+        <p class="g-num">9 / 9</p>
+        <h1>Essayez sur l’environnement de test</h1>
+        <p>Ouvrez la page officielle du SAFINUM Innovate Challenge, puis cliquez sur le logo Amira épinglé dans la barre d’outils.</p>
+        <p class="g-chemin"><a class="g-lien" href="https://safinum.cm/hackathon-test" target="_blank" rel="noopener">safinum.cm/hackathon-test</a> <button class="g-copier" data-copier="https://safinum.cm/hackathon-test">Copier</button></p>
+        <p class="g-astuce">Les données de cette page sont fictives : aucune transaction réelle.</p>
+      </div>
+      <div class="g-maquette navigateur" aria-hidden="true">
+        <div class="n-barre">
+          <span class="n-adresse"><span class="tape tape-safinum">safinum.cm/hackathon-test</span><span class="caret"></span></span>
+          <span class="n-icones"><img class="clic-final" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAPoAAAD6AG1e1JrAAAFxElEQVRYhe1X3W/bVBR3u47FZeuqVFtpfN2wqRojjtNO1UaQJnlt0/j62mk3IBr92sYmIeBlAgSv+Tt44oEHpAhB2YeGYCiIBxCwpVs/FrSOpU23fiVZ0rVV6edB17FTN/1YCzzuSEf2Pb4+53d/59xzbYZ5LjsUYELF9Brn2sgQap8Y4tvHE6hNtj77fwRCxRJIJfS6GpwpoteIU7KN8efuTVafB6pjfNdAmAnuss6hEmJCxRIjlTAMs0NgsOrEOjadZ9Ele4LvmBjmO2GY74DHfNcIVL1bWgCgMGjRjoIL0YZad/TUx0K06bhpN50nUNAe5zuScb4dMs53YJTv+jI3JcdW0GDDj/wnZIfyET4Y8GwPBOQcuH896XH3NmaPJTCIfU1/i1HJR+1SSKeTSaBL9jhqH087L8AjvmtoEAVrTAAG5YzfoZxVkDrfWv0GYKRm5EpZMNOyaXyJ5pxhmLqH8uVjwxjctxue1t73g2eg6Sf95VDu5R5na/ko35l5zHeNDvJvC4XB5SrSRlBgUUHaiswpsy3VZ0BznvnAys6WDIi3JK9nwDcv3mlcFnsaQextmqy5j8vMadOHLlWO8B3RuKO9jo5pAa7SrrQTPrCo8NqKjAgFAQrS5jHCx5/JgBWEEG045xloWvL0+UCMNqRc/V57bgLDJCsu7htEnetpr1LazZX7kbKEeXVZ4bWlZo50bi+4KeHcaty3pc7amA/Eu43p2h6pvHBHhBhmNTjCHQrSlnTaEVnCSF2hY2p/NvWrUmRq/Wf1u6nBfbvhomfAl3Il/HYrgPXBA3pQGpzSTlBgGb+UW3k9o/vK+2Y2keJ1FiOY5/dTb9ZFTx6w2vI5rzJybqzcyPkiLcRNaKfvb5yKoCv4ArbjspaKln1U6b3XG2QL55lO9YIzqx2RZYxUwBSAQ3sv99xvxzW4zFTfYd9+XIP3bBhc5oiKOTIoc2Qcc+ooVZlTx2SOPGw+hN8yA5vBMYeDNMd4TXAVMKcuYESGZURSMlInTcVInZARSeoxkKqfHWtEQdqQyreCUTyURnq/rFW30vu45JRs5lytSitVUOA+4QNgFBxYldpNH1bN+TsNhNN6NwAQGFb5FlAKAFBQCtISXuTNp6K5svlFwgUebAZA4bWtASCtfx0Av0PR/IjEMUfSmFKVoystc+SR8rJytjAFRrej1C8XpGARc+Qx5khG5tQnpmJOpb4ymCMP/YjgTYtQckrltFio0vsPvd7Ni5BTzyl8IQgNsEN9n1Z748HGSlqIpjY5mipqamo2LkImtzXW7FEwttz4Lfb00+jeA1Zbvu9zpIt2OwOEuQ3nMacGrWA3iLWhFJkKEUYPkOrZc2Euxibh3r4KKwAmtNqCMUc6CdIoA2Yv0Lug2Qu224jyAmFGbzLpu7a2uT9ZmO6zpeM9+8vXAGCgiAEoyjckTjHTkQdBUGCBHss7acUMQI6eJz22jtkYuzh7j4Und2ypbH9Z/jByRWCveG38sD4Ih3dZ00H4wLLRmBYVXqUgtuqKGwdP9bAn5mLs3FQvu5K5y8JUny25kmLyx7H7JlS6rmb+eOWbcVE3hMP54xg71PPEYAIbxzFBgTl/tVr/TBAAubwvDLOXYaQU0lF2eukBC7Mx9ufcc9Dpd34eLxeuT2WFa9mRI1/Fj+ovh2C1JhzqeQWZTOzggwQMBiZ+K62b6WefUhAzMXZ+4tYevXVGIrkAru+ydlf35Lh4cx6E61N/HQkPHSoEoacDBRZanGforpjyIUXcbhqK6HVmYPexTJ/tk6k7Ja/l7QYDrnDCLnRPJoXuSfD8uATC9ewXJgDrKmWH9rqM1E+bHaRuR1/GUPBZnh+bAH4Bu+tqekK4kgThSgrc17IJ7y/AWuf8+89ySzoiEabETIthNGvAJtyYiYnfz4H4wxyIN6ZjUihSkt+e//nHZCsxaD767aQmdCfHhO7k6KtfpxXrs+fC7ED+AUP/9Alpg30TAAAAAElFTkSuQmCC" alt="" /><span class="puzzle">🧩</span></span>
+        </div>
+        <div class="n-page partage final">
+          <div class="s-site safinum">
+            <div class="sf-entete"><span class="sf-logo">🏛</span><b>Safinum Pay</b></div>
+            <b class="sf-titre"><span class="avant">Bonjour, Amina</span><span class="apres">⟦FF⟧ Bonjour, Amina</span></b>
+            <div class="sf-solde"><small><span class="avant">Solde disponible</span><span class="apres">⟦FF⟧ Solde disponible</span></small><strong>250 000 FCFA</strong></div>
+            <i></i><i class="court"></i>
+            <span class="sf-bouton"><span class="avant">Effectuer un transfert</span><span class="apres">⟦FF⟧ Effectuer un transfert</span></span>
+          </div>
+          <div class="s-panneau final-panneau"><img src="./assets/amira-logo-DA5bnsOf.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-sens">Français → Fulfulde</span><span class="rond-traduire"><span class="avant">Traduire</span><span class="apres">Voir l’original</span></span></div>
+          <span class="curseur c-final"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="g-nav" aria-label="Étapes">
+    <button class="g-prec" id="prec" aria-label="Étape précédente">←</button>
+    <div class="g-points" id="points"></div>
+    <button class="g-suiv" id="suiv">Suivant <span aria-hidden="true">→</span></button>
+  </nav>
+  <p class="g-pied" id="pied-dev" hidden><a href="/apercu.html">Voir un aperçu du panneau sans installer</a></p>
+</div>
+</body>
+</html>

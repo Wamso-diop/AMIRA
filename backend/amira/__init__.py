@@ -5,9 +5,10 @@ import re
 import threading
 import time
 from collections.abc import Mapping
+from pathlib import Path
 
 import click
-from flask import Flask, abort, current_app, g, request, Response
+from flask import Flask, abort, current_app, g, redirect, request, Response, send_from_directory
 from flask.cli import with_appcontext
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -22,6 +23,7 @@ from .services.translator import MachineCache
 log = logging.getLogger("amira")
 RID_RE = re.compile(r"[A-Za-z0-9_-]{1,64}")
 MAX_JSON = 256 * 1024
+GUIDE_DIR = Path(__file__).parents[1] / "guide"  # guide d'installation construit (front : npm run guide), ouvert par demo.py
 _FROM_CONFIG = object()
 
 
@@ -110,6 +112,19 @@ def create_app(env: Mapping[str, str] | None = None, engine=_FROM_CONFIG) -> Fla
         """Page fixe, sans donnée : un humain qui ouvre le serveur dans un navigateur comprend ce qu'il voit."""
         return Response(HOME, mimetype="text/html")
 
+    @app.get("/guide")
+    def guide_sans_barre():
+        return redirect("/guide/", code=301)
+
+    @app.get("/guide/")
+    def guide():
+        """Guide d'installation (page fixe et fichiers statiques : aucune donnée, aucun appel externe)."""
+        return send_from_directory(GUIDE_DIR, "guide.html")
+
+    @app.get("/guide/<path:name>")
+    def guide_fichier(name: str):
+        return send_from_directory(GUIDE_DIR, name)  # refuse « .. » et les chemins hors du dossier
+
     app.cli.add_command(export_admin)
     app.cli.add_command(purge)
     return app
@@ -121,7 +136,8 @@ HOME = """<!doctype html><meta charset="utf-8"><meta name="viewport" content="wi
 <h1>Amira : le serveur est actif.</h1>
 <p>Ce serveur n'a pas de page à afficher. Il répond à l'extension Chrome Amira.</p>
 <p>Dans Chrome : <b>chrome://extensions</b>, mode développeur, <b>Charger l'extension non empaquetée</b>,
-dossier <b>extension/</b>. Ouvrez ensuite la page à traduire et cliquez sur l'icône Amira.</p>
+dossier <b>extension/</b>. Ouvrez ensuite la page à traduire et cliquez sur l'icône Amira.
+Le guide pas à pas est ici : <a href="/guide/">/guide/</a>.</p>
 <p><a href="/v1/health">/v1/health</a> · <a href="/v1/ready">/v1/ready</a></p>
 """
 

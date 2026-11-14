@@ -55,4 +55,4 @@ réussi, la sortie du modèle pour une phrase de contrôle dans `models/m2m_ff/i
 
 ## Licence
 
-À documenter en phase D (`LICENSES.md`).
+Modèle de base : **M2M100, version 418M** (Meta), licence **MIT, vérifiée**. L'usage commercial est permis **à condition de conserver la mention de la licence** : voir `backend/LICENSES.md`.
