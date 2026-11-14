@@ -4,20 +4,23 @@
  * chrome.* du mode `npm run dev`.
  */
 import { AmiraApi, ApiError, HttpApi, TranslateResponse, TranslateSegmentOut } from '../services/api';
+import { EmbeddedApi } from '../services/embedded';
 import { MockApi } from '../services/mock';
 import { appendLog } from '../services/log';
 import { loadSettings, Settings } from '../services/settings';
-import { API_URL, USE_MOCK } from '../config';
+import { API_URL, EMBEDDED, USE_MOCK } from '../config';
 import type { BgRequest, BgResult, StatusResult } from '../shared/messages';
 
 const CACHE_KEY = 'amira.cache';
 const CACHE_MAX = 1000;
 
 let mock: MockApi | null = null;
+let embedded: EmbeddedApi | null = null;
 let statusCache: { at: number; key: string; value: StatusResult } | null = null;
 
 /** Back-end Amira fixé à la construction ; simulation tant qu'aucune adresse n'est fournie. */
 function apiFor(s: Settings): AmiraApi | null {
+  if (EMBEDDED) return (embedded ??= new EmbeddedApi(API_URL ? new HttpApi(API_URL) : null));
   if (USE_MOCK) {
     mock ??= new MockApi();
     mock.scenario = s.mockScenario;
@@ -61,7 +64,7 @@ function cacheKey(req: { source: string; target: string; variety: string | null 
 
 export async function getStatus(force = false): Promise<StatusResult> {
   const s = await loadSettings();
-  const key = `${USE_MOCK}|${s.mockScenario}`;
+  const key = `${USE_MOCK}|${EMBEDDED}|${s.mockScenario}`;
   if (!force && statusCache && statusCache.key === key && Date.now() - statusCache.at < 20_000) return statusCache.value;
   const api = apiFor(s);
   let value: StatusResult;
@@ -69,7 +72,7 @@ export async function getStatus(force = false): Promise<StatusResult> {
   else {
     try {
       await api.health();
-      value = { state: 'ready', demo: USE_MOCK, capabilities: await api.capabilities() };
+      value = { state: 'ready', demo: USE_MOCK, autonomous: EMBEDDED, capabilities: await api.capabilities() };
     } catch (e) {
       const code = e instanceof ApiError ? e.code : 'CLIENT_ERROR';
       value = { state: code === 'NETWORK' || code === 'TIMEOUT' ? 'offline' : 'error', demo: USE_MOCK, capabilities: null, errorCode: code };

@@ -23,6 +23,8 @@ export type ServerState = 'ready' | 'busy' | 'offline' | 'notConnected' | 'error
 export interface StatusResult {
   state: ServerState;
   demo: boolean;
+  /** L'extension agit seule : mémoire validée et voix embarquées (pas de serveur nécessaire). */
+  autonomous?: boolean;
   capabilities: Capabilities | null;
   errorCode?: string;
 }
@@ -91,7 +93,8 @@ export interface Readable {
 /** Notification du script de contenu vers le panneau. */
 export type ContentEvent =
   | { type: 'amira:stats'; stats: PageStats }
-  | { type: 'amira:warning'; text: string }
+  /** Message d'erreur affiché sur la page (texte masqué) ; key : clé de l'enregistrement du natif, si elle existe. */
+  | { type: 'amira:error'; text: string; key: string }
   | { type: 'amira:picked'; state: PickState };
 
 export const EMPTY_STATS: PageStats = { enabled: false, showingOriginal: false, translated: 0, kept: 0, errors: 0, pending: 0, total: 0 };

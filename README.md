@@ -32,6 +32,8 @@ La première fois, le script crée son environnement et installe Flask tout seul
 
 **2. Installer l'extension** (Chrome)
 
+`python demo.py` **ouvre tout seul un guide animé dans votre navigateur** (<http://127.0.0.1:5000/guide/>) : il montre, étape par étape, ce qui suit, avec le chemin exact du dossier `extension/` et un bouton pour le copier. Il commence par une démonstration : un clic sur **Traduire**, puis un clic pour **écouter** la voix d'un locuteur natif. Pas de navigateur graphique ? `python demo.py --no-browser`, puis ouvrir l'adresse à la main.
+
 1. Ouvrir `chrome://extensions` et activer **Mode développeur** (en haut à droite).
 2. Cliquer sur **Charger l'extension non empaquetée** et choisir le dossier **`extension/`** de ce dépôt.
 3. Épingler Amira (icône puzzle, puis punaise).
@@ -45,7 +47,7 @@ La première fois, le script crée son environnement et installe Flask tout seul
 
 > **Sans le modèle de traduction**, Amira sert la mémoire validée par les locuteurs natifs : tout ce qui est connu est traduit et marqué *validé*, et tout le reste **reste en original** au lieu d'être mal traduit. C'est voulu. Avec le modèle M2M100 affiné (dossier `backend/models/m2m_ff/`, non livré dans le dépôt à cause de sa taille : voir [backend/docs/MODEL.md](backend/docs/MODEL.md)), `demo.py` le détecte et le charge.
 >
-> **Si le serveur n'est pas lancé**, la pastille l'indique et la page reste dans sa langue d'origine : l'extension ne casse jamais le site.
+> **L'extension agit seule.** Sa mémoire validée et 130 voix de locuteurs natifs sont **dans le paquet** (`extension/`, 7,2 Mo compressé, aussi livré en `livrable/Amira-Extension.zip`) : sans serveur, la pastille indique « Prêt · autonome », la page est traduite par la mémoire validée et lue avec la voix des natifs ; un texte que la mémoire ne connaît pas reste en original. Le serveur lancé par `python demo.py` n'est qu'un renfort : s'il répond, il traduit en plus ce que la mémoire ne connaît pas. Si l'extension ne peut rien faire d'un texte, la page reste dans sa langue d'origine : elle ne casse jamais le site.
 
 **Avec le modèle de traduction (facultatif, hors git)** : serveur local, depuis `backend/` :
 1. Installer une fois : `.venv/bin/pip install --index-url https://download.pytorch.org/whl/cpu torch==2.15.0 && .venv/bin/pip install -r requirements.txt -c constraints.txt` (`python demo.py` crée `.venv`).
@@ -61,8 +63,8 @@ Le dossier `models/` est ignoré par git : le modèle n'est jamais commité.
 |---|---|
 | Voir le panneau à côté d'une fausse page bancaire, sans serveur ni Chrome | `cd front && npm install && npm run apercu` |
 | Reconstruire l'extension moi-même (Node.js 20+) | `npm run extension` (à la racine) |
-| Lancer les tests du serveur (401) | installation complète décrite dans [backend/README.md](backend/README.md), puis `pytest` |
-| Lancer les tests de l'extension (59, puis le bout en bout dans un vrai navigateur) | `cd front && npm install && npm test && npm run test:e2e` |
+| Lancer les tests du serveur (435, plus 11 avec le vrai modèle) | installation complète décrite dans [backend/README.md](backend/README.md), puis `pytest` |
+| Lancer les tests de l'extension (67, puis 8 de bout en bout dans un vrai navigateur) | `cd front && npm install && npm test && npm run test:e2e` |
 | Tout le parcours (serveur réel, vraie extension, Chromium) | `bash backend/tools/e2e_extension.sh` |
 
 </details>
@@ -122,7 +124,7 @@ Chaque traduction porte un statut : `validated` (mémoire native), `machine` (mo
 ### 7. Construit pour être repris
 - **Contrat d'API figé et documenté** : [front/docs/API.md](front/docs/API.md) et [backend/docs/openapi.yaml](backend/docs/openapi.yaml). L'extension ne connaît que l'adresse du serveur, fixée à la construction.
 - **Serveur indépendant** : Flask, SQLite, aucune dépendance cloud ; le moteur de traduction se remplace sans toucher au reste.
-- **460 tests automatisés** (401 serveur, 59 extension) plus des tests de bout en bout dans un vrai navigateur.
+- **531 tests automatisés** (450 serveur dont 11 avec le vrai modèle, 81 extension) plus 8 tests de bout en bout dans un vrai navigateur.
 - **Documentation** : [conception](backend/SPEC.md), [règles de qualité](backend/CONSTRAINTS.md), [masquage](backend/docs/MASQUAGE.md), [exploitation](backend/docs/EXPLOITATION.md), [mesures de performance](backend/docs/PERF.md), [design](front/docs/DESIGN.md), [licences](backend/LICENSES.md), [composants tiers](front/docs/COMPOSANTS-TIERS.md). **Aucun service externe**, polices et icônes embarquées.
 
 ---
@@ -162,6 +164,7 @@ AMIRA/
 │   ├── src/content/       découpage, masquage, vérification, observation de la page
 │   ├── src/panel/         panneau latéral
 │   └── docs/              API.md · DESIGN.md · COMPOSANTS-TIERS.md · captures/
+├── livrable/              les livrables de l'épreuve : description, script vidéo, note technique, documentation complète (PDF et Markdown)
 └── backend/               API Flask
     ├── demo.py            lancement en une commande
     ├── languages/<code>/  une langue : fiche, mémoire validée, voix, phrases de contrôle

@@ -1,9 +1,8 @@
-// Guide d'installation affiché par `npm run dev` : 7 diapositives animées.
-import '@fontsource/inter-tight/latin-500.css';
-import '@fontsource/inter-tight/latin-800.css';
-import '@fontsource/inter-tight/latin-900.css';
-import '@fontsource/noto-sans/latin-400.css';
+// Guide d'installation : 9 diapositives animées. Servi par le serveur Amira (/guide/, ouvert par `python demo.py`)
+// et par `npm run dev`. La page n'écrit jamais dans le DOM autre chose que du texte (textContent).
+import './fonts.css';
 import './guide.css';
+import './demo.css';
 
 const slides = [...document.querySelectorAll<HTMLElement>('.g-slide')];
 const points = document.getElementById('points')!;
@@ -40,14 +39,19 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') aller(courant - 1);
 });
 
+// Dossier de l'extension : `python demo.py` ouvre le guide avec ?dossier=<chemin complet> (sur cette machine seulement).
+const dossier = new URLSearchParams(location.search).get('dossier');
+if (dossier) document.querySelectorAll('[data-dossier]').forEach((el) => (el.textContent = dossier));
+
 document.addEventListener('click', async (e) => {
   const b = (e.target as Element).closest<HTMLButtonElement>('.g-copier');
   if (!b) return;
-  const texte = b.dataset.copier!;
+  const libelle = b.textContent;
+  const texte = 'copierDossier' in b.dataset ? dossier ?? 'extension' : b.dataset.copier!;
   try {
     await navigator.clipboard.writeText(texte);
     b.textContent = 'Copié';
-    setTimeout(() => (b.textContent = 'Copier'), 1600);
+    setTimeout(() => (b.textContent = libelle), 1600);
   } catch {
     b.textContent = 'Sélectionnez le texte';
   }
@@ -58,3 +62,21 @@ window.addEventListener('hashchange', () => {
   const n = Number(location.hash.slice(1)) - 1;
   if (n >= 0 && n !== courant) aller(n);
 });
+
+// Pastille d'en-tête : état réel du serveur qui sert ce guide (/v1/ready : 200 prêt, 503 modèle en chargement).
+const statut = document.getElementById('statut')!;
+const libelle = statut.querySelector('span')!;
+async function verifier() {
+  try {
+    const r = await fetch('/v1/ready', { cache: 'no-store' });
+    statut.dataset.etat = r.ok ? 'pret' : 'charge';
+    libelle.textContent = r.ok ? 'Serveur Amira prêt' : 'Serveur Amira lancé : le modèle de traduction se charge…';
+    setTimeout(verifier, r.ok ? 10000 : 2000);
+  } catch {
+    statut.dataset.etat = 'absent';
+    libelle.textContent = 'Serveur Amira non joint : lancez python demo.py';
+    setTimeout(verifier, 5000);
+  }
+}
+verifier();
+if (import.meta.env.DEV) document.getElementById('pied-dev')!.hidden = false;

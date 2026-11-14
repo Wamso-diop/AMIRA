@@ -9,6 +9,7 @@ import { decide } from '../../content/verify';
 import { errorText } from '../App';
 import { bg, toTab } from '../bridge';
 import { useT } from '../i18n';
+import { langLabel } from '../langLabel';
 import { play } from '../player';
 import { Badge, Segmented } from '../ui/controls';
 import { IconCopy, IconListen, IconRetry } from '../ui/icons';
@@ -93,9 +94,9 @@ export function TranslateTab(props: TabProps & { toggle: (on: boolean) => Promis
 
       <p className="sens" aria-live="polite">
         <span>{t('translate.detected')}</span>
-        <b>{t(`translate.${dir.source}`)}</b>
+        <b>{langLabel(t, dir.source)}</b>
         <Arrow />
-        <b>{t(`translate.${dir.target}`)}</b>
+        <b>{langLabel(t, dir.target)}</b>
       </p>
 
       <BigButton {...props} />
@@ -200,9 +201,9 @@ function QuickTranslator({ settings, showToast }: TabProps) {
       />
       {input.trim() && (
         <p className="sens petit">
-          <b>{t(`translate.${dir.source}`)}</b>
+          <b>{langLabel(t, dir.source)}</b>
           <Arrow />
-          <b>{t(`translate.${dir.target}`)}</b>
+          <b>{langLabel(t, dir.target)}</b>
         </p>
       )}
       <p className="aide">{t('translate.quickMasked')}</p>

@@ -35,14 +35,18 @@ npm run build        # → dist/
 Après une modification du code : `npm run build`, puis le bouton ↻ d'Amira dans `chrome://extensions`.
 Les pages internes de Chrome (`chrome://…`, boutique Chrome) ne peuvent pas être traduites : Chrome l'interdit à toutes les extensions.
 
+## Mode autonome (l'extension agit seule)
+
+`npm run jury` construit `../extension/` en **mode autonome** (`VITE_AMIRA_MODE=embedded`) : la mémoire validée (`src/data/memory.json`) et les voix (`public/audio/`) sont dans le paquet, et le serveur local est un simple renfort (« hybride »). Ces données viennent de `backend/languages/<code>/` : `npm run data` les régénère (budget des voix : 8 Mo, pour tenir dans 10 Mo). Les règles de la mémoire sont celles du serveur, portées à l'identique ; `tests/unit/embedded.test.ts` les compare aux réponses du vrai serveur sur plus de 2 000 requêtes. Test sans serveur dans un vrai navigateur : `node scripts/e2e-autonome.mjs`.
+
 ## Développer : `npm run dev`
 
 ```bash
 npm run dev
 ```
 - construit `dist/` puis le **reconstruit à chaque modification** du code ;
-- ouvre un **guide animé** (7 étapes) qui montre comment ouvrir `chrome://extensions`, activer le mode développeur,
-  charger `dist/`, épingler Amira et l'utiliser sur un site. Le chemin exact de `dist/` y est affiché, avec un bouton Copier.
+- ouvre le **guide animé** (9 étapes, `guide.html`) : démonstration (traduire, écouter), puis `chrome://extensions`, mode développeur,
+  chargement du dossier, épingle, utilisation. Les jurés le reçoivent par `python demo.py` : il est **construit dans `backend/guide/`** (`npm run guide`) et servi par le serveur à `/guide/`. Après une modification du guide : `npm run guide`, puis commiter `backend/guide/`.
 
 Après une modification : bouton ↻ d'Amira dans `chrome://extensions`, puis recharger la page.
 `npm run apercu` affiche le panneau à côté d'une page bancaire fictive, sans installer l'extension.

@@ -21,7 +21,7 @@ if (url) {
   writeFileSync('dist/manifest.json', JSON.stringify(m, null, 2));
   console.log(`Back-end Amira : ${url}`);
 } else {
-  console.log('Back-end Amira : non configuré → simulation (texte préfixé ⟦FF⟧). Voir .env.example.');
+  console.log(process.env.VITE_AMIRA_MODE === 'embedded' ? 'Mode autonome : mémoire validée et voix embarquées, sans serveur.' : 'Back-end Amira : non configuré → simulation (texte préfixé ⟦FF⟧). Voir .env.example.');
 }
 const files = [m.background.service_worker, m.side_panel.default_path, ...m.content_scripts.flatMap((c) => c.js), ...Object.values(m.icons)];
 const missing = files.filter((f) => !existsSync(`dist/${f}`));

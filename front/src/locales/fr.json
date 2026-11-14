@@ -14,6 +14,7 @@
     "busy": "En cours",
     "offline": "Hors ligne",
     "notConnected": "Service non connecté",
+    "autonomous": "autonome",
     "error": "Erreur",
     "demo": "démo"
   },
@@ -105,7 +106,7 @@
     "resume": "Reprendre",
     "stop": "Arrêter",
     "speed": "Vitesse",
-    "autoWarnings": "Lire automatiquement les avertissements",
+    "autoWarnings": "Lire automatiquement les messages d'erreur",
     "recorded": "Voix enregistrée",
     "synthetic": "Voix de synthèse",
     "prev": "Passage précédent",

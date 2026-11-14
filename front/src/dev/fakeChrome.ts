@@ -70,7 +70,7 @@ export function installFakeChrome(): void {
     },
   };
 
-  // Moteur de contenu : sur la page visible de l'aperçu (dev.html, cadre de gauche) si elle existe,
+  // Moteur de contenu : sur la page visible de l'aperçu (apercu.html, cadre de gauche) si elle existe,
   // sinon sur une page de démonstration en mémoire.
   const siteFrame = (): HTMLIFrameElement | null => {
     try {
@@ -80,7 +80,7 @@ export function installFakeChrome(): void {
     }
   };
   const sendRuntime = (msg: BgRequest | ContentEvent): Promise<unknown> => {
-    if (msg.type === 'amira:stats' || msg.type === 'amira:warning' || msg.type === 'amira:picked') {
+    if (msg.type === 'amira:stats' || msg.type === 'amira:error' || msg.type === 'amira:picked') {
       runtimeMessage.emit(msg, { tab: { id: 1 }, frameId: 0 }, () => undefined);
       return Promise.resolve();
     }

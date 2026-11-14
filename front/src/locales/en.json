@@ -14,6 +14,7 @@
     "busy": "Working",
     "offline": "Offline",
     "notConnected": "Service not connected",
+    "autonomous": "standalone",
     "error": "Error",
     "demo": "demo"
   },
@@ -105,7 +106,7 @@
     "resume": "Resume",
     "stop": "Stop",
     "speed": "Speed",
-    "autoWarnings": "Read warnings automatically",
+    "autoWarnings": "Read error messages aloud automatically",
     "recorded": "Recorded voice",
     "synthetic": "Synthetic voice",
     "prev": "Previous passage",

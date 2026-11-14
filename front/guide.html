@@ -4,53 +4,92 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Installer Amira</title>
-<link rel="icon" href="/icons/icon-32.png" />
+<meta name="description" content="Guide en 9 étapes pour installer Amira dans Chrome et traduire une page en fulfulde." />
+<link rel="icon" href="./public/icons/icon-32.png" />
 </head>
 <body>
 <div class="guide">
   <header class="g-haut">
-    <img class="g-logo" src="/src/assets/amira-logo-clair.png" alt="Amira" />
-    <p class="g-statut" id="statut"><i></i><span>front/dist se reconstruit à chaque modification</span></p>
+    <img class="g-logo" src="./src/assets/amira-logo-clair.png" alt="Amira" />
+    <p class="g-statut" id="statut" role="status"><i></i><span>Vérification du serveur Amira…</span></p>
   </header>
 
   <main class="g-scene" aria-live="polite">
-    <!-- 0 : ouverture -->
+    <!-- 0 : ouverture, avec la démonstration : traduire, puis écouter -->
     <section class="g-slide g-intro" data-titre="Bienvenue">
-      <div class="intro-logo" aria-hidden="true">
-        <svg class="logo-anim" viewBox="0 0 420 130" role="img" aria-label="Amira">
-          <g transform="translate(62 65)">
-            <g transform="rotate(12) scale(1.45)"><path class="lp lp1" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#E01D5B" /></g>
-            <g transform="rotate(-48) scale(1.45)"><path class="lp lp2" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#2DCF42" /></g>
-            <g transform="rotate(-132) scale(1.45)"><path class="lp lp3" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#EFD109" /></g>
-            <g transform="rotate(168) scale(1.45)"><path class="lp lp4" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#2BB1EB" /></g>
-          </g>
-          <path class="la la-barre" d="M14 65 H40" />
-          <path class="la la-fleche" d="M112 30 L 78 65 L 112 100 M 80 65 H 150" />
-          <text class="lt" x="150" y="92">Amira<tspan class="lt-point">.</tspan></text>
-        </svg>
-      </div>
       <div class="g-texte intro-texte">
+        <div class="intro-logo" aria-hidden="true">
+          <svg class="logo-anim" viewBox="0 0 420 130" role="img" aria-label="Amira">
+            <g transform="translate(62 65)">
+              <g transform="rotate(12) scale(1.45)"><path class="lp lp1" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#E01D5B" /></g>
+              <g transform="rotate(-48) scale(1.45)"><path class="lp lp2" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#2DCF42" /></g>
+              <g transform="rotate(-132) scale(1.45)"><path class="lp lp3" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#EFD109" /></g>
+              <g transform="rotate(168) scale(1.45)"><path class="lp lp4" d="M0 -6 C 5 -11 6.5 -15 6.5 -19 A 6.5 6.5 0 0 0 -6.5 -19 C -6.5 -15 -5 -11 0 -6 Z" fill="#2BB1EB" /></g>
+            </g>
+            <path class="la la-barre" d="M14 65 H40" />
+            <path class="la la-fleche" d="M112 30 L 78 65 L 112 100 M 80 65 H 150" />
+            <text class="lt" x="150" y="92">Amira<tspan class="lt-point">.</tspan></text>
+          </svg>
+        </div>
         <h1>Lire. Comprendre. Agir.</h1>
-        <p>Amira rend les services financiers numériques compréhensibles en fulfulde, directement dans votre navigateur, sans rien changer au site.</p>
-        <p>Ce guide vous montre comment l’installer dans Chrome en quelques minutes.</p>
+        <p>Amira rend les services financiers compréhensibles en fulfulde, directement dans votre navigateur, sans rien changer au site.</p>
+        <ol class="demo-etapes">
+          <li class="e1"><span class="e-n">1</span><span>Un clic sur <b>Traduire</b> : la page change de langue, les montants ne bougent pas.</span></li>
+          <li class="e2"><span class="e-n">2</span><span>Un clic sur <b>l’écouteur</b> : la voix d’un locuteur natif lit le passage.</span></li>
+        </ol>
+        <p class="intro-suite">Ce guide vous montre ensuite comment l’installer dans Chrome, en 3 minutes.</p>
+      </div>
+
+      <div class="g-maquette navigateur demo" role="img" aria-label="Démonstration : dans une page bancaire, un clic sur Traduire fait passer les textes du français au fulfulde, puis un clic sur l’écouteur lit une phrase avec la voix d’un locuteur natif.">
+        <div class="n-barre" aria-hidden="true"><span class="n-adresse">safinum.cm/hackathon-test</span><span class="n-icones"><img src="./public/icons/icon-32.png" alt="" /></span></div>
+        <div class="d-page" aria-hidden="true">
+          <div class="d-site">
+            <div class="d-entete"><span class="d-logo"></span><b class="d-t d-titre"><span class="fr">Votre compte</span><span class="ff">Siggorɗe maaɗa</span></b></div>
+            <div class="d-solde">
+              <small class="d-t"><span class="fr">Solde disponible</span><span class="ff">Ceede ɗe a mari jonta</span></small>
+              <strong>250 000 FCFA</strong>
+              <span class="d-intact"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3.2L13 4.8" /></svg>montant inchangé</span>
+            </div>
+            <div class="d-alerte">
+              <span class="d-ecoute"><svg viewBox="0 0 24 24"><path d="M4 9.5v5h3.6l4.9 4V5.5l-4.9 4H4z" /><path class="o1" d="M15.6 9.2a4 4 0 010 5.6" /><path class="o2" d="M18 6.8a7.4 7.4 0 010 10.4" /></svg></span>
+              <div class="d-alerte-corps">
+                <p class="d-lisible"><span class="d-t"><span class="fr">Attention : vérifiez le nom du bénéficiaire.</span><span class="ff">Hakkiilo : laarta innde jaɓɓoowo.</span></span></p>
+                <div class="d-ligne-voix">
+                  <span class="d-onde"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <span class="d-badge">Voix d’un locuteur natif</span>
+                </div>
+              </div>
+            </div>
+            <span class="d-bouton d-t"><span class="fr">Effectuer un transfert</span><span class="ff">Neldugo ceede</span></span>
+          </div>
+          <aside class="d-panneau">
+            <img class="d-p-logo" src="./src/assets/amira-logo.png" alt="" />
+            <span class="d-pret"><i></i>Prêt</span>
+            <b class="d-p-titre">Cette page en <u>fulfulde</u></b>
+            <span class="d-sens">Français → Fulfulde</span>
+            <span class="d-traduire"><span class="b1">Traduire</span><span class="b2">Traduction…</span><span class="b3">Voir l’original</span></span>
+            <span class="d-compte">4 passages traduits</span>
+          </aside>
+          <span class="d-curseur"></span>
+        </div>
       </div>
     </section>
 
     <!-- 1 -->
-    <section class="g-slide" data-titre="Construire">
+    <section class="g-slide" data-titre="Le dossier extension">
       <div class="g-texte">
         <p class="g-num">2 / 9</p>
-        <h1>L’extension est déjà construite</h1>
-        <p><code>npm run dev</code> a créé le dossier <code>front/dist</code> et le met à jour à chaque modification du code. C’est ce dossier que Chrome va charger.</p>
-        <p class="g-chemin">Dans le dossier du projet : <code class="chemin">AMIRA</code> <span aria-hidden="true">›</span> <code class="chemin">front</code> <span aria-hidden="true">›</span> <code class="chemin">dist</code></p>
+        <h1>L’extension est prête</h1>
+        <p><code>python demo.py</code> a lancé le serveur Amira et ouvert ce guide. Le dossier <code>extension</code> du projet contient l’extension déjà construite : rien à installer ni à compiler. C’est lui que Chrome va charger.</p>
+        <p class="g-chemin"><code class="chemin" data-dossier>AMIRA › extension</code> <button class="g-copier" data-copier-dossier>Copier le chemin</button></p>
       </div>
       <div class="g-maquette terminal" aria-hidden="true">
         <div class="t-barre"><i></i><i></i><i></i></div>
-        <pre><span class="t-l l1">$ npm run dev</span>
-<span class="t-l l2 doux">vite build — panneau, service worker</span>
-<span class="t-l l3 doux">vite build — script de contenu</span>
-<span class="t-l l4 ok">✓ front/dist prêt à charger dans Chrome</span>
-<span class="t-l l5 doux">surveillance des modifications…</span><span class="t-curseur"></span></pre>
+        <pre><span class="t-l l1">$ python demo.py</span>
+<span class="t-l l2 doux">mémoire validée et voix des locuteurs natifs chargées</span>
+<span class="t-l l3 doux">le modèle de traduction se charge en arrière-plan</span>
+<span class="t-l l4 ok">✓ serveur prêt sur http://127.0.0.1:5000</span>
+<span class="t-l l5 doux">ce guide s’ouvre dans votre navigateur…</span><span class="t-curseur"></span></pre>
       </div>
     </section>
 
@@ -86,12 +125,13 @@
     </section>
 
     <!-- 4 -->
-    <section class="g-slide" data-titre="Charger front/dist">
+    <section class="g-slide" data-titre="Charger le dossier extension">
       <div class="g-texte">
         <p class="g-num">5 / 9</p>
-        <h1>Chargez le dossier dist</h1>
-        <p>Cliquez sur <b>Charger l’extension non empaquetée</b>. Dans la fenêtre qui s’ouvre, allez là où vous avez placé le projet, ouvrez <b>AMIRA</b>, puis <b>front</b>, choisissez <b>dist</b> et cliquez sur <b>Sélectionner</b>. Amira apparaît avec son logo.</p>
-        <p class="g-chemin">Dans le dossier du projet : <code class="chemin">AMIRA</code> <span aria-hidden="true">›</span> <code class="chemin">front</code> <span aria-hidden="true">›</span> <code class="chemin">dist</code></p>
+        <h1>Chargez le dossier extension</h1>
+        <p>Cliquez sur <b>Charger l’extension non empaquetée</b>. Dans la fenêtre qui s’ouvre, choisissez le dossier <b>extension</b> du projet <b>AMIRA</b> et cliquez sur <b>Sélectionner</b>. Amira apparaît avec son logo.</p>
+        <p class="g-chemin"><code class="chemin" data-dossier>AMIRA › extension</code> <button class="g-copier" data-copier-dossier>Copier le chemin</button></p>
+        <p class="g-astuce">Astuce : collez le chemin copié dans la barre d’adresse de la fenêtre, ou tapez <code>Ctrl+L</code> sous Linux.</p>
       </div>
       <div class="g-maquette navigateur" aria-hidden="true">
         <div class="n-barre"><span class="n-adresse">chrome://extensions</span></div>
@@ -101,12 +141,11 @@
             <p class="x-d-titre">Sélectionner le dossier de l’extension</p>
             <p class="x-d-ligne">📁 AMIRA</p>
             <p class="x-d-ligne retrait">📁 backend</p>
+            <p class="x-d-ligne retrait choisi">📁 extension</p>
             <p class="x-d-ligne retrait">📁 front</p>
-            <p class="x-d-ligne retrait2 choisi">📁 dist</p>
-            <p class="x-d-ligne retrait2">📁 src</p>
             <span class="x-d-ok">Sélectionner</span>
           </div>
-          <div class="x-carte"><img src="/icons/icon-48.png" alt="" /><span><b>Amira</b> 0.1.0<br /><small>Rend un service financier compréhensible en fulfulde.</small></span></div>
+          <div class="x-carte"><img src="./public/icons/icon-48.png" alt="" /><span><b>Amira</b> 0.1.0<br /><small>Rend un service financier compréhensible en fulfulde.</small></span></div>
           <span class="curseur c-charger"></span>
         </div>
       </div>
@@ -120,9 +159,9 @@
         <p>Cliquez sur l’icône <b>puzzle</b> de la barre d’outils, puis sur l’<b>épingle</b> à côté d’Amira. Son logo reste visible en permanence.</p>
       </div>
       <div class="g-maquette navigateur" aria-hidden="true">
-        <div class="n-barre"><span class="n-adresse">exemple.cm</span><span class="n-icones"><img class="epinglee" src="/icons/icon-32.png" alt="" /><span class="puzzle">🧩</span></span></div>
+        <div class="n-barre"><span class="n-adresse">exemple.cm</span><span class="n-icones"><img class="epinglee" src="./public/icons/icon-32.png" alt="" /><span class="puzzle">🧩</span></span></div>
         <div class="n-page">
-          <div class="p-menu"><p>Extensions</p><p class="p-ligne"><img src="/icons/icon-16.png" alt="" /> Amira <span class="p-pin">📌</span></p></div>
+          <div class="p-menu"><p>Extensions</p><p class="p-ligne"><img src="./public/icons/icon-16.png" alt="" /> Amira <span class="p-pin">📌</span></p></div>
           <span class="curseur c-pin"></span>
         </div>
       </div>
@@ -136,10 +175,10 @@
         <p>Sur la page à traduire, cliquez sur le logo Amira. Le panneau s’ouvre à droite et la page se resserre à côté : rien n’est caché. Tirez son bord pour l’élargir ; Chrome retient la largeur.</p>
       </div>
       <div class="g-maquette navigateur" aria-hidden="true">
-        <div class="n-barre"><span class="n-adresse">banque.exemple.cm</span><span class="n-icones"><img class="clic-icone" src="/icons/icon-32.png" alt="" /></span></div>
+        <div class="n-barre"><span class="n-adresse">banque.exemple.cm</span><span class="n-icones"><img class="clic-icone" src="./public/icons/icon-32.png" alt="" /></span></div>
         <div class="n-page partage">
           <div class="s-site"><b>Votre compte</b><i></i><i class="court"></i><i></i><span class="s-bouton"></span></div>
-          <div class="s-panneau"><img src="/src/assets/amira-logo.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-switch"><i></i></span></div>
+          <div class="s-panneau"><img src="./src/assets/amira-logo.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-switch"><i></i></span></div>
         </div>
       </div>
     </section>
@@ -150,13 +189,13 @@
         <p class="g-num">8 / 9</p>
         <h1>Activez « Traduire cette page »</h1>
         <p>Amira détecte la langue du site : français ou anglais vers le fulfulde, fulfulde vers le français ou l’anglais. La première fois sur un nouveau site, Chrome demande votre accord une seule fois.</p>
-        <p class="g-astuce">Après une modification du code, cliquez sur ↻ sous Amira dans <code>chrome://extensions</code>.</p>
+        <p class="g-astuce">Si la pastille n’indique pas « Prêt », vérifiez que la fenêtre où tourne <code>python demo.py</code> est toujours ouverte.</p>
       </div>
       <div class="g-maquette navigateur" aria-hidden="true">
-        <div class="n-barre"><span class="n-adresse">banque.exemple.cm</span><span class="n-icones"><img src="/icons/icon-32.png" alt="" /></span></div>
+        <div class="n-barre"><span class="n-adresse">banque.exemple.cm</span><span class="n-icones"><img src="./public/icons/icon-32.png" alt="" /></span></div>
         <div class="n-page partage">
           <div class="s-site traduit"><b><span class="avant">Votre compte</span><span class="apres">⟦FF⟧ Votre compte</span></b><i></i><i class="court"></i><i></i><span class="s-bouton"></span></div>
-          <div class="s-panneau ouvert"><img src="/src/assets/amira-logo.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-switch active"><i></i></span><span class="s-sens">Français → Fulfulde</span></div>
+          <div class="s-panneau ouvert"><img src="./src/assets/amira-logo.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-switch active"><i></i></span><span class="s-sens">Français → Fulfulde</span></div>
         </div>
       </div>
     </section>
@@ -173,7 +212,7 @@
       <div class="g-maquette navigateur" aria-hidden="true">
         <div class="n-barre">
           <span class="n-adresse"><span class="tape tape-safinum">safinum.cm/hackathon-test</span><span class="caret"></span></span>
-          <span class="n-icones"><img class="clic-final" src="/icons/icon-32.png" alt="" /><span class="puzzle">🧩</span></span>
+          <span class="n-icones"><img class="clic-final" src="./public/icons/icon-32.png" alt="" /><span class="puzzle">🧩</span></span>
         </div>
         <div class="n-page partage final">
           <div class="s-site safinum">
@@ -183,7 +222,7 @@
             <i></i><i class="court"></i>
             <span class="sf-bouton"><span class="avant">Effectuer un transfert</span><span class="apres">⟦FF⟧ Effectuer un transfert</span></span>
           </div>
-          <div class="s-panneau final-panneau"><img src="/src/assets/amira-logo.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-sens">Français → Fulfulde</span><span class="rond-traduire"><span class="avant">Traduire</span><span class="apres">Voir l’original</span></span></div>
+          <div class="s-panneau final-panneau"><img src="./src/assets/amira-logo.png" alt="" /><b>Cette page en <u>fulfulde</u></b><span class="s-sens">Français → Fulfulde</span><span class="rond-traduire"><span class="avant">Traduire</span><span class="apres">Voir l’original</span></span></div>
           <span class="curseur c-final"></span>
         </div>
       </div>
@@ -195,7 +234,7 @@
     <div class="g-points" id="points"></div>
     <button class="g-suiv" id="suiv">Suivant <span aria-hidden="true">→</span></button>
   </nav>
-  <p class="g-pied"><a href="/apercu.html">Voir un aperçu du panneau sans installer</a></p>
+  <p class="g-pied" id="pied-dev" hidden><a href="/apercu.html">Voir un aperçu du panneau sans installer</a></p>
 </div>
 <script type="module" src="/src/guide/guide.ts"></script>
 </body>

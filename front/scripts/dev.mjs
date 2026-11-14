@@ -33,7 +33,7 @@ run(['build', '--watch'], { wait: false, label: 'panneau' });
 run(['build', '--watch', '--config', 'vite.content.config.ts'], { wait: false, label: 'contenu' });
 
 console.log('▶ Guide d’installation :');
-const server = spawn(node, [vite, '--open', '/dev.html'], { stdio: 'inherit', env });
+const server = spawn(node, [vite, '--open', '/guide.html'], { stdio: 'inherit', env });
 children.push(server);
 
 const stop = () => {

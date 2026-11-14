@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useT } from '../i18n';
 import { errorText } from '../App';
+import { readLangFor } from '../autoRead';
 import { IDLE, pause, play, resume, setRate, skip, stop, subscribe, type PlayerState } from '../player';
 import { Switch } from '../ui/controls';
 import { IconAlert, IconMic, IconNext, IconPage, IconPlay, IconPrev, IconStop, IconTarget } from '../ui/icons';
@@ -28,7 +29,7 @@ export function VoiceTab(props: TabProps) {
   const { settings, update, status, showToast, page } = props;
   const { t, lang: uiLang } = useT();
   // langue lue : celle de la traduction affichée (langue cible, ou français/anglais si la page est dans la langue cible)
-  const readLang = isTarget(page.stats.lang) ? settings.returnLang : TARGET.code;
+  const readLang = readLangFor(page.stats.lang, settings);
   const langWord = isTarget(readLang) ? TARGET.name[uiLang] : readLang === 'en' ? 'English' : t('translate.frWord');
   const [what, setWhat] = useState<What>('page');
   const [player, setPlayer] = useState<PlayerState>(IDLE);
@@ -78,16 +79,6 @@ export function VoiceTab(props: TabProps) {
   useEffect(() => {
     void pick({ type: 'amira:pick', action: 'focus', id: player.currentId });
   }, [player.currentId]);
-
-  // lecture automatique des avertissements, si activée
-  useEffect(() => {
-    if (!settings.autoReadWarnings || !tts) return;
-    const onMsg = (msg: ContentEvent) => {
-      if (msg?.type === 'amira:warning') void play([msg.text], readLang, settings.ttsSpeed);
-    };
-    chrome.runtime.onMessage.addListener(onMsg);
-    return () => chrome.runtime.onMessage.removeListener(onMsg);
-  }, [settings.autoReadWarnings, readLang, settings.ttsSpeed, tts]);
 
   const startPicking = async () => applyState(await pick({ type: 'amira:pick', action: 'start', selected }));
   const stopPicking = async () => applyState(await pick({ type: 'amira:pick', action: 'stop' }));

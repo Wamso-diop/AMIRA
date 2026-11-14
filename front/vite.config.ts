@@ -9,7 +9,7 @@ export default defineConfig({
   base: './',
   // dist/ est vidé par le script de construction : pas ici, pour que le mode surveillance ne
   // supprime pas content.js construit à côté.
-  server: { open: '/dev.html', watch: { ignored: ['**/dist/**', '**/tests/**'] } },
+  server: { open: '/guide.html', watch: { ignored: ['**/dist/**', '**/tests/**'] } },
   build: {
     outDir: 'dist',
     emptyOutDir: false,

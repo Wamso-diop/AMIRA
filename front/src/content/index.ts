@@ -50,7 +50,7 @@ async function main() {
     translate: (req) => send<TranslateResult>({ type: 'amira:translate', req, hote: location.hostname }),
     log,
     onStats: (stats) => void send({ type: 'amira:stats', stats }).catch(() => undefined),
-    onWarning: (text) => void send({ type: 'amira:warning', text }).catch(() => undefined),
+    onError: (text, key) => void send({ type: 'amira:error', text, key }).catch(() => undefined),
   });
 
   const picker = new Picker(

@@ -8,12 +8,16 @@
     "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc --noEmit && vite build && vite build --config vite.content.config.ts && node scripts/build-manifest.mjs",
     "build:harness": "vite build --config vite.harness.config.ts",
     "jury": "node scripts/build-jury.mjs",
+    "data": "cd ../backend && .venv/bin/python -m tools.export_extension_data --front ../front",
+    "guide": "vite build --config vite.guide.config.ts",
+    "livrable": "node scripts/livrable-figures.mjs && python3 scripts/livrable_docx.py",
     "icons": "node scripts/make-icons.mjs",
     "test": "vitest run",
     "test:e2e": "npm run build:harness && playwright test",
     "safinum": "npm run build && node scripts/safinum-run.mjs",
     "screens": "node scripts/screens.mjs",
-    "apercu": "vite --open /apercu.html"
+    "apercu": "vite --open /apercu.html",
+    "livrable:captures": "node scripts/livrable-capture.mjs"
   },
   "dependencies": {
     "@fontsource/inter-tight": "^5.3.0",

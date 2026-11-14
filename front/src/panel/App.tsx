@@ -3,6 +3,7 @@ import type { Settings } from '../services/settings';
 import type { ServerState } from '../shared/messages';
 import { toTab, NoContentError } from './bridge';
 import { ensureContent } from './access';
+import { useAutoReadErrors } from './autoRead';
 import { usePageStats, useSettings, useStatus } from './hooks';
 import { I18n, makeT, type T } from './i18n';
 import { Onboarding } from './Onboarding';
@@ -47,6 +48,9 @@ export function App() {
   useEffect(() => {
     if (settings) applyAppearance(settings);
   }, [settings]);
+
+  // lecture automatique des erreurs de la page : quel que soit l'onglet affiché
+  useAutoReadErrors(settings, !!status?.capabilities?.tts, page.stats.lang);
 
   useEffect(() => {
     const on = () => setOnline(true);
@@ -109,7 +113,7 @@ export function App() {
         <header className="entete">
           <div className="entete-l1">
             <p className="accroche">{t('app.tagline')}</p>
-            <StatusPill state={state} demo={status?.demo} />
+            <StatusPill state={state} demo={status?.demo} autonomous={status?.autonomous} />
           </div>
           <div className="entete-l2">
             <Switch className="entete-switch" label={t('app.toggle')} checked={page.stats.enabled} onChange={(v) => void toggle(v)} />

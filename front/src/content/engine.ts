@@ -29,8 +29,8 @@ export interface EngineDeps {
   translate: (req: TranslateRequest) => Promise<TranslateResult>;
   log: (entry: Partial<LogEntry>) => void;
   onStats: (s: PageStats) => void;
-  /** Avertissement ou erreur nouvellement affiché (texte masqué) : pour la lecture automatique. */
-  onWarning?: (maskedText: string) => void;
+  /** Message d'erreur nouvellement affiché (texte masqué) et clé de son enregistrement : pour la lecture automatique. */
+  onError?: (maskedText: string, key: string) => void;
   settings: EngineSettings;
   batchSize?: number;
   debounceMs?: number;
@@ -542,8 +542,8 @@ export class Engine {
           continue;
         }
       }
-      if ((seg.category === 'security_warning' || seg.category === 'error') && this.deps.onWarning) {
-        this.deps.onWarning(out!.text.replace(/\{\/?[BE]\d+\}/g, ''));
+      if (seg.category === 'error' && this.deps.onError) {
+        this.deps.onError(out!.text.replace(/\{\/?[BE]\d+\}/g, ''), audioKey(seg.masked));
       }
     }
     this.observer?.takeRecords();

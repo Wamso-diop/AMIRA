@@ -51,7 +51,7 @@ export function Badge({ status }: { status: SegmentStatus }) {
   );
 }
 
-export function StatusPill({ state, demo }: { state: ServerState | 'loading'; demo?: boolean }) {
+export function StatusPill({ state, demo, autonomous }: { state: ServerState | 'loading'; demo?: boolean; autonomous?: boolean }) {
   const { t } = useT();
   if (state === 'loading') return <span className="etat offline" role="status">{t('states.loading')}</span>;
   return (
@@ -59,6 +59,7 @@ export function StatusPill({ state, demo }: { state: ServerState | 'loading'; de
       <i aria-hidden />
       {t(`status.${state}`)}
       {demo && state !== 'notConnected' && <small>· {t('status.demo')}</small>}
+      {autonomous && state === 'ready' && <small>· {t('status.autonomous')}</small>}
     </span>
   );
 }

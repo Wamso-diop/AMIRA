@@ -6,7 +6,7 @@ export type DisplayMode = 'replace' | 'bilingual' | 'hover';
 export type Theme = 'light' | 'dark' | 'system';
 
 export interface Settings {
-  version: 1;
+  version: 2;
   onboarded: boolean;
   /** Langue d'arrivée quand la page est dans la langue cible (sinon on traduit toujours vers la langue cible). */
   returnLang: 'fr' | 'en';
@@ -21,6 +21,7 @@ export interface Settings {
   extraNames: string[];
   // Voix
   ttsSpeed: number;
+  /** Lit à voix haute, dès qu'il s'affiche, un message d'erreur de la page (actif par défaut). */
   autoReadWarnings: boolean;
   // Accessibilité
   textScale: number;
@@ -37,7 +38,7 @@ export interface Settings {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
-  version: 1,
+  version: 2,
   onboarded: false,
   returnLang: 'fr',
   variety: TARGET.defaultVariety,
@@ -47,7 +48,7 @@ export const DEFAULT_SETTINGS: Settings = {
   maskSensitive: true,
   extraNames: [],
   ttsSpeed: 1,
-  autoReadWarnings: false,
+  autoReadWarnings: true,
   textScale: 1,
   highContrast: false,
   theme: 'system',
@@ -62,7 +63,9 @@ export const SETTINGS_KEY = 'amira.settings';
 
 export function normalizeSettings(raw: unknown): Settings {
   const r = (raw && typeof raw === 'object' ? raw : {}) as Partial<Settings>;
-  return { ...DEFAULT_SETTINGS, ...r, maskSensitive: true, version: 1 };
+  // version 1 : lecture automatique éteinte par défaut ; depuis la version 2 elle est active par défaut
+  const from = r.version === 2 ? r : { ...r, autoReadWarnings: true };
+  return { ...DEFAULT_SETTINGS, ...from, maskSensitive: true, version: 2 };
 }
 
 export async function loadSettings(): Promise<Settings> {
