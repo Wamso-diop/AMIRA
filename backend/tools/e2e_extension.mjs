@@ -99,15 +99,27 @@ if (stats.translated > 0 && stats.pending === 0 && goldShown > 0 && amountsKept 
   pass('traduction', { ...stats, goldShown, amountsKept });
 } else fail('traduction', { stats, goldShown, amountsKept });
 
-// 3. lecture des messages importants (comme l'onglet Voix) : une requête /v1/tts par passage
-const seg = await sw.evaluate(async (url) => {
+// 2b. message inédit (absent du gold) : traduit par le moteur, donc différent de l'original affiché avant
+const inedit = unknown.filter((t) => before.includes(t) && !after.includes(t));
+if (inedit.length > 0) pass('inedit', { traduits: inedit.length, sur: unknown.length });
+else fail('inedit', { sur: unknown.length, note: 'aucune phrase inédite traduite' });
+
+// 3. lecture des messages importants (comme l'onglet Voix) : une requête /v1/tts par passage.
+// On lit le premier message ET l'avertissement (role=alert, « code secret »).
+const readable = await sw.evaluate(async (url) => {
   const [tab] = await chrome.tabs.query({ url: url + '*' });
-  return (await chrome.tabs.sendMessage(tab.id, { type: 'amira:readable', what: 'messages' }, { frameId: 0 })).segments[0];
+  return (await chrome.tabs.sendMessage(tab.id, { type: 'amira:readable', what: 'messages' }, { frameId: 0 })).segments;
 }, PAGE);
-const tts = seg && await panel.evaluate((s) => chrome.runtime.sendMessage(
-  { type: 'amira:tts', req: { text: s.text, language: 'fr', speed: 1, segmentKey: s.key } }), seg);
+const read = (s) => panel.evaluate((s) => chrome.runtime.sendMessage(
+  { type: 'amira:tts', req: { text: s.text, language: 'fr', speed: 1, segmentKey: s.key } }), s);
+const seg = readable[0];
+const tts = seg && await read(seg);
 if (tts?.ok && tts.data?.voice) pass('lecture', { key: seg.key, category: seg.category, voice: tts.data.voice });
 else fail('lecture', { found: Boolean(seg), tts });
+const warn = readable.find((s) => /code secret/i.test(s.text));
+const ttsWarn = warn && await read(warn);
+if (ttsWarn?.ok && ttsWarn.data?.voice) pass('avertissement', { category: warn.category, voice: ttsWarn.data.voice });
+else fail('avertissement', { found: Boolean(warn), readable: readable.map((s) => s.category), ttsWarn });
 
 await page.screenshot({ path: resolve(tmpdir(), 'amira-e2e.png'), fullPage: true });
 await ctx.close();

@@ -4,7 +4,7 @@ Une installation d'Amira sert **une langue cible** (aujourd'hui `ff`, le fulfuld
 
 ```
 backend/languages/<code>/
-├── language.json      nom, code NLLB, variétés, dossier du modèle  ← la fiche
+├── language.json      nom, variétés, dossier du modèle  ← la fiche
 ├── gold.csv           la mémoire validée par un locuteur natif     ← le contenu
 ├── audio/             les enregistrements des natifs (optionnel)
 └── check_model.json   phrases de contrôle du modèle (optionnel)
@@ -13,10 +13,10 @@ front/src/languages.ts une entrée (lettres propres, noms, variété)  ← le se
 
 ## En six étapes (environ une demi-heure, hors traduction)
 
-Remplacer `xx` par le code de la langue (2 ou 3 lettres, ISO 639) et `xxx_Latn` par son code NLLB-200.
+Remplacer `xx` par le code de la langue (2 ou 3 lettres, ISO 639).
 
 1. **Créer le squelette** (depuis `backend/`) :
-   `python -m tools.new_language xx --nllb xxx_Latn --variety nord,sud`
+   `python -m tools.new_language xx --variety nord,sud`
    La première variété est celle demandée par défaut. Rien n'est écrit dans la langue : la mémoire est vide.
 
 2. **Faire écrire la mémoire par un locuteur natif** : `languages/xx/gold.csv`, mêmes colonnes que `languages/ff/gold.csv` (`id, kind, section, page, fr, en, xx, fr_variants, en_variants, xx_variants, …`).
@@ -24,7 +24,7 @@ Remplacer `xx` par le code de la langue (2 ou 3 lettres, ISO 639) et `xxx_Latn` 
    - Un nombre n'est jamais traduit : la ligne serait refusée.
    - Les lignes refusées sont listées avec la raison par `python -m tools.import_gold languages/xx/gold.csv --validator <nom du natif> --language xx`.
 
-3. **Le modèle (facultatif)** : déposer le modèle NLLB affiné dans `backend/models/nllb_xx/` (le chemin est dans `language.json`). **Sans modèle, Amira sert la mémoire validée seule** et garde l'original pour tout le reste : c'est le comportement le plus sûr, et celui de `python demo.py`.
+3. **Le modèle (facultatif)** : déposer le modèle M2M100 affiné dans `backend/models/m2m_xx/` (le chemin est dans `language.json`). Le tokenizer doit connaître le code de la langue (jeton `__xx__`) : sinon le moteur refuse de charger avec une erreur claire. **Sans modèle, Amira sert la mémoire validée seule** et garde l'original pour tout le reste : c'est le comportement le plus sûr, et celui de `python demo.py`.
 
 4. **Les voix (facultatif)** : déposer les `.m4a` du natif nommés par le texte qu'il dit, puis
    `python -m tools.organize_audio <dossier des .m4a> languages/xx/gold.csv languages/xx/audio --language xx`

@@ -19,7 +19,7 @@ def wrap(text, src, tgt, strict):
 
 
 def app_with(db_path, engine, **env):
-    return create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "nllb", **env}, engine=engine)
+    return create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "m2m100", **env}, engine=engine)
 
 
 def translate(app, texts, source="fr", target="ff", category=None):
@@ -172,16 +172,16 @@ def test_ready_attend_le_moteur(db_path):
 # --- vrai modèle (lent, ignoré par défaut : pytest -m model) ----------------------------------
 
 @pytest.mark.model
-def test_vrai_modele_controle_colab():
-    from amira.engine import NllbEngine
+def test_vrai_modele_aller_retour():
+    from real_engine import real_engine
 
     data = json.loads((Path(__file__).parents[1] / "languages" / "ff" / "check_model.json").read_text(encoding="utf-8"))
-    engine = NllbEngine(str(Path(__file__).parents[1] / "models" / "nllb_ff"), {"fr": "fra_Latn", "en": "eng_Latn", "ff": "fuv_Latn"})
+    engine = real_engine()
     assert not engine.ready()
     engine.load()
     assert engine.ready()
     ((text, conf),) = engine.translate([data["control"]["source"]], "fr", "ff")
-    assert text == data["control"]["colab"] and 0 < conf <= 1
+    assert text and 0 < conf <= 1
     ((back, conf2),) = engine.translate([text], "ff", "fr", strict=True)
     assert back and 0 < conf2 <= 1
 
@@ -190,7 +190,7 @@ def test_echec_de_chargement_journalise(tmp_path, caplog):
     from amira.engine import from_config
 
     with caplog.at_level(logging.ERROR):
-        engine = from_config({"ENGINE": "nllb", "MODEL_DIR": str(tmp_path / "absent"), "LANG_CODES": {}, "ENGINE_SEG_S": 0.8})
+        engine = from_config({"ENGINE": "m2m100", "MODEL_DIR": str(tmp_path / "absent"), "LANG_CODES": {}, "ENGINE_SEG_S": 0.8})
         assert engine.loader is None  # rien n'est chargé avant le premier ready() (flask export-admin, purge…)
         assert not engine.ready()
         engine.loader.join(timeout=60)

@@ -1,7 +1,7 @@
 """Lance Amira en démonstration : une commande, aucune configuration.   python demo.py [--language ff] [--port 5000]
 
 - crée .venv et installe Flask au besoin (Python 3.10+ ; seul Flask est requis sans le modèle) ;
-- sert la mémoire validée (languages/<code>/gold.csv) ; si le modèle NLLB est dans models/nllb_<code>/, il complète la mémoire ;
+- sert la mémoire validée (languages/<code>/gold.csv) ; si le modèle M2M100 est dans models/m2m_<code>/, il complète la mémoire ;
 - écoute sur 127.0.0.1 seulement. Pour la production : gunicorn (voir docs/EXPLOITATION.md).
 """
 import argparse
@@ -41,9 +41,9 @@ def main() -> None:
     from amira import config, create_app, db
 
     model = HERE / config.load_language(args.language)["model_dir"]
-    # le modèle exige aussi torch et transformers (requirements.txt) ; sinon, mémoire validée seule
-    has_ml = all(importlib.util.find_spec(m) for m in ("torch", "transformers"))
-    engine = "nllb" if has_ml and (model / "model.safetensors").exists() else "memory"
+    # le modèle exige aussi torch, transformers et sentencepiece (requirements.txt) ; sinon, mémoire validée seule
+    has_ml = all(importlib.util.find_spec(m) for m in ("torch", "transformers", "sentencepiece"))
+    engine = "m2m100" if has_ml and (model / "model.safetensors").exists() else "memory"
     env = {**os.environ, "AMIRA_ENV": "development", "AMIRA_LANGUAGE": args.language, "AMIRA_ENGINE": engine,
            "AMIRA_DB_PATH": "data/demo.sqlite3", "AMIRA_GOLD_VALIDATOR": "natif-1"}
     app = create_app(env)
@@ -57,7 +57,7 @@ def main() -> None:
     if app.extensions["amira"]["engine"] is not None:
         app.extensions["amira"]["engine"].ready()  # charge le modèle en tâche de fond
     print(f"\nAmira ({args.language}) prête sur http://127.0.0.1:{args.port} — moteur : "
-          f"{'modèle NLLB + mémoire validée' if engine == 'nllb' else 'mémoire validée seule (modèle ou torch absent)'}\n"
+          f"{'modèle M2M100 + mémoire validée' if engine == 'm2m100' else 'mémoire validée seule (modèle, torch, transformers ou sentencepiece absent)'}\n"
           "Dans Chrome : ↻ sur Amira (chrome://extensions) ; la pastille passe à « Prêt ». Ctrl+C pour arrêter.\n")
     app.run(host="127.0.0.1", port=args.port, threaded=True, use_reloader=False)
 

@@ -2,12 +2,11 @@
 import statistics
 import threading
 import time
-from pathlib import Path
 
 import pytest
 
 from amira import create_app
-from amira.engine import NllbEngine
+from real_engine import real_engine
 from conftest import DEV
 from gold import rows, to_front
 
@@ -23,7 +22,7 @@ engine_calls = [0]  # segments réellement envoyés au modèle
 
 @pytest.fixture(scope="module")
 def engine():
-    e = NllbEngine(str(Path(__file__).parents[1] / "models" / "nllb_ff"), {"fr": "fra_Latn", "en": "eng_Latn", "ff": "fuv_Latn"})
+    e = real_engine()
     e.load()
     real = e.translate
 
@@ -51,7 +50,7 @@ def timed(client, body):
 
 def test_lot_de_40_visites_successives(engine, db_path):
     """Même page (20 textes du gold + 20 inconnus) visitée plusieurs fois : latence, et segments traduits ou non."""
-    client = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "nllb"}, engine=engine).test_client()
+    client = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "m2m100"}, engine=engine).test_client()
     print("\nvisite | durée | validated (mémoire) | machine (dont cache) | uncertain")
     covered, durations = [], []
     for visit in range(1, 8):
@@ -69,7 +68,7 @@ def test_lot_de_40_visites_successives(engine, db_path):
 
 
 def test_quatre_requetes_simultanees(engine, db_path):
-    app = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "nllb"}, engine=engine)
+    app = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "m2m100"}, engine=engine)
     results = [None] * 4
 
     def go(i):
@@ -87,7 +86,7 @@ def test_quatre_requetes_simultanees(engine, db_path):
 
 
 def test_premier_appel_a_froid(db_path):
-    e = NllbEngine(str(Path(__file__).parents[1] / "models" / "nllb_ff"), {"fr": "fra_Latn", "en": "eng_Latn", "ff": "fuv_Latn"})
+    e = real_engine()
     e.load()
     t0 = time.perf_counter()
     e.translate(["Votre demande est en cours."], "fr", "ff")

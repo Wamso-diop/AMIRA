@@ -43,9 +43,16 @@ La première fois, le script crée son environnement et installe Flask tout seul
 3. Onglet **Voix** : écouter la page, ou **La sélection**, puis toucher un passage sur la page pour l'entendre.
 4. Onglet **Journal** : constater que seuls des codes techniques sont conservés, jamais le texte de la page.
 
-> **Sans le modèle de traduction**, Amira sert la mémoire validée par les locuteurs natifs : tout ce qui est connu est traduit et marqué *validé*, et tout le reste **reste en original** au lieu d'être mal traduit. C'est voulu. Avec le modèle NLLB affiné (dossier `backend/models/nllb_ff/`, non livré dans le dépôt à cause de sa taille), `demo.py` le détecte et le charge.
+> **Sans le modèle de traduction**, Amira sert la mémoire validée par les locuteurs natifs : tout ce qui est connu est traduit et marqué *validé*, et tout le reste **reste en original** au lieu d'être mal traduit. C'est voulu. Avec le modèle M2M100 affiné (dossier `backend/models/m2m_ff/`, non livré dans le dépôt à cause de sa taille : voir [backend/docs/MODEL.md](backend/docs/MODEL.md)), `demo.py` le détecte et le charge.
 >
 > **Si le serveur n'est pas lancé**, la pastille l'indique et la page reste dans sa langue d'origine : l'extension ne casse jamais le site.
+
+**Avec le modèle de traduction (facultatif, hors git)** : serveur local, depuis `backend/` :
+1. Installer une fois : `.venv/bin/pip install --index-url https://download.pytorch.org/whl/cpu torch==2.15.0 && .venv/bin/pip install -r requirements.txt -c constraints.txt` (`python demo.py` crée `.venv`).
+2. Placer les 7 fichiers du modèle dans `backend/models/m2m_ff/` : `config.json`, `generation_config.json`, `model.safetensors`, `sentencepiece.bpe.model`, `vocab.json`, `tokenizer_config.json`, `added_tokens.json`.
+3. Vérifier : `sha256sum models/m2m_ff/model.safetensors` doit donner la valeur de [backend/docs/MODEL.md](backend/docs/MODEL.md).
+4. Lancer : `python demo.py`. Le message de démarrage indique « modèle M2M100 + mémoire validée » ; sans lui, « mémoire validée seule ».
+Le dossier `models/` est ignoré par git : le modèle n'est jamais commité.
 
 <details>
 <summary><b>Autres façons de tester</b></summary>
@@ -103,7 +110,7 @@ Vérifié sur l'ordinateur les marqueurs {N0} {N1} sont-ils tous là, une seule 
 Le fulfulde de l'Adamaoua est la première langue, pas la dernière (ghomálá', ewondo, duala, bassa, bulu, pidgin sont prévus). **Ajouter une langue ne change ni le moteur, ni la sécurité, ni l'API** :
 
 ```bash
-cd backend && python -m tools.new_language bbj --nllb bbj_Latn   # crée languages/bbj/ : fiche, mémoire vide, audio
+cd backend && python -m tools.new_language bbj   # crée languages/bbj/ : fiche, mémoire vide, audio
 ```
 
 Un locuteur natif remplit `languages/bbj/gold.csv`, on ajoute une ligne dans `front/src/languages.ts`, et c'est tout. Pas à pas : [backend/languages/README.md](backend/languages/README.md). Un test vérifie qu'une langue ajoutée est servie de bout en bout.
@@ -171,7 +178,7 @@ Nous préférons les écrire nous-mêmes :
 - **La qualité du fulfulde dépend des locuteurs natifs.** La mémoire validée couvre l'environnement de test du concours ; le reste est traduit par le modèle, marqué comme tel, et gardé en original en cas de doute.
 - **Les navigateurs n'ont pas de voix fulfulde.** Sans enregistrement natif pour un passage, la voix de synthèse est clairement étiquetée comme telle.
 - **Le panneau n'est pas encore traduit en fulfulde** (il est en français et en anglais) : nous refusons de générer cette traduction sans locuteur natif.
-- **Le modèle NLLB est sous licence non commerciale (CC-BY-NC)** : acceptable pour ce prototype, à remplacer pour un usage commercial (le moteur est interchangeable, voir [LICENSES.md](backend/LICENSES.md)).
+- **Licences** : M2M100 est sous licence MIT. Le droit d'usage de la mémoire validée reste à confirmer par le locuteur natif ([LICENSES.md](backend/LICENSES.md)).
 - Le texte dessiné dans des images ou des `<canvas>` n'est pas traduit.
 - Le serveur de démonstration (`demo.py`) est fait pour une machine locale ; la production passe par gunicorn derrière la passerelle de la banque ([EXPLOITATION.md](backend/docs/EXPLOITATION.md)).
 

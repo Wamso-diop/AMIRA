@@ -15,7 +15,7 @@ def confident(t, *_):
 
 
 def app_with(db_path, engine):
-    return create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "nllb"}, engine=engine)
+    return create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "m2m100"}, engine=engine)
 
 
 def post(app, segments, source="fr", target="ff"):

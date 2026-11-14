@@ -16,7 +16,7 @@ def load_language(code: str) -> dict:
     path = LANGUAGES_DIR / code / "language.json"
     try:
         info = json.loads(path.read_text(encoding="utf-8"))
-        return {k: info[k] for k in ("code", "name", "nllb", "varieties", "model_dir", "engine_version")}
+        return {k: info[k] for k in ("code", "name", "varieties", "model_dir", "engine_version")}
     except (OSError, ValueError, KeyError):
         raise RuntimeError(f"AMIRA_LANGUAGE={code} : fiche languages/{code}/language.json absente ou incomplète") from None
 
@@ -41,10 +41,10 @@ def load(env: Mapping[str, str]) -> dict:
         # sens autorisés : jamais fr↔en
         "DIRECTIONS": _list(get("AMIRA_DIRECTIONS", f"fr>{c},en>{c},{c}>fr,{c}>en")),
         "DB_PATH": get("AMIRA_DB_PATH", "data/amira.sqlite3"),
-        # moteur : nllb (modèle local) ou memory (mémoire validée seule)
-        "ENGINE": get("AMIRA_ENGINE", "nllb"),
+        # moteur : m2m100 (modèle local) ou memory (mémoire validée seule)
+        "ENGINE": get("AMIRA_ENGINE", "m2m100"),
         "MODEL_DIR": get("AMIRA_MODEL_DIR", lang["model_dir"]),
-        "LANG_CODES": dict(p.split("=", 1) for p in _list(get("AMIRA_LANG_CODES", f"fr=fra_Latn,en=eng_Latn,{c}={lang['nllb']}"))),
+        "LANG_CODES": dict(p.split("=", 1) for p in _list(get("AMIRA_LANG_CODES", f"fr=fr,en=en,{c}={c}"))),
         "MIN_CONFIDENCE": float(get("AMIRA_MIN_CONFIDENCE", "0.5")),
         "MIN_CONFIDENCE_FROM_FF": float(get("AMIRA_MIN_CONFIDENCE_FROM_FF", "0.7")),
         "ENGINE_BUDGET_S": float(get("AMIRA_ENGINE_BUDGET_S", "6")),
@@ -76,8 +76,8 @@ def load(env: Mapping[str, str]) -> dict:
     if not cfg["TRUSTED_PROXIES"].isdigit():
         raise RuntimeError("AMIRA_TRUSTED_PROXIES : nombre entier de proxys de confiance (0 par défaut)")
     cfg["TRUSTED_PROXIES"] = int(cfg["TRUSTED_PROXIES"])
-    if cfg["ENGINE"] not in ("nllb", "memory"):
-        raise RuntimeError("AMIRA_ENGINE vaut nllb ou memory")
+    if cfg["ENGINE"] not in ("m2m100", "memory"):
+        raise RuntimeError("AMIRA_ENGINE vaut m2m100 ou memory")
     if cfg["ENV"] != "development" and not cfg["ALLOWED_ORIGINS"]:
         raise RuntimeError("AMIRA_ALLOWED_ORIGINS est obligatoire hors développement (identifiant de l'extension publiée)")
     return cfg

@@ -1,8 +1,11 @@
 {
   "code": "ff",
   "name": "fulfulde",
-  "nllb": "fuv_Latn",
-  "varieties": ["ngaoundere", "garoua", "maroua"],
-  "model_dir": "models/nllb_ff",
+  "varieties": [
+    "ngaoundere",
+    "garoua",
+    "maroua"
+  ],
+  "model_dir": "models/m2m_ff",
   "engine_version": "amira-nllb-ff-stage2"
 }

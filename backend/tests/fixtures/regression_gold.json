@@ -1,0 +1,562 @@
+[
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e002d",
+   "source": "en",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "{N0} Pay — demonstration environment. Do not enter real personal data.",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e002d",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "{N0} Pay babal ƴeewtirgo. Taa winndu habaruuji maaɗa ɗi goonga."
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e004c",
+   "source": "fr",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Le montant doit être supérieur à {N0}.",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e004c",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Limgal ceede haani bura {N0}."
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0054",
+   "source": "fr",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Le numéro doit contenir {N0} chiffres.",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0054",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Lamba haani mara limgal {N0}."
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0092",
+   "source": "ff",
+   "target": "fr",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Ceede ɗe a mari jonta ko {N0}.",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0092",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Votre solde est de {N0}."
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0094",
+   "source": "fr",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Vous avez envoyé {N0} à {N1}. Frais : {N2}. Nouveau solde : {N3}. Référence : {N4}.",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0094",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "A neldi {N0} ha {N1}Yoɓde : {N2}. Bawo ɗum, ceede ɗe a mari ko {N3}. Batakewol : {N4}."
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0098",
+   "source": "fr",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Vous allez retirer {N0} auprès de l'agent {N1}. Frais : {N2}. Confirmez-vous ?",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0098",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "A don yaha ittugo {N0} ha agent {N1}. Yoɓde : {N2}. A tabitini na ?"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e009a",
+   "source": "ff",
+   "target": "fr",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "A nastini {N0} ɗer konte maaɗa. Bawo ɗum, ceede ɗe a mari ko {N1}.",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e009a",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Vous avez déposé {N0} sur votre compte. Nouveau solde : {N1}."
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e009c",
+   "source": "fr",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Vous avez acheté {N0} de crédit pour le {N1}.",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e009c",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "A sooɗi kredi {N0} ngam limgal {N1}."
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0000",
+   "source": "fr",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "compte",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0000",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Sigga"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0006",
+   "source": "ff",
+   "target": "fr",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "lamba",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0006",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "numéro"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e000c",
+   "source": "fr",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Retour",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e000c",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Lorta"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0012",
+   "source": "ff",
+   "target": "fr",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "timmi",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0012",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "terminé"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0018",
+   "source": "fr",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Protocole de test",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0018",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Laawol ƴeewtirgo"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e001e",
+   "source": "ff",
+   "target": "fr",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Siggorɗe maaɗa",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e001e",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Votre compte"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0024",
+   "source": "fr",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Effectuer un transfert",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0024",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Neldugo ceede"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e002a",
+   "source": "ff",
+   "target": "fr",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Faktir yitte",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e002a",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Facture électricité"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0031",
+   "source": "en",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Safinum account",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0031",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Konte Safinum"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0037",
+   "source": "ff",
+   "target": "en",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Winndu habaruuji jaɓɓoowo. Laarta tum lamba hideko tabitinugo.",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0037",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Enter the recipient's details. Always check the number before validating."
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e003d",
+   "source": "en",
+   "target": "ff",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "Note (optional)",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e003d",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Binndol (to a yidi)"
+    }
+   ]
+  }
+ },
+ {
+  "request": {
+   "requestId": "9f1c2a7b3d4e0043",
+   "source": "ff",
+   "target": "en",
+   "variety": "ngaoundere",
+   "segments": [
+    {
+     "id": "s1",
+     "text": "kuugal",
+     "placeholders": []
+    }
+   ]
+  },
+  "response": {
+   "engineVersion": "amira-nllb-ff-stage2",
+   "requestId": "9f1c2a7b3d4e0043",
+   "segments": [
+    {
+     "confidence": 1.0,
+     "id": "s1",
+     "origin": "memory",
+     "status": "validated",
+     "text": "Operation"
+    }
+   ]
+  }
+ }
+]

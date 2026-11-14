@@ -1,9 +1,12 @@
 """S0 : le modèle se charge-t-il depuis le disque et répond-il ? Mesure RAM et latence CPU.
 
-Usage : python tools/check_model.py [--model models/nllb_ff] [--data languages/ff/check_model.json]
-Aucun accès réseau : HF_HUB_OFFLINE est forcé. Une différence avec Colab se signale, elle ne se corrige pas.
+Usage (depuis backend/) : python -m tools.check_model [--model models/m2m_ff] [--data languages/ff/check_model.json]
+Aucun accès réseau : HF_HUB_OFFLINE est forcé.
+Pas de référence écrite à la main : la sortie du premier chargement réussi est enregistrée, avec la date, dans
+<modèle>/integrity.json (propre à cette machine, hors git) ; les passages suivants la comparent.
 """
 import argparse
+import datetime
 import json
 import math
 import os
@@ -17,18 +20,22 @@ os.environ["TRANSFORMERS_OFFLINE"] = "1"
 import torch
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
+from amira.engine import lang_id
+
+SRC, TGT = "fr", "ff"
+
 
 def rss_mb() -> float:
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024  # Linux : ko
 
 
 def translate(tok, model, texts, beams=4):
-    tok.src_lang = "fra_Latn"
+    tok.src_lang = SRC
     enc = tok(texts, return_tensors="pt", padding=True, truncation=True, max_length=128)
     with torch.inference_mode():
         out = model.generate(
             **enc,
-            forced_bos_token_id=tok.convert_tokens_to_ids("fuv_Latn"),
+            forced_bos_token_id=lang_id(tok, TGT),
             num_beams=beams,
             max_new_tokens=96,
             output_scores=True,
@@ -47,9 +54,21 @@ def timed(tok, model, texts, runs=3):
     return statistics.median(durations), max(durations)
 
 
+def control_verdict(model_dir: str, ctrl: dict, got: str) -> str:
+    ref = os.path.join(model_dir, "integrity.json")
+    if not os.path.exists(ref):  # premier chargement réussi sur cette machine : c'est lui la référence
+        saved = {"source": ctrl["source"], "output": got, "date": datetime.date.today().isoformat()}
+        json.dump(saved, open(ref, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        return f"référence d'intégrité ENREGISTRÉE ({ref})"
+    saved = json.load(open(ref, encoding="utf-8"))
+    if saved["source"] == ctrl["source"] and saved["output"] == got:
+        return f"IDENTIQUE à la référence du {saved['date']}"
+    return f"DIFFÉRENT de la référence du {saved['date']} (attendu : {saved['output']!r})"
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", default=os.environ.get("AMIRA_MODEL_DIR", "models/nllb_ff"))
+    ap.add_argument("--model", default=os.environ.get("AMIRA_MODEL_DIR", "models/m2m_ff"))
     ap.add_argument("--data", default=f"languages/{os.environ.get('AMIRA_LANGUAGE', 'ff')}/check_model.json")
     args = ap.parse_args()
     data = json.load(open(args.data, encoding="utf-8"))
@@ -62,8 +81,7 @@ def main():
 
     ctrl = data["control"]
     (got, conf), = translate(tok, model, [ctrl["source"]])
-    verdict = "IDENTIQUE à Colab" if got == ctrl["colab"] else f"DIFFÉRENT de Colab (attendu : {ctrl['colab']!r})"
-    print(f"\ncontrôle : {ctrl['source']!r} → {got!r} conf {conf:.2f} : {verdict}\n")
+    print(f"\ncontrôle : {ctrl['source']!r} → {got!r} conf {conf:.2f} : {control_verdict(args.model, ctrl, got)}\n")
 
     for src in data["sentences"]:
         t1 = time.perf_counter()

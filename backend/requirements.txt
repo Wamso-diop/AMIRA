@@ -4,4 +4,5 @@ Flask==3.1.3
 python-dotenv==1.2.4
 gunicorn==27.0.0
 transformers==5.22.2
+sentencepiece==0.2.3  # tokenizer M2M100
 torch==2.15.0

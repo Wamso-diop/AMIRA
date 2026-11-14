@@ -77,8 +77,8 @@ tâches, pas de micro-services.
 | Étape | Commande | Budget |
 |---|---|---|
 | après chaque modification | `cd backend && pytest -q` (les tests `model` sont ignorés par défaut) | < 10 s |
-| fin de tâche, CI | `pytest -q && pip-audit -r requirements.txt` | minutes |
-| avant livraison | `pytest -q -m model` (vrai modèle, lot de 40 : médiane et p95 dans `docs/PERF.md`) + bout en bout avec l'extension | manuel |
+| fin de tâche, CI | `pytest -q && python tools/check_repo.py && pip-audit -r requirements.txt` | minutes |
+| avant livraison (`/ship`) | `python tools/check_repo.py` (aucun poids, aucun fichier > 50 MiB) + `pytest -q -m model` (vrai modèle, lot de 40 : médiane et p95 dans `docs/PERF.md`) + bout en bout avec l'extension | manuel |
 
 ## Mesuré, pas encore imposé
 

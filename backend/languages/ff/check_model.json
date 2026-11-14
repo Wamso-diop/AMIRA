@@ -1,5 +1,7 @@
 {
-  "control": {"source": "Votre solde est insuffisant.", "colab": "Ceede moɗon mari cikay."},
+  "control": {
+    "source": "Votre solde est insuffisant."
+  },
   "sentences": [
     "Votre carte a été bloquée par mesure de sécurité.",
     "Veuillez patienter pendant le traitement de votre demande.",

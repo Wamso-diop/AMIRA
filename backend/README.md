@@ -1,10 +1,10 @@
 # Back-end Amira
 
-API Flask qui traduit des textes **masqués** entre fr/en et fulfulde : mémoire validée par un natif d'abord, modèle NLLB local ensuite.
+API Flask qui traduit des textes **masqués** entre fr/en et fulfulde : mémoire validée par un natif d'abord, modèle M2M100 local ensuite.
 
 0. **Démonstration en une commande** (sans modèle ni configuration) : `python demo.py` (Windows : `py demo.py`). Le reste de cette liste concerne l'installation complète.
 1. **Installer** : `python3 -m venv .venv && .venv/bin/pip install --index-url https://download.pytorch.org/whl/cpu torch==2.15.0 && .venv/bin/pip install -r requirements-dev.txt -c constraints.txt`
-2. **Configurer** : modèle dans `models/nllb_ff/` (chemin dans `languages/ff/language.json`), puis `cp .env.example .env` (renseigner `AMIRA_ADMIN_TOKENS`).
+2. **Configurer** : modèle dans `models/m2m_ff/` (voir [docs/MODEL.md](docs/MODEL.md) ; chemin dans `languages/ff/language.json`), puis `cp .env.example .env` (renseigner `AMIRA_ADMIN_TOKENS`).
 3. **Charger la mémoire** : `.venv/bin/python -m tools.import_gold languages/ff/gold.csv --validator natif-1` (ensuite, chaque modification du CSV est rechargée seule : voir `AMIRA_GOLD_VALIDATOR` dans `.env.example`)
 4. **Lancer** : `.venv/bin/gunicorn -w 1 --threads 4 -b 127.0.0.1:5000 wsgi:app` (exploitation : [docs/EXPLOITATION.md](docs/EXPLOITATION.md)).
 5. **Tester** : `.venv/bin/pytest` ; vrai modèle : `pytest -m model` ; bout en bout avec l'extension : `bash tools/e2e_extension.sh`.

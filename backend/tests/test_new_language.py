@@ -9,7 +9,7 @@ from tools.import_gold import import_gold
 
 @pytest.fixture
 def zz(tmp_path, monkeypatch):
-    new_language.create("zz", "zzz_Latn", ["nord", "sud"], tmp_path)
+    new_language.create("zz", ["nord", "sud"], tmp_path)
     monkeypatch.setattr(config, "LANGUAGES_DIR", tmp_path)
     return tmp_path
 
@@ -18,7 +18,7 @@ def test_config_deduite_de_la_fiche(zz):
     cfg = config.load({"AMIRA_ENV": "development", "AMIRA_LANGUAGE": "zz"})
     assert cfg["TARGET"] == "zz" and cfg["LANGUAGES"] == ["fr", "en", "zz"]
     assert cfg["DIRECTIONS"] == ["fr>zz", "en>zz", "zz>fr", "zz>en"] and cfg["VARIETIES"] == ["nord", "sud"]
-    assert cfg["LANG_CODES"]["zz"] == "zzz_Latn" and cfg["GOLD_PATH"] == "languages/zz/gold.csv"
+    assert cfg["LANG_CODES"]["zz"] == "zz" and cfg["GOLD_PATH"] == "languages/zz/gold.csv"
 
 
 def test_langue_inconnue_refusee():
@@ -29,9 +29,9 @@ def test_langue_inconnue_refusee():
 def test_creation_refuse_codes_invalides_et_doublons(zz):
     for bad in ("fr", "en", "FUL", "x"):
         with pytest.raises(ValueError):
-            new_language.create(bad, "x", [], zz)
+            new_language.create(bad, [], zz)
     with pytest.raises(FileExistsError):
-        new_language.create("zz", "zzz_Latn", [], zz)
+        new_language.create("zz", [], zz)
 
 
 def test_memoire_et_traduction_de_bout_en_bout(zz, tmp_path):

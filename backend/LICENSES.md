@@ -4,14 +4,17 @@
 
 | Élément | Licence | Conséquence |
 |---|---|---|
-| Modèle de base : `facebook/nllb-200-distilled-600M` | **CC-BY-NC 4.0 (non commercial)** | Acceptable pour le hackathon. **Interdit pour un usage commercial, donc pour une vraie banque.** Le moteur se remplace sans toucher au reste : un autre dossier dans `AMIRA_MODEL_DIR`, ou un autre `engine.py` qui respecte `translate(textes, src, tgt) -> [(texte, confiance)]`. Le modèle affiné hérite de cette licence. |
+| Modèle livré : M2M100 (`facebook/m2m100_418M`, 483 905 536 paramètres), affiné pour le fulfulde | **MIT** ([fiche du modèle](https://huggingface.co/facebook/m2m100_418M)) | Usage commercial permis. Licence relevée sur la fiche le 2026-11-14 ; **non revérifiée en ligne ce jour-là** (aucun accès réseau pendant ce travail) : à recontrôler sur la fiche avant toute diffusion. Le modèle affiné reste hors de git (`docs/MODEL.md`). |
+| NLLB-200 (`facebook/nllb-200-distilled-600M`) | CC-BY-NC 4.0 (non commercial) | **Évalué, non livré** : retiré du code et du disque le 2026-11-14 à cause de sa licence non commerciale. |
+
+Le moteur reste interchangeable : un autre dossier dans `AMIRA_MODEL_DIR`, ou un autre `engine.py` qui respecte `translate(textes, src, tgt) -> [(texte, confiance)]`.
 
 ## Données d'entraînement
 
 | Étape | Jeu de données | Licence |
 |---|---|---|
-| Affinage, étape 1 | `FredMike23/french-FULFULDE-ADAMAOUA` (Hugging Face) | **NON VÉRIFIÉE.** À contrôler sur la fiche Hugging Face. La copie de la fiche dans le cache local (`README.md` du jeu de données) ne déclare aucune licence : seulement `dataset_info` et `configs`. |
-| Affinage, étape 2, et mémoire validée (`data/gold_fulfulde.csv`) | Textes du document « Environnement de test », traduits et corrigés par le locuteur natif de l'équipe | **Droit d'usage à confirmer avec lui.** |
+| Affinage, étape 1 | `FredMike23/french-FULFULDE-ADAMAOUA` (Hugging Face) | **MIT, vérifiée** (information de l'équipe). |
+| Affinage, étape 2, et mémoire validée (`languages/ff/gold.csv`) | Textes du document « Environnement de test », traduits et corrigés par le locuteur natif de l'équipe | **Droit d'usage à confirmer par le locuteur natif.** |
 
 Consultés mais **non utilisés** : `ARPRIM/pulaar_fulfulde`, `BayangSouloukna/adamawa-fulfulde-silver-v1`, `abdouaziiz/fulfulde_clean`, Common Voice (`fub`), `stfotso/french-ghomala-bandjoun`, Ewondo-TTS-Dataset (Mozilla).
 
@@ -33,6 +36,7 @@ Relevé avec `pip-licenses --from=mixed` le 2026-11-12 (outil installé le temps
 | transformers | 5.22.2 | Apache-2.0 | production (`engine.py`) |
 | tokenizers | 0.23.3 | Apache-2.0 | production (transformers) |
 | safetensors | 0.8.0 | Apache-2.0 | production (transformers) |
+| sentencepiece | 0.2.3 | Apache-2.0 | production (tokenizer M2M100) ; installée le 2026-11-14, licence selon la documentation du projet, hors relevé `pip-licenses` du 2026-11-12 |
 | huggingface_hub | 2.4.0 | Apache-2.0 | production (transformers ; hors ligne) |
 | torch | 2.15.0+cpu | BSD-3-Clause, avec des composants Apache-2.0, MIT, BSL-1.0, ISC, Zlib | production (`engine.py`) |
 | numpy | 2.5.4 | BSD-3-Clause, avec des composants 0BSD, MIT, Zlib, CC0-1.0 | production (transformers) |
@@ -41,4 +45,4 @@ Relevé avec `pip-licenses --from=mixed` le 2026-11-12 (outil installé le temps
 | jsonschema | 4.26.0 | MIT | tests seulement |
 | pip-audit | 2.10.1 | Apache-2.0 | audit seulement |
 
-Toutes les bibliothèques ont des licences permissives. **Seul le modèle bloque un usage commercial.**
+Toutes les bibliothèques ont des licences permissives. Aucune licence de bibliothèque ne bloque un usage commercial ; reste à confirmer le droit d'usage de la mémoire validée.

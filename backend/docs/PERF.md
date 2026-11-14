@@ -1,5 +1,70 @@
 # Mesures de performance
 
+> NLLB a été évalué puis retiré le 2026-11-14 : les sections « S0 », « S6 », « S10 et S11 » et « Correctif du 2026-11-12 » ci-dessous sont des **mesures historiques faites avec NLLB**, conservées comme trace. Le moteur livré est M2M100 (première section).
+
+## M2M100 : le vrai modèle, par le service (2026-11-14)
+
+Même machine que S0 (i7-6820HQ, CPU seulement, 15,8 Go de RAM). `AMIRA_MODEL_FAMILY=m2m100`, modèle `models/m2m_ff`
+(voir `docs/MODEL.md`), torch 2.15.0+cpu à 4 fils, `num_beams=4`, `max_new_tokens=96`, budget du service 6 s, paquets de 4.
+Mesure : requêtes `POST /v1/translate` complètes (masquage, mémoire, moteur), **cache vide à chaque essai**, textes français
+inconnus du gold. Les `p95` portent sur 10 essais (20 pour les requêtes simultanées) : à ce volume, ils sont proches du maximum.
+
+| Scénario | Essais | Médiane | p95 | Max | Statuts |
+|---|---|---|---|---|---|
+| 1 segment | 10 | 1,86 s | 1,89 s | 1,89 s | 1 `machine` |
+| 8 segments | 10 | 5,63 s | **6,21 s** | 6,21 s | 8 `machine` |
+| Lot de 40 (20 gold + 20 inconnus) | 10 | 5,92 s | **6,25 s** | 6,25 s | 20 `validated`, 8 `machine`, 12 `uncertain` |
+| 4 requêtes simultanées (lots différents) | 20 | 6,00 s | **6,24 s** | 6,24 s | 4 `machine` pour une requête sur deux, 0 pour les autres |
+
+**Le p95 dépasse 6 s** pour 8 segments, le lot de 40 et les requêtes simultanées. Le dépassement est de 0,2 à 0,25 s au-dessus
+du budget de 6 s du service (plafond de génération + traitement autour), et reste **sous les 8 s** après lesquelles le front coupe.
+
+| RAM | Valeur |
+|---|---|
+| RSS après chargement et échauffement | 2 266 Mo |
+| RSS finale après les mesures | 2 474 Mo |
+| RSS maximale du processus | 2 745 Mo |
+
+Moteur seul (`python -m tools.check_model`, 3 essais) : chargement 2,5 s ; 1 segment médiane 1,92 s (max 2,03 s) ;
+8 segments en un lot médiane 4,74 s (max 4,99 s) ; RSS max 447 Mo en `check_model` au chargement puis 2 884 Mo en fin de mesure.
+
+Pour comparaison, les mesures NLLB de la même machine (ci-dessous, S0 et S10) : 1 segment 1,94 s, 8 segments 6,19 s, lot de 40 médiane 3,55 s
+avec 4 segments inconnus traduits. Avec M2M100, le lot de 40 en traduit 8 mais prend 5,92 s : le moteur utilise tout le budget.
+
+
+**Nombre d'essais** : les p95 de ce tableau portent sur **10 essais** (20 pour les requêtes simultanées). À ce volume, ils sont proches du maximum.
+
+**Décision (2026-11-14)** : un p95 de 6,2 s est acceptable, la limite réelle du front étant de 8 s. Le budget (6 s) et `num_beams` (4) ne changent pas.
+
+### Sous charge : deux cœurs occupés (2026-11-14)
+
+Mêmes scénarios, pendant que deux processus Python tournaient en boucle (charge système 2,4), pour simuler le navigateur et l'enregistrement d'écran. Même nombre d'essais.
+
+| Scénario | Médiane | p95 | Max | Statuts (dernier essai) |
+|---|---|---|---|---|
+| 1 segment | 2,02 s | 2,06 s | 2,06 s | 1 `machine` |
+| 8 segments | 5,75 s | 6,26 s | 6,26 s | 6 `machine`, 2 `uncertain` |
+| Lot de 40 | 5,87 s | **6,12 s** | 6,12 s | 20 `validated`, 8 `machine`, 12 `uncertain` |
+| 4 requêtes simultanées | 6,00 s | 6,41 s | 6,41 s | 4 `machine` pour une requête sur deux (8 dans un tour) |
+
+RSS maximale du processus : 2 735 Mo. Seuil d'arrêt fixé à 7,5 s pour le lot de 40 : non atteint (6,12 s).
+La charge coûte surtout aux segments : avec 2 cœurs pris, 8 segments inconnus n'en voient plus que 6 traduits (le plafond de 6 s coupe la génération).
+
+### Comparaison avec la référence humaine : pourquoi 13 sur 56 et non 17 sur 56
+
+`tests/fixtures/m2m_colab_reference.csv`, 56 phrases (fr et en vers ff). La sortie du serveur est **identique** à la colonne `m2m100` de Colab (56 sur 56) ; seule la façon de comparer à la colonne `reference` change le score :
+
+| Normalisation | Serveur | Colab M2M100 | Colab NLLB |
+|---|---|---|---|
+| Aucune (égalité exacte) | 13 sur 56 (23,2 %) | 13 sur 56 (23,2 %) | 12 sur 56 |
+| Casse ignorée | 16 sur 56 (28,6 %) | 16 sur 56 | 13 sur 56 |
+| Casse et ponctuation finale ignorées | **17 sur 56 (30,4 %)** | **17 sur 56 (30,4 %)** | 13 sur 56 |
+| Casse et toute la ponctuation ignorées | 17 sur 56 | 17 sur 56 | 13 sur 56 |
+
+Les 17 sur 56 (30,4 %) du notebook correspondent à la comparaison sans casse ni ponctuation finale. Le 13 sur 56 est la comparaison exacte. Le modèle et ses sorties sont les mêmes des deux côtés : aucun écart de ce côté.
+
+---
+
 ## S0 : modèle seul (2026-11-12)
 
 Machine : Intel Core i7-6820HQ (4 cœurs, 8 fils), 15,8 Go de RAM, CPU seulement.

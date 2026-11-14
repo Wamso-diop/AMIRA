@@ -14,7 +14,7 @@ ADMIN = {"Authorization": "Bearer jeton"}
 
 
 def make(db_path, engine, **env):
-    return create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "nllb", "AMIRA_ADMIN_TOKENS": "jeton", **env}, engine=engine)
+    return create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "m2m100", "AMIRA_ADMIN_TOKENS": "jeton", **env}, engine=engine)
 
 
 def seg(text, i, category=None):

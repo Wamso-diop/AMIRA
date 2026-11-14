@@ -16,7 +16,7 @@ MASKED = "Texte masqué CANARIMASQUE {N0}"  # passe la garde : ne doit pas non p
 @pytest.fixture
 def setup(db_path, tmp_path):
     engine = FakeEngine()
-    app = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "nllb", "AMIRA_RECORDINGS_DIR": str(tmp_path / "rec")},
+    app = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "m2m100", "AMIRA_RECORDINGS_DIR": str(tmp_path / "rec")},
                      engine=engine)
     return app, engine, db_path
 

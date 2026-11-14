@@ -8,13 +8,13 @@ Règles : [CONSTRAINTS.md](CONSTRAINTS.md). En cas de conflit : le contrat du fr
 
 Une API Flask sans état, dans `backend/`, qui :
 - traduit des textes **déjà masqués** par l'extension : `fr → ff`, `en → ff`, `ff → fr`, `ff → en` ;
-- sert d'abord la **mémoire validée** par des natifs (`data/gold_fulfulde.csv`, puis l'admin), et le modèle NLLB affiné seulement comme repli, jamais pour `security_warning` ni `fees` ;
+- sert d'abord la **mémoire validée** par des natifs (`data/gold_fulfulde.csv`, puis l'admin), et le modèle M2M100 affiné seulement comme repli, jamais pour `security_warning` ni `fees` ;
 - renvoie l'audio d'un natif (`/v1/tts`), sinon `204` ;
 - reçoit les signalements (`/v1/feedback`) dans une file `pending`, et offre aux natifs des outils internes (`/v1/admin`).
 
 Réussite : la pastille du front affiche « Prêt » (sans « démo ») ; une page de test est traduite ; chaque marqueur revient intact ; aucune donnée réelle ni aucun texte n'atteint le moteur, la base ou les journaux sans avoir passé la garde.
 
-## 2. Ce qui a été vérifié (S0, sans code)
+## 2. Ce qui a été vérifié (S0, sans code) : historique, avant le passage à M2M100 (voir `docs/MODEL.md`)
 
 | Point | Constat |
 |---|---|
@@ -68,7 +68,7 @@ backend/
 ├── CONSTRAINTS.md SPEC.md README.md LICENSES.md
 ├── requirements.txt .env.example wsgi.py demo.py
 ├── languages/<code>/               une langue : language.json, gold.csv (mémoire validée), audio/, check_model.json
-├── models/nllb_ff/                 AMIRA_MODEL_DIR (ignoré par git, monté en lecture seule)
+├── models/m2m_ff/                  AMIRA_MODEL_DIR (ignoré par git, monté en lecture seule)
 ├── docs/openapi.yaml PERF.md MASQUAGE.md EXPLOITATION.md
 ├── tools/check_model.py import_gold.py
 ├── amira/
@@ -109,7 +109,7 @@ Texte normalisé (NFKC, caractères invisibles retirés), marqueurs du front ret
 
 ### 7.4 Moteur (`engine.py`)
 
-Le chargement commence au premier `ready()` (`wsgi.py` l'appelle au démarrage ; les commandes `flask` ne chargent jamais le modèle). `transformers` est importé à ce moment-là, sur CPU, sous `torch.inference_mode()`. Le modèle est chargé une seule fois, et `generate` est protégé par un verrou. Paramètres : codes `fra_Latn`, `eng_Latn` et `fuv_Latn` (configurables), `forced_bos_token_id` sur la cible, `num_beams=4`, `max_new_tokens=96`, entrée tronquée à 128 jetons. Confiance = `exp(sequences_scores)`. La tentative stricte utilise `num_beams=8` et `no_repeat_ngram_size=3`. Une exception levée par le moteur est remplacée par `EngineError("échec du moteur")`, sans texte, et tous les segments concernés deviennent `uncertain`.
+Le chargement commence au premier `ready()` (`wsgi.py` l'appelle au démarrage ; les commandes `flask` ne chargent jamais le modèle). `transformers` est importé à ce moment-là, sur CPU, sous `torch.inference_mode()`. Le modèle est chargé une seule fois, et `generate` est protégé par un verrou. Paramètres : codes `fr`, `en` et `ff` (configurables ; jeton de langue lu par `lang_id`), `forced_bos_token_id` sur la cible, `num_beams=4`, `max_new_tokens=96`, entrée tronquée à 128 jetons. Confiance = `exp(sequences_scores)`. La tentative stricte utilise `num_beams=8` et `no_repeat_ngram_size=3`. Une exception levée par le moteur est remplacée par `EngineError("échec du moteur")`, sans texte, et tous les segments concernés deviennent `uncertain`.
 
 ### 7.5 Autres points d'accès
 

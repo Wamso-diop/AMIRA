@@ -22,18 +22,34 @@ class EngineError(Exception):
         super().__init__("échec du moteur")
 
 
+def lang_id(tok, code: str) -> int:
+    """Identifiant du jeton d'une langue (source ou cible) : get_lang_id (M2M100), sinon le code, puis « __code__ »."""
+    get = getattr(tok, "get_lang_id", None)
+    if get is not None:
+        try:
+            return get(code)
+        except KeyError:
+            pass
+    for token in (code, f"__{code}__"):
+        i = tok.convert_tokens_to_ids(token)
+        if i is not None and i != getattr(tok, "unk_token_id", None):
+            return i
+    raise ValueError(f"jeton de langue introuvable dans le tokenizer : {code!r}")
+
+
 def generate(tok, model, texts: list[str], src_code: str, tgt_code: str, strict: bool,
              max_time: float | None = None) -> list[tuple[str, float]]:
     """Confiance mise à 0 pour une traduction partielle : entrée tronquée, ou sortie arrêtée (max_new_tokens, max_time)."""
     import torch
 
+    lang_id(tok, src_code)  # code inconnu du tokenizer (ex. un code à 3 lettres avec M2M100) : erreur claire, pas un KeyError
     tok.src_lang = src_code
     too_long = [len(ids) > MAX_INPUT_TOKENS for ids in tok(texts)["input_ids"]]
     enc = tok(texts, return_tensors="pt", padding=True, truncation=True, max_length=MAX_INPUT_TOKENS)
     with torch.inference_mode():
         out = model.generate(
             **enc,
-            forced_bos_token_id=tok.convert_tokens_to_ids(tgt_code),
+            forced_bos_token_id=lang_id(tok, tgt_code),
             num_beams=8 if strict else 4,
             no_repeat_ngram_size=3 if strict else 0,
             max_new_tokens=MAX_NEW_TOKENS,
@@ -43,14 +59,14 @@ def generate(tok, model, texts: list[str], src_code: str, tgt_code: str, strict:
             return_dict_in_generate=True,
         )
     decoded = tok.batch_decode(out.sequences, skip_special_tokens=True)
-    # position 0 = jeton de départ du décodeur (</s> pour NLLB) : la fin se cherche après
+    # position 0 = jeton de départ du décodeur (</s> pour M2M100) : la fin se cherche après
     ended = [bool((row[1:] == tok.eos_token_id).any()) for row in out.sequences]
     # exp(score moyen par jeton) : probabilité moyenne par jeton, à calibrer
     return [(t, 0.0 if cut or not done else math.exp(s))
             for t, s, cut, done in zip(decoded, out.sequences_scores.tolist(), too_long, ended)]
 
 
-class NllbEngine:
+class Engine:
     def __init__(self, model_dir: str, codes: dict[str, str], seconds_per_segment: float = 0.8):
         self.model_dir, self.codes = model_dir, codes
         # durée estimée d'un segment (faisceau normal), remesurée après chaque génération
@@ -150,4 +166,4 @@ def from_config(cfg: dict):
     """Moteur décrit par la configuration ; chargé en tâche de fond au premier ready() (/v1/ready répond 503 d'ici là)."""
     if cfg["ENGINE"] == "memory":
         return None
-    return NllbEngine(cfg["MODEL_DIR"], cfg["LANG_CODES"], cfg["ENGINE_SEG_S"])
+    return Engine(cfg["MODEL_DIR"], cfg["LANG_CODES"], cfg["ENGINE_SEG_S"])

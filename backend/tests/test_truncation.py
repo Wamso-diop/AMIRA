@@ -6,7 +6,7 @@ torch = pytest.importorskip("torch")
 from amira.engine import MAX_INPUT_TOKENS, MAX_NEW_TOKENS, generate
 
 EOS, PAD = 2, 1
-START = EOS  # comme NLLB : decoder_start_token_id = </s>, donc chaque séquence commence par </s>
+START = EOS  # comme M2M100 : decoder_start_token_id = </s>, donc chaque séquence commence par </s>
 
 
 class FakeTok:
@@ -43,7 +43,7 @@ class FakeModel:
 
 
 def run(texts, rows):
-    return generate(FakeTok(), FakeModel(rows), texts, "fra_Latn", "fuv_Latn", strict=False)
+    return generate(FakeTok(), FakeModel(rows), texts, "fr", "ff", strict=False)
 
 
 def test_sortie_normale_garde_sa_confiance():
@@ -67,11 +67,9 @@ def test_sortie_coupee_a_max_new_tokens_sans_fin():
 
 @pytest.mark.model
 def test_vrai_modele_texte_trop_long():
-    from pathlib import Path
+    from real_engine import real_engine
 
-    from amira.engine import NllbEngine
-
-    e = NllbEngine(str(Path(__file__).parents[1] / "models" / "nllb_ff"), {"fr": "fra_Latn", "ff": "fuv_Latn"})
+    e = real_engine()
     e.load()
     long = ("Votre demande de virement a été reçue et sera traitée dans les meilleurs délais par nos services. " * 8)[:1000]
     ((_, conf),) = e.translate([long], "fr", "ff")
@@ -86,5 +84,5 @@ def test_generate_transmet_max_time():
             seen.update(kw)
             return super().generate(**kw)
 
-    generate(FakeTok(), Recorder([[50, EOS]]), ["Texte"], "fra_Latn", "fuv_Latn", strict=False, max_time=1.5)
+    generate(FakeTok(), Recorder([[50, EOS]]), ["Texte"], "fr", "ff", strict=False, max_time=1.5)
     assert seen["max_time"] == 1.5

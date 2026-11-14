@@ -29,7 +29,7 @@ def test_le_blocage_fonctionne(no_network):
 
 
 def test_translate_tts_feedback_sans_reseau(db_path, tmp_path, no_network):
-    app = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "nllb", "AMIRA_RECORDINGS_DIR": str(tmp_path)},
+    app = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "m2m100", "AMIRA_RECORDINGS_DIR": str(tmp_path)},
                      engine=FakeEngine())
     c = app.test_client()
     r = c.post("/v1/translate", json={"requestId": "r", "source": "fr", "target": "ff", "variety": "ngaoundere",
@@ -42,13 +42,12 @@ def test_translate_tts_feedback_sans_reseau(db_path, tmp_path, no_network):
 
 @pytest.mark.model
 def test_vrai_modele_sans_reseau(db_path, no_network):
-    from pathlib import Path
 
-    from amira.engine import NllbEngine
+    from real_engine import real_engine
 
-    engine = NllbEngine(str(Path(__file__).parents[1] / "models" / "nllb_ff"), {"fr": "fra_Latn", "en": "eng_Latn", "ff": "fuv_Latn"})
+    engine = real_engine()
     engine.load()
-    app = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "nllb"}, engine=engine)
+    app = create_app({**DEV, "AMIRA_DB_PATH": db_path, "AMIRA_ENGINE": "m2m100"}, engine=engine)
     r = app.test_client().post("/v1/translate", json={"requestId": "r", "source": "fr", "target": "ff", "variety": "ngaoundere",
                                                       "segments": [{"id": "a", "text": "Votre demande a été envoyée.", "placeholders": []}]})
     assert r.status_code == 200 and no_network == []

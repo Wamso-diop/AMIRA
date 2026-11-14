@@ -102,3 +102,5 @@ backend/models/
 backend/data/*.sqlite3
 backend/media/
 backend/.venv/
+# Référence Colab M2M100 fournie par l'équipe : jamais commitée
+backend/tests/fixtures/m2m_colab_reference.csv
